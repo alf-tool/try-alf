@@ -18,7 +18,8 @@ TryAlf = ::Rack::Builder.new do
 
   # Connect to the suppliers and parts exemplar
   use Alf::Rack::Connect do |cfg|
-    cfg.database = Alf::Test::Sap.adapter(:sqlite)
+    ENV['DATABASE_URL'] ||= Alf::Test::Sap.sequel_uri(:sqlite)
+    cfg.database = ::Sequel.connect(ENV['DATABASE_URL'])
   end
 
   map '/one' do
