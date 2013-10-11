@@ -36,7 +36,6 @@ TryAlf = ::Rack::Builder.new do
       g.body{|ex| ex.message }
       g.ensure(true){|ex|
         puts ex.message
-        puts ex.backtrace.join("\n")
       }
     end
     run Alf::Rack::Query.new{|q|
