@@ -1,4 +1,4 @@
-function QueryController($scope, $http) {
+function QueryController($scope, $http, $filter) {
 
   $scope.mode     = "data";
   $scope.error    = "";
@@ -20,6 +20,9 @@ function QueryController($scope, $http) {
           "Accept": $scope.format
         }
       }).success(function(data){
+        if ($scope.format == "application/json") {
+          data = $filter('json')(data);
+        }
         $scope.result = data;
         $scope.error = "";
       }).error(function(data){
