@@ -1,0 +1,7 @@
+human: |-
+  For each city, get the suppliers and the available parts.
+alternatives: 
+  - query: |-
+      suppliers_by_city = group(suppliers, [:sid, :name, :status], :suppliers)
+      parts_by_city     = group(parts, [:city], :parts, allbut: true)
+      join(suppliers_by_city, parts_by_city)

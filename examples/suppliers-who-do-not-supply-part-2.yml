@@ -1,0 +1,9 @@
+human: |-
+  Get suppliers who do *not* supply part P2.
+alternatives:
+  - query: |-
+      not_matching(suppliers, restrict(supplies, pid: 'P2'))
+  - query: |-
+      minus(
+        suppliers,
+        matching(suppliers, restrict(supplies, pid: 'P2')))

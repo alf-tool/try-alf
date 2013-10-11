@@ -1,0 +1,16 @@
+human: |-
+  Per supplier, get the parts he does *not* supply.
+alternatives: 
+  - query: |-
+      sids       = project(suppliers, [:sid])
+      pids       = project(parts, [:pid])
+      candidates = join(sids, pids)
+      supplied   = project(supplies, [:sid, :pid])
+      missing    = minus(candidates, supplied)
+      group(missing, [:pid], :parts)
+  - query: |-
+      sids       = project(suppliers, [:sid])
+      pids       = project(parts, [:pid])
+      candidates = join(sids, pids)
+      missing    = not_matching(candidates, supplies)
+      group(missing, [:pid], :parts)

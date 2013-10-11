@@ -1,0 +1,7 @@
+human: |-
+  Get all cities where either a supplier or a part is located.
+alternatives:
+  - query: |-
+      union(
+        project(suppliers, [:city]),
+        project(parts, [:city]))

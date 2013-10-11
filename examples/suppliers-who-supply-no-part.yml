@@ -1,0 +1,5 @@
+human: |-
+  Get suppliers who supply no part.
+alternatives:
+  - query: |-
+      not_matching(suppliers, supplies)

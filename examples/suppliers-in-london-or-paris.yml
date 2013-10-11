@@ -1,0 +1,15 @@
+human: |-
+  Get suppliers located in London or in Paris.
+alternatives:
+  - query: |-
+      restrict(suppliers, eq(:city, 'London') | eq(:city, 'Paris'))
+  - query: |-
+      union(
+        restrict(suppliers, city: 'London'),
+        restrict(suppliers, city: 'Paris'))
+  - query: |-
+      restrict(suppliers, among(:city, ['London', 'Paris']))
+  - query: |-
+      minus(
+        suppliers,
+        restrict(suppliers, neq(:city, 'London') & neq(:city, 'Paris')))

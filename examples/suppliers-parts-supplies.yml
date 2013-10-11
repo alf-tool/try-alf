@@ -1,0 +1,8 @@
+human: |-
+  Show the suppliers, the parts and the supplies.
+alternatives:
+  - query: |-
+      extend(DEE,
+        suppliers: ->(t){ suppliers },
+        parts:     ->(t){ parts     },
+        supplies:  ->(t){ supplies  })

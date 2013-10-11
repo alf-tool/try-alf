@@ -1,0 +1,173 @@
+body {
+  color: #222222;
+  background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #EEE), color-stop(.25, transparent), to(transparent)), -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, #EEE), color-stop(.25, transparent), to(transparent)), -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, #EEE)), -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, transparent), color-stop(.75, #EEE));
+  background-image: -webkit-linear-gradient(75deg, #EEE 25%, transparent 25%, transparent), -webkit-linear-gradient(-75deg, #EEE 25%, transparent 25%, transparent), -webkit-linear-gradient(75deg, transparent 75%, #EEE 75%), -webkit-linear-gradient(-75deg, transparent 75%, #EEE 75%);
+  background-image: -moz-linear-gradient(75deg, #EEE 25%, transparent 25%, transparent), -moz-linear-gradient(-75deg, #EEE 25%, transparent 25%, transparent), -moz-linear-gradient(75deg, transparent 75%, #EEE 75%), -moz-linear-gradient(-75deg, transparent 75%, #EEE 75%);
+  background-image: -ms-linear-gradient(75deg, #EEE 25%, transparent 25%, transparent), -ms-linear-gradient(-75deg, #EEE 25%, transparent 25%, transparent), -ms-linear-gradient(75deg, transparent 75%, #EEE 75%), -ms-linear-gradient(-75deg, transparent 75%, #EEE 75%);
+  background-image: -o-linear-gradient(75deg, #EEE 25%, transparent 25%, transparent), -o-linear-gradient(-75deg, #EEE 25%, transparent 25%, transparent), -o-linear-gradient(75deg, transparent 75%, #EEE 75%), -o-linear-gradient(-75deg, transparent 75%, #EEE 75%);
+  background-image: linear-gradient(75deg, #EEE 25%, transparent 25%, transparent), linear-gradient(-75deg, #EEE 25%, transparent 25%, transparent), linear-gradient(75deg, transparent 75%, #EEE 75%), linear-gradient(-75deg, transparent 75%, #EEE 75%);
+  -webkit-background-size: 15px 15px;
+  -moz-background-size: 15px 15px;
+  background-size: 15px 15px;
+  -moz-box-shadow: 1px 1px 8px gray;
+  -webkit-box-shadow: 1px 1px 8px gray;
+  box-shadow: 1px 1px 8px gray;
+  font-size: 16px;
+}
+header {
+  margin-bottom: 20px;
+}
+header ul {
+  margin: 0px;
+  padding: 0px;
+  font-size: 16px;
+  font-family: Helvetica;
+  font-weight: bold;
+}
+header a:hover {
+  cursor: pointer;
+}
+header li {
+  list-style: none;
+  display: block;
+  float: left;
+  background: white;
+  width: 120px;
+  height: 40px;
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+  margin-right: 15px;
+  box-shadow: 1px 1px 8px gray;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+  background-color: #fff;
+  color: #08c;
+}
+header li p {
+  line-height: 20px;
+  padding-top: 10px;
+}
+header li.active {
+  height: 70px;
+  background-color: #08c;
+  color: white;
+}
+header li.active a {
+  color: white;
+}
+header li.active p {
+  padding-top: 40px;
+}
+.clear {
+  clear: both;
+}
+p.human {
+  font-size: 18px;
+  font-style: italic;
+  line-height: 20px;
+  padding: 5px 10px;
+  padding-left: 15px;
+  vertical-align: middle;
+  margin-bottom: 0px;
+}
+p.alternatives {
+  line-height: 20px;
+  padding: 5px 10px;
+  vertical-align: middle;
+  margin-bottom: 0px;
+  text-align: right;
+}
+.ace_editor {
+  height: 250px;
+  width: 100%;
+  font-size: 18px;
+}
+#editor {
+  box-shadow: 1px 1px 8px gray;
+}
+#result-tab .header, #editor .header {
+  background: white;
+  margin-bottom: 0px;
+  padding: 7px 0px 7px 0px;
+  border: 1px solid black;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+  width: 958px;
+}
+#ace {
+  padding-top: 15px;
+  width: 958px;
+  border: 1px solid black;
+  border-top: none;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+#result-tab {
+  margin-top: 20px;
+}
+#result-tab .header form {
+  margin-right: 15px;
+}
+#result-tab .header a:hover {
+  cursor: pointer;
+}
+#result-tab .header .nav-pills {
+  margin-bottom: 0px;
+  float: left;
+  margin-left: 15px;
+}
+#error {
+ margin-bottom: 0px; 
+}
+#result {
+  height: 400px;
+  overflow: auto;
+  white-space: pre;
+  word-wrap: normal;
+  background-color: black;
+  color: white;
+  margin-top: 0px;
+  box-shadow: 1px 1px 8px gray;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+form.formats-form {
+  text-align: right;
+  margin: 0px;
+  padding: 0px;
+}
+form.formats-form label.radio {
+  line-height: 20px;
+  padding: 5px 7px 5px;
+}
+article {
+  background: white;
+  margin-bottom: 0px;
+  padding: 7px 0px 7px 0px;
+  border: 1px solid black;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  width: 958px;
+  min-height: 300px;
+  padding: 15px;
+  font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
+  font-size: 18px; 
+}
+article h1 {
+  font-size: 24px;
+  padding: 10px 0px;
+}
+article ul li {
+  padding-bottom: 5px;
+}

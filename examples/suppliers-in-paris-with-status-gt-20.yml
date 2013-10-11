@@ -1,0 +1,11 @@
+human: |-
+  Get suppliers in Paris with status strictly greater than 20.
+alternatives:
+  - query: |-
+      restrict(suppliers, eq(:city, 'Paris') & gt(:status, 20))
+  - query: |-
+      restrict(suppliers, ->(t){ t.city == 'Paris' and t.status > 20 })
+  - query: |-
+      in_paris = restrict(suppliers, city: 'Paris')
+      status20 = restrict(suppliers, gt(:status, 20))
+      intersect(in_paris, status20)

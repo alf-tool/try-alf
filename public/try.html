@@ -1,0 +1,30 @@
+<div ng-controller="QueryController">
+  <div id="editor" class="row">
+    <div class="header">
+      <div class="row">
+        <div class="span9">
+          <p class="human">
+            <i class="icon-random"
+               style="vertical-align: middle; line-height: 20px"
+               ng-click="getQueryAtRandom()"></i> {{query.human}}
+          </p>
+        </div>
+        <div class="span3">
+          <p class="alternatives">
+            <span ng-repeat="q in query.alternatives"
+                  ng-click="setQuery(q)"
+                  class="badge"
+                  ng-class="{'badge-info': q['query']==src}">
+              {{$index+1}}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="ace" ui-ace="{theme: 'textmate', mode: 'ruby', onLoad: aceLoaded}" ng-model="src"></div>
+  </div>
+  <div class="row">
+    <div id="error" class="alert alert-error" ng-show="error">{{error}}</div>
+  </div>
+  <div ng-include="'/result.html'"/>
+</div>

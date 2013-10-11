@@ -1,0 +1,35 @@
+'use strict';
+
+var tryalf = angular.module('tryalf', ['ui.state', 'ui.ace']);
+
+tryalf.config(function($locationProvider){
+  $locationProvider.html5Mode(true);
+});
+
+tryalf.config(function($stateProvider, $urlRouterProvider){
+  $urlRouterProvider.otherwise("/try/");
+  $stateProvider
+    .state('try', {
+        url: "/try/",
+        templateUrl: "/try.html",
+    })
+    .state('learn', {
+        url: "/learn/",
+        templateUrl: "/learn.html",
+    })
+    .state('blog', {
+        url: "/blog/",
+        templateUrl: "/blog.html",
+    })
+    .state('about', {
+        url: "/about/",
+        templateUrl: "/about.html",
+    });
+});
+
+tryalf.run(
+  [ '$rootScope', '$state', '$stateParams',
+  function ($rootScope, $state, $stateParams) {
+    $rootScope.$state = $state;
+    $rootScope.$stateParams = $stateParams;
+  }]);

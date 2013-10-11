@@ -1,0 +1,75 @@
+<div class="row">
+<article>
+
+<h1>What?</h1>
+<p>Alf is a modern query language. It is rooted in relational algebra, inspired
+by
+<a href="http://en.wikipedia.org/wiki/D_(data_language_specification)" target="_blank"><i>Tutorial D</i></a>
+and
+<a href="http://www.thethirdmanifesto.com/" target="_blank">The Third Manifesto</a>.</p>
+
+<p>The tool is currently implemented as a Ruby Domain Specific Language (DSL).
+It also comes with a nice commandline tool for using the algebra in shell
+with a pipe-and-filter *nix philosophy.</p>
+
+<p>Alf can query multiple and various sources of data, including but not restricted
+to SQL databases. It has a smart compiler that delegates to the underlying engines what
+can be delegated.</p>
+
+<h1>Research questions</h1>
+
+<p>Despite providing a nice tool for querying traditional data-bases, Alf aims
+at investigating the following research questions:</p>
+<ul>
+  <li>How far can we use the closure property of relational algebra as an
+      abstraction mechanism for software engineering? Do SQL engines support
+      very complex query plans? How can logical query optimization help?</li>
+  <li>Is modern relational algebra on top of a powerful type system enough to
+      query multiple heterogeneous data sources? What connectors do we need?</li>
+  <li>What high-level relational operators do software engineers invent if
+      provided with a way to create their own?</li>
+  <li>How do we truly reconcile multiple type systems when it comes to manipulating
+      and passing data aound? e.g. Ruby (more generally a host language), SQL
+      (an underlying database engine), JSON/XML (for data transfer), etc.</li>
+  <li>Can we come with a pragmatic, intuitive, yet sound proposal for view
+      updating on top of a well selected subset of relational operators?</li>
+  <li>How well can we integrate (sound) query languages with host programming
+      languages following a DSL approach?</li>
+</ul>
+
+<p>We are currently looking for collaborations within the academic world and
+with industrial partners interrested in investing in this kind of approach.
+Drop us an email if interrested.</p>
+
+<h1>Who and where?</h1>
+Alf is developed by <a href="http://www.uclouvain.be/80226.html">Bernard Lambeau</a>
+at the 
+<a href="http://www.uclouvain.be/" target="_blank">University of Louvain</a>.
+The tool source code is available on
+<a href="http://github.com/alf-tool/" target="_blank">github</a>.
+
+<h1>Licence</h1>
+<pre>
+Copyright (c) 2011-2013 - Bernard Lambeau & The University of Louvain (Belgium)
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>
+
+</article>
+</div>
