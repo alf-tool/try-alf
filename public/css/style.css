@@ -167,3 +167,7 @@ article h1 {
 article ul li {
   padding-bottom: 5px;
 }
+table .code {
+  font-family: Courier;
+  font-size: 90%;
+}

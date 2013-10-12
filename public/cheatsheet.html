@@ -1,0 +1,34 @@
+<div class="row">
+<article ng-controller="DocController">
+  <div>
+    <h1 class="pull-left">Operators</h1>
+    <div class="pull-right">
+      <label class="radio inline">
+        <input type="radio" ng-model="docmode" value="examples">
+        examples
+      </label>
+      <label class="radio inline">
+        <input type="radio" ng-model="docmode" value="api">
+        api
+      </label>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  <table class="table table-condensed">
+    <tr>
+      <th>name</th>
+      <th ng-show="docmode == 'api'">description</th>
+      <th ng-show="docmode == 'api'">signature</th>
+      <th ng-show="docmode == 'api'">options</th>
+      <th ng-show="docmode == 'examples'">example</th>
+    </tr>
+    <tr ng-repeat="op in operators | orderBy:'name'">
+      <td>{{op.name}}</td>
+      <td ng-show="docmode == 'api'">{{op.description}}</td>
+      <td ng-show="docmode == 'api'" class="code">{{op.signature}}</td>
+      <td ng-show="docmode == 'api'" class="code">{{op.options}}</td>
+      <td ng-show="docmode == 'examples'" class="code">{{op.example}}</td>
+    </tr>
+  </table>
+</article>
+</div>

@@ -45,7 +45,7 @@ TryAlf = ::Rack::Builder.new do
   end
 
   # Simply redirect to index page on root
-  ['/', '/try/', '/blog/', '/about/'].each do |url|
+  ['/', '/try/', '/about/', '/cheatsheet/'].each do |url|
     map(url) do
       run Rack::File.new("public/index.html")
     end

@@ -13,13 +13,9 @@ tryalf.config(function($stateProvider, $urlRouterProvider){
         url: "/try/",
         templateUrl: "/try.html",
     })
-    .state('learn', {
-        url: "/learn/",
-        templateUrl: "/learn.html",
-    })
-    .state('blog', {
-        url: "/blog/",
-        templateUrl: "/blog.html",
+    .state('cheatsheet', {
+        url: "/cheatsheet/",
+        templateUrl: "/cheatsheet.html",
     })
     .state('about', {
         url: "/about/",
