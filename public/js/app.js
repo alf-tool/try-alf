@@ -10,7 +10,7 @@ tryalf.config(function($stateProvider, $urlRouterProvider){
   $urlRouterProvider.otherwise("/try/");
   $stateProvider
     .state('try', {
-        url: "/try/",
+        url: "/try/?src",
         templateUrl: "/try.html",
     })
     .state('cheatsheet', {

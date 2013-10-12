@@ -1,4 +1,4 @@
-function QueryController($scope, $http, $filter) {
+function QueryController($scope, $stateParams, $http, $filter) {
 
   $scope.mode     = "data";
   $scope.error    = "";
@@ -6,6 +6,15 @@ function QueryController($scope, $http, $filter) {
   $scope.query    = {};
   $scope.result   = "";
   $scope.format   = "text/plain";
+
+  $scope.init = function(){
+    if ($stateParams.src) {
+      $scope.src = $stateParams.src;
+      $scope.query = {human: "[user defined]"}
+    } else {
+      $scope.getQueryAtRandom();
+    }
+  }
   
   $scope.setQuery = function(q){
     $scope.src = q['query'];
@@ -52,6 +61,6 @@ function QueryController($scope, $http, $filter) {
   $scope.aceLoaded = function(editor) {
     $scope.editor = editor;
     editor.getSession().setTabSize(2);
-    $scope.getQueryAtRandom();
+    $scope.init();
   };
 }
