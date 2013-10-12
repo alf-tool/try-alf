@@ -99,11 +99,9 @@ p.alternatives {
   border-radius: 4px;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
-  width: 958px;
 }
 #ace {
   padding-top: 15px;
-  width: 958px;
   border: 1px solid black;
   border-top: none;
   -webkit-border-radius: 4px;
@@ -158,7 +156,6 @@ article {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  width: 958px;
   min-height: 300px;
   padding: 15px;
   font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
