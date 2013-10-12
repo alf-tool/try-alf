@@ -1,25 +1,21 @@
 <div ng-controller="QueryController">
   <div id="editor" class="row">
     <div class="header">
-      <div class="row">
-        <div class="span9">
-          <p class="human">
-            <i class="icon-random"
-               style="vertical-align: middle; line-height: 20px"
-               ng-click="getQueryAtRandom()"></i> {{query.human}}
-          </p>
-        </div>
-        <div class="span3">
-          <p class="alternatives">
-            <span ng-repeat="q in query.alternatives"
-                  ng-click="setQuery(q)"
-                  class="badge"
-                  ng-class="{'badge-info': q['query']==src}">
-              {{$index+1}}
-            </span>
-          </p>
-        </div>
-      </div>
+      <p class="human pull-left">
+        <i class="icon-random"
+           style="vertical-align: middle; line-height: 20px"
+           ng-click="getQueryAtRandom()"/>
+        <span> {{query.human}}</span>
+      </p>
+      <p class="alternatives pull-right">
+        <span ng-repeat="q in query.alternatives"
+              ng-click="setQuery(q)"
+              class="badge"
+              ng-class="{'badge-info': q['query']==src}">
+          {{$index+1}}
+        </span>
+      </p>
+      <div class="clearfix"></div>
     </div>
     <div id="ace" ui-ace="{theme: 'textmate', mode: 'ruby', onLoad: aceLoaded}" ng-model="src"></div>
   </div>
