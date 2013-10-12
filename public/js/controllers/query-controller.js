@@ -11,7 +11,7 @@ function QueryController($scope, $http, $filter) {
     $scope.src = q['query'];
   }
   $scope.runQuery = function(){
-    if ($scope.src && $scope.looksOk($scope.src)) {
+    if ($scope.src) {
       $http({
         method: 'POST',
         url: "/query/" + $scope.mode,
@@ -33,10 +33,6 @@ function QueryController($scope, $http, $filter) {
     }
   }
 
-  $scope.looksOk = function(src) {
-    return true;
-  }
-  
   $scope.getQueryAtRandom = function(){
     $http.get("/one").success(function(data){
       $scope.query = data;
