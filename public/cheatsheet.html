@@ -34,5 +34,39 @@
       </td>
     </tr>
   </table>
+
+  <div>
+    <h1>Predicates</h1>
+  </div>
+  <table class="table table-condensed">
+    <tr>
+      <th>name</th>
+      <th>description</th>
+      <th>signature</th>
+      <th>example</th>
+    </tr>
+    <tr ng-repeat="op in predicates">
+      <td>{{op.name}}</td>
+      <td>{{op.description}}</td>
+      <td class="code">{{op.signature}}</td>
+      <td class="code">{{op.example}}</td>
+    </tr>
+  </table>
+
+  <div>
+    <h1>Aggregate functions</h1>
+  </div>
+  <table class="table table-condensed">
+    <tr>
+      <th>name</th>
+      <th>description</th>
+      <th>example</th>
+    </tr>
+    <tr ng-repeat="op in aggregators | orderBy: 'name'">
+      <td>{{op.name}}</td>
+      <td>{{op.description}}</td>
+      <td class="code">{{op.example}}</td>
+    </tr>
+  </table>
 </article>
 </div>

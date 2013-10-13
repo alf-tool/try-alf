@@ -1,0 +1,75 @@
+- name: native
+  description: |-
+    Any user-defined tuple predicate
+  signature: |-
+    predicate:Proc
+  example: |-
+    ->(t){ t.city == 'London' }
+- name: tautology
+  description: |-
+    TRUE
+  signature: ~
+  example: |-
+    tautotlogy
+- name: contradiction
+  description: |-
+    FALSE
+  signature: ~
+  example: |-
+    contradiction
+- name: eq
+  description: |-
+    Equals to
+  signature: |-
+    left:Any, right:Any
+  example: |-
+    eq(:city, 'London')
+- name: neq
+  description: |-
+    Not equal to
+  signature: |-
+    left:Any, right:Any
+  example: |-
+    neq(:city, 'London')
+- name: lt
+  description: |-
+    Less than
+  signature: |-
+    left:Any, right:Any
+  example: |-
+    lt(:status, 20)
+- name: lte
+  description: |-
+    Less than or equal to
+  signature: |-
+    left:Any, right:Any
+  example: |-
+    lte(:status, 20)
+- name: gt
+  description: |-
+    Greater than
+  signature: |-
+    left:Any, right:Any
+  example: |-
+    gt(:status, 20)
+- name: gte
+  description: |-
+    Greater than or equal to
+  signature: |-
+    left:Any, right:Any
+  example: |-
+    gte(:status, 20)
+- name: between
+  description: |-
+    Between (closed on both sides)
+  signature: |-
+    left:Any, lower:Any, upper:Any 
+  example: |-
+    between(:status, 10, 20)
+- name: among
+  description: |-
+    Among a set of values
+  signature:
+    left:Any, right:Array<Any>
+  example: |-
+    among(:status, [10, 20])

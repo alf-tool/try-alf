@@ -23,8 +23,9 @@ namespace :doc do
 
   task :gen do
     require 'json'
-    operators = (Path.dir/"public/doc/operators.yml").load
-    (Path.dir/"public/doc/operators.json").write(operators.to_json)
+    (Path.dir/"public/doc/").glob("*.yml") do |file|
+      file.sub_ext('.json').write(file.load.to_json)
+    end
   end
 
 end
