@@ -2,10 +2,7 @@
   <div id="editor" class="row">
     <div class="header">
       <p class="human pull-left">
-        <i class="icon-random"
-           style="vertical-align: middle; line-height: 20px"
-           ng-click="getQueryAtRandom()"/>
-        <span> {{query.human}}</span>
+        <span>{{query.human}}</span>
       </p>
       <p class="alternatives pull-right">
         <span ng-repeat="q in query.alternatives"
@@ -14,6 +11,8 @@
               ng-class="{'badge-info': q['query']==src}">
           {{$index+1}}
         </span>
+        <i class="icon-repeat" ng-click="getQueryAtRandom()"/>
+        <i class="icon-magnet" ng-click="$state.transitionTo('try', {src: src})"/>
       </p>
       <div class="clearfix"></div>
     </div>

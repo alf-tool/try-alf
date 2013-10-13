@@ -99,6 +99,9 @@ p.alternatives {
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+#editor .header i {
+  vertical-align: middle;
+}
 #ace {
   padding-top: 15px;
   border: 1px solid black;

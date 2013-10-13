@@ -10,7 +10,7 @@ function QueryController($scope, $stateParams, $http, $filter) {
   $scope.init = function(){
     if ($stateParams.src) {
       $scope.src = $stateParams.src;
-      $scope.query = {human: "[user defined]"}
+      $scope.query = {human: "Type your query below..."}
     } else {
       $scope.getQueryAtRandom();
     }
