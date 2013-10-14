@@ -152,7 +152,7 @@ form.formats-form label.radio {
 }
 article {
   background: white;
-  margin-bottom: 0px;
+  margin-bottom: 20px;
   padding: 7px 0px 7px 0px;
   border: 1px solid black;
   -webkit-border-radius: 4px;
@@ -162,6 +162,7 @@ article {
   padding: 15px;
   font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
   font-size: 18px; 
+  box-shadow: 1px 1px 8px gray;
 }
 article h1 {
   font-size: 24px;
