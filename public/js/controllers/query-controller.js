@@ -19,15 +19,14 @@ function QueryController($scope, $stateParams, $http, $filter) {
   $scope.setQuery = function(q){
     $scope.src = q['query'];
   }
+
   $scope.runQuery = function(){
     if ($scope.src) {
       $http({
         method: 'POST',
         url: "/query/" + $scope.mode,
         data: $scope.src,
-        headers: {
-          "Accept": $scope.format
-        }
+        headers: { "Accept": $scope.format }
       }).success(function(data){
         if ($scope.format == "application/json") {
           data = $filter('json')(data);
@@ -38,9 +37,11 @@ function QueryController($scope, $stateParams, $http, $filter) {
         $scope.error = data;
         $scope.result = "";
       });
-      $scope.editor.focus();
     }
   }
+  $scope.$watch("format", $scope.runQuery);
+  $scope.$watch("mode",   $scope.runQuery);
+  $scope.$watch("src",    $scope.runQuery);
 
   $scope.getQueryAtRandom = function(){
     $http.get("/one").success(function(data){
@@ -48,15 +49,6 @@ function QueryController($scope, $stateParams, $http, $filter) {
       $scope.src = data["alternatives"][0]['query'];
     });
   }
-  $scope.$watch("format", function(newValue, oldValue){
-    $scope.runQuery();
-  });
-  $scope.$watch("mode", function(newValue, oldValue){
-    $scope.runQuery();
-  });
-  $scope.$watch("src", function(newValue, oldValue){
-    $scope.runQuery();
-  });
   
   $scope.aceLoaded = function(editor) {
     $scope.editor = editor;
