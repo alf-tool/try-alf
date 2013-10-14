@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alf-tool/alf-core.git
-  revision: fb7bedc39fe2e0fd725044850412095f993e3ffb
+  revision: 0a8a36274d552d1dca7ff86bd08750f8f583b969
   specs:
     alf-core (0.15.0)
       domain (~> 1.0)
@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: git://github.com/alf-tool/alf-rack.git
-  revision: b56d7f19b77af215fa9efbcf6cc61f5674238a48
+  revision: 8ceefd9c7e1295e65c1bdfa542787be9cf0690dd
   specs:
     alf-rack (0.15.0)
       alf-core (~> 0.15.0)
@@ -61,10 +61,10 @@ GEM
     sequel (4.3.0)
     sexpr (0.6.0)
     sqlite3 (1.3.8)
-    thin (1.5.1)
+    thin (1.6.0)
       daemons (>= 1.0.9)
-      eventmachine (>= 0.12.6)
-      rack (>= 1.0.0)
+      eventmachine (>= 1.0.0)
+      rack (>= 1.5.0)
 
 PLATFORMS
   ruby
