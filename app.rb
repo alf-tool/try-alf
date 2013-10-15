@@ -1,13 +1,13 @@
 require 'path'
 require 'rack/robustness'
+require 'rack/timeout'
 require 'alf-core'
 require 'alf/lang/parser/safer'
 require 'alf-sequel'
-require 'alf-test'
 require 'alf-rack'
 require 'alf/rack/query'
 
-DbUrl     = ENV['DATABASE_URL'] ||= Alf::Test::Sap.sequel_uri(:sqlite)
+DbUrl     = ENV['DATABASE_URL'] ||= "sap.db"
 DbOptions = { parser: Alf::Lang::Parser::Safer }
 Queries   = (Path.dir/"examples").glob("*.yml").map(&:load)
 PublicUrl = (Path.dir/'public').glob("*").map{|p| "/#{p.basename}"}
@@ -21,6 +21,8 @@ TryAlf = ::Rack::Builder.new do
     }
   end
   map '/query' do
+    use Rack::Timeout
+    Rack::Timeout.timeout = 0.01
     use Alf::Rack::Connect do |cfg|
       cfg.database = Alf::Database.new(DbUrl, DbOptions)
     end
@@ -34,7 +36,7 @@ TryAlf = ::Rack::Builder.new do
     end
     run Alf::Rack::Query.new{|q|
       q.type_check = true
-      q.catch_all = false
+      q.catch_all  = false
     }
   end
   ['/', '/try/', '/about/', '/cheatsheet/'].each do |url|

@@ -13,3 +13,5 @@ alternatives:
       minus(
         suppliers,
         restrict(suppliers, neq(:city, 'London') & neq(:city, 'Paris')))
+  - query: |-
+      matching(suppliers, Relation(city: ['London', 'Paris']))

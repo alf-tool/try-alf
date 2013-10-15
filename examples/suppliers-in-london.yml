@@ -3,3 +3,5 @@ human: |-
 alternatives:
   - query: |-
       restrict(suppliers, city: 'London')
+  - query: |-
+      matching(suppliers, Relation(city: 'London'))
