@@ -7,7 +7,9 @@ require 'alf-sequel'
 require 'alf-rack'
 require 'alf/rack/query'
 
-DbUrl     = ENV['DATABASE_URL'] ||= "sap.db"
+ENV['DATABASE_URL'] ||= "sqlite://sap.db"
+DbUrl     = ENV['DATABASE_URL']
+SequelDb  = ::Sequel.connect(DbUrl)
 DbOptions = { parser: Alf::Lang::Parser::Safer }
 Queries   = (Path.dir/"examples").glob("*.yml").map(&:load)
 PublicUrl = (Path.dir/'public').glob("*").map{|p| "/#{p.basename}"}
@@ -22,9 +24,9 @@ TryAlf = ::Rack::Builder.new do
   end
   map '/query' do
     use Rack::Timeout
-    Rack::Timeout.timeout = 0.01
+    Rack::Timeout.timeout = 0.1
     use Alf::Rack::Connect do |cfg|
-      cfg.database = Alf::Database.new(DbUrl, DbOptions)
+      cfg.database = Alf::Database.new(SequelDb, DbOptions)
     end
     use Rack::Robustness do |g|
       g.status 400

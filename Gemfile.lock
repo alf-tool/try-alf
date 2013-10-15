@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: git://github.com/alf-tool/alf-rack.git
-  revision: 0fc5ff46f034c35fedf446cb0dc70929303cff47
+  revision: e30d13cc416f7ca78f487f96945f867adb1e57fc
   specs:
     alf-rack (0.15.0)
       alf-core (~> 0.15.0)
