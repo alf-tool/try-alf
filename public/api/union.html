@@ -1,0 +1,56 @@
+<h1>Union</h1>
+
+<p>Logical OR</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">union</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">union</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">),</span> <span class="n">project</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'union(project(suppliers, [:city]), project(parts, [:city]))'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation as the set union of <code>left</code> and <code>right</code> tuples.</p>
+
+<p>The <code>left</code> and <code>right</code> relations must be union-compatible, which in short
+means that they must have same heading (type inheritance is partly
+supported through ruby&#39;s own type system, so that the actual behavior is
+slighlty more permissive).</p>
+
+<h2>Implementation notes</h2>
+
+<p>Unlike SQL, this operator ALWAYS remove duplicates. There is no way, in
+Alf, to compute <em>bags</em> of tuples and therefore no way to express something
+such as UNION ALL.</p>
+
+<p>The optimizer is not smart enough so far to discover when operands are
+actually disjoint and duplicate removal not needed (e.g. the SQL compiler
+never generates UNION ALL). Any patch improving this is welcome!</p>
+
+<p>Similarly, it is sometimes idiomatic in Alf to use <code>union</code> as a logical OR,
+such as the example below. So far, the optimizer/compiler is not smart
+enough to translate the former in the latter (which is likely to have a
+better query plan, especially when using the SQL compiler and usual SQL
+DBMSs). Any patch is welcome here too!</p>
+<div class="highlight"><pre><span class="n">union</span><span class="p">(</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'union(
+  restrict(suppliers, city: \'Paris\'),
+  restrict(suppliers, city: \'London\'))'})">Try it!</a></div>
+
+<p>is equivalent to</p>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, eq(:city, \'Paris\') | eq(:city, \'London\'))'})">Try it!</a></div>

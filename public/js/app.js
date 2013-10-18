@@ -7,20 +7,30 @@ tryalf.config(function($locationProvider){
 });
 
 tryalf.config(function($stateProvider, $urlRouterProvider){
-  $urlRouterProvider.otherwise("/try/");
+  $urlRouterProvider.otherwise("/");
   $stateProvider
     .state('try', {
-        url: "/try/?src",
+        url: "/?src",
         templateUrl: "/try.html",
     })
     .state('cheatsheet', {
         url: "/cheatsheet/",
         templateUrl: "/cheatsheet.html",
     })
+    .state('doc', {
+        url: "/doc/{obj:.*}",
+        templateUrl: "/doc.html",
+    })
     .state('about', {
         url: "/about/",
         templateUrl: "/about.html",
     });
+});
+
+tryalf.filter('markdown', function() {
+  return function(input) {
+    markdown.toHTML(input);
+  };
 });
 
 tryalf.run(

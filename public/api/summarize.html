@@ -1,0 +1,43 @@
+<h1>Summarize</h1>
+
+<p>Aggregate and compute</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">,</span> <span class="n">aggs</span><span class="p">:</span> <span class="no">Summarization</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">(</span><span class="ss">:qty</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'summarize(supplies, [:sid], total: sum(:qty))'})">Try it!</a></div>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">})</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'summarize(supplies, [:sid], total: sum{|t| t.qty * 2 })'})">Try it!</a></div>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="n">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">}},</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'summarize(supplies, [:pid, :qty], {total: sum{|t| t.qty * 2 }}, allbut: true)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation obtained by taking the projection of <code>operand</code>
+on <code>by</code> attributes then extending each tuple <code>t</code> with the result of
+aggregations defined by <code>aggs</code> on the tuples from <code>operand</code> matching <code>t</code>.</p>
+
+<p>In SQL-ish terms, <code>SELECT [by], [agg] FROM operand GROUP BY [by]</code>.</p>
+
+<h2>Implementation notes</h2>
+
+<p>As of current Alf version, this operator cannot be translated to SQL code.
+That means that all computations are done in ruby, which may seriously
+hurt performance.</p>
+
+<p>Similarly, as <code>summarize</code> tends to be a showstopper during compilation, it
+is strongly recommanded to use it as high as possible in query expressions
+trees so as to delegate the largest possible query parts to data engines.</p>

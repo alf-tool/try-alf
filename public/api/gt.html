@@ -1,0 +1,25 @@
+<h1>Gt</h1>
+
+<p>Greater than</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">gt</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>This predicates checks whether a value (<code>left</code>) is greater than another
+one (<code>right</code>).</p>
+
+<h2>Implementation notes</h2>
+
+<p>This predicate is equivalent to <code>-&gt;(t){ _left_ &gt; _right_ }</code>.</p>

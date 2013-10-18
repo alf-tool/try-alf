@@ -1,0 +1,43 @@
+<h1>Concat</h1>
+
+<p>String concatenation</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="no">AttrName</span><span class="o">|</span><span class="p">(</span><span class="no">Tuple</span><span class="o">-&gt;</span><span class="no">Numeric</span><span class="p">))</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="n">between</span><span class="p">:</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="n">between</span><span class="p">:</span> <span class="s1">&#39;, &#39;</span><span class="p">){</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="p">}</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">},</span> <span class="n">between</span><span class="p">:</span> <span class="s1">&#39;, &#39;</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>Concatenates string representations of input values.</p>
+
+<h2>Implementation notes</h2>
+
+<p>This aggregate function can be applied to any data type, not only String
+attributes. Ruby&#39;s <code>to_s</code> will be used on values prior to concatenation.</p>
+
+<p>The options are:</p>
+
+<ul>
+<li><code>_before_</code> starts the resulting string (defaults to &#39;&#39;)</li>
+<li><code>_after_</code> ends the resulting string (defaults to &#39;&#39;)</li>
+<li><code>_between_</code> is used between each value</li>
+</ul>
+
+<p>As of current Alf version, the order in which the values are concatenated
+is not guaranteed. This function is thus non-deterministic so far and
+shoud probably be avoided if possible.</p>

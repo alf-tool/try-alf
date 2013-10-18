@@ -1,0 +1,162 @@
+<h1>Ruby basics</h1>
+
+<p>Ruby is &quot;a dynamic, open source programming language with a focus on
+simplicity and productivity.&quot; (quoted from
+<a href="https://www.ruby-lang.org/">ruby-lang.org</a>). Fortunately, you do <em>not</em> have
+to be a ruby expert to:</p>
+
+<ul>
+<li>experiment with Alf on <a href="http://www.try-alf.org">www.try-alf.org</a>,</li>
+<li>use the command line tool,</li>
+<li>write simple Alf-based scripts that connect to files and databases</li>
+</ul>
+
+<p>Integrating the query language inside ruby-based software is another story, of
+course. This page provides you with sufficient knowledge of ruby for the
+scenarios above. Don&#39;t miss the <a href="/doc/alf-in-ruby">Alf in Ruby</a> and <a href="/doc/alf-in-shell">Alf in
+Shell</a> pages for getting started concretely.</p>
+
+<p>An important note first. Relational algebra can be seen as a purely functional
+kind of programming. For this reason and on very intent, the overview here
+does not cover variables, affectation (e.g. <code>x = 2</code>) or operators that involve
+mutation of shared state (e.g. classes and object-oriented programming). All
+are valid in Ruby but not strictly necessary in the context of Alf.</p>
+
+<h2>Types and values</h2>
+
+<p>Data management is first and foremost about <em>types</em> and <em>values</em>. Alf uses the
+type system of ruby as a foundation. Useful value literals that you might
+encounter when learning Alf are:</p>
+<div class="highlight"><pre><span class="s1">&#39;a string&#39;</span>   <span class="c1"># type: String</span>
+<span class="s2">&quot;a string&quot;</span>   <span class="c1"># type: String, similar but supports interpolation</span>
+<span class="mi">12</span>           <span class="c1"># type: Integer</span>
+<span class="mi">12</span><span class="o">.</span><span class="mi">0</span>         <span class="c1"># type: Float</span>
+<span class="kp">true</span>         <span class="c1"># type: TrueClass, ... ruby has no Boolean, Alf fakes one sometimes</span>
+<span class="kp">false</span>        <span class="c1"># type: FalseClass</span><span class="sr"></span>
+<span class="sr">/[a-b]+/</span>     <span class="c1"># type: Regexp</span>
+<span class="ss">:hello</span>       <span class="c1"># type: Symbol (used by Alf for attribute names, aka AttrName)</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">]</span>    <span class="c1"># type: Array (ruby supports heteroegenous arrays, we dont&#39;t use them here)</span>
+<span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span> <span class="c1"># type: Hash (aka dictionnary, or map, Alf uses them a lot. see later)</span>
+<span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="p">}</span> <span class="c1"># type: Proc (aka block or function, see later too)</span>
+</pre>
+</div>
+
+<h2>Operators</h2>
+
+<p>Operators are seen here a pure functions that compute values from other
+values. Alf comes with a (somewhat strange) mix of infix, prefix and suffix
+syntaxes for operator invocations, all inherited from ruby. Unfortunately,
+you can&#39;t currently mix the styles, and have to follow the rules described
+now.</p>
+
+<p>The infix notation is commonly used for comparisons, common arithmetic,
+boolean algebra, set-based operations on arrays, matching against regular
+expression, etc. A few examples you might encounter in Alf&#39;s documentation:</p>
+<div class="highlight"><pre><span class="mi">2</span> <span class="o">==</span> <span class="mi">3</span>              <span class="c1"># false</span>
+<span class="mi">2</span> <span class="o">&lt;</span> <span class="mi">3</span>               <span class="c1"># true</span>
+<span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span>               <span class="c1"># 2</span>
+<span class="mi">12</span> <span class="o">*</span> <span class="mi">10</span>             <span class="c1"># 120</span>
+<span class="mi">2</span> <span class="o">**</span> <span class="mi">8</span>              <span class="c1"># 258</span>
+<span class="kp">true</span> <span class="o">|</span> <span class="kp">false</span>        <span class="c1"># true</span>
+<span class="kp">true</span> <span class="o">&amp;</span> <span class="kp">false</span>        <span class="c1"># false</span>
+<span class="o">[</span><span class="mi">17</span><span class="p">,</span> <span class="mi">13</span><span class="o">]</span> <span class="o">|</span> <span class="o">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="o">]</span>  <span class="c1"># [17, 13, 4], i.e. set-union </span>
+<span class="o">[</span><span class="mi">17</span><span class="p">,</span> <span class="mi">13</span><span class="o">]</span> <span class="o">&amp;</span> <span class="o">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">4</span><span class="o">]</span>  <span class="c1"># [13], i.e. set-intersection </span>
+<span class="s2">&quot;acbbcad&quot;</span> <span class="o">=~</span> <span class="sr">/b+/</span>   <span class="c1"># 2, one-or-more &#39;b&#39;s found at index 2</span>
+</pre>
+</div>
+
+<p>The suffix notation is commonly used for invoking operators in an object-oriented
+kind of style (we also say &#39;sending a message&#39;), and for selecting attributes
+on tuples (which is a special case of the former):</p>
+<div class="highlight"><pre><span class="s2">&quot;hello&quot;</span><span class="o">.</span><span class="n">upcase</span>        <span class="c1"># &quot;UPCASE&quot;</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">empty?</span>      <span class="c1"># false</span>
+<span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">].</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>   <span class="c1"># &quot;1;2;3&quot;</span>
+<span class="n">t</span><span class="o">.</span><span class="n">name</span>                <span class="c1"># &quot;Jones&quot; if t is Tuple(name: &quot;Jones&quot;), see later</span>
+</pre>
+</div>
+
+<p>The prefix notation is idiomatic in Alf when writing queries. This kind of
+syntax has been chosen for its functional nature, that nicely fits with the
+closure property of relational algebra (the fact that you invoke an operator
+on the result of a previous one):</p>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>We also occasionally use the prefix notation for invoking type selectors,
+also called &quot;explicit coercion functions&quot; in Alf:</p>
+<div class="highlight"><pre><span class="no">Date</span><span class="p">(</span><span class="s2">&quot;2013-10-17&quot;</span><span class="p">)</span>     <span class="c1"># coerces a String to a Date value</span>
+<span class="no">Relation</span><span class="p">(</span><span class="o">[</span>             <span class="c1"># coerces a Array of Hashes to a Relation</span>
+  <span class="p">{</span><span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Smith&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Jones&#39;</span><span class="p">}</span>
+<span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>We also occasionaly define new operators. Ruby is dynamically typed and
+therefore does not require or even provide you with a way to make argument
+types explicit. For instance, for a scalar operator:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">double</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="mi">2</span><span class="o">*</span><span class="n">x</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<p>Another example, for defining a new relational operator as a shortcut for a
+longer expression (something we frequently use in this documentation and is
+also idiomatic for building domain-specific relational abstractions):</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">in_london</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<h2>Hashes</h2>
+
+<p>Hashes are very common in Ruby, so common that dedicated syntaxes exist
+for them. A hash captures <code>(key, value)</code> pairs, where both the key and the
+value can be arbitrary values:</p>
+<div class="highlight"><pre><span class="p">{</span> <span class="s2">&quot;city&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;London&quot;</span><span class="p">,</span> <span class="s2">&quot;price&quot;</span> <span class="o">=&gt;</span> <span class="mi">17</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;suppliers&quot;</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;Jones&quot;</span><span class="p">,</span> <span class="s2">&quot;Smith&quot;</span><span class="o">]</span> <span class="p">}</span>
+</pre>
+</div>
+
+<p>Now, it is very common to use Symbols (e.g. <code>:city</code>) instead of Strings for
+keys: </p>
+<div class="highlight"><pre><span class="p">{</span> <span class="ss">:city</span> <span class="o">=&gt;</span> <span class="s2">&quot;London&quot;</span><span class="p">,</span> <span class="ss">:price</span> <span class="o">=&gt;</span> <span class="mi">17</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:suppliers</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="s2">&quot;Jones&quot;</span><span class="p">,</span> <span class="s2">&quot;Smith&quot;</span><span class="o">]</span> <span class="p">}</span>
+</pre>
+</div>
+
+<p>A special syntax can be used in this case that is more compact. The following
+Hash denotes the same value as the one above:</p>
+<div class="highlight"><pre><span class="p">{</span> <span class="n">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="mi">17</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">suppliers</span><span class="p">:</span> <span class="o">[</span><span class="s2">&quot;Jones&quot;</span><span class="p">,</span> <span class="s2">&quot;Smith&quot;</span><span class="o">]</span> <span class="p">}</span>
+</pre>
+</div>
+
+<p>Hashes can of course be passed as arguments when invoking operators. A good
+example is when invoking Alf&#39;s <code>restrict</code> operator:</p>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="p">{</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
+</pre>
+</div>
+
+<p>When a Hash is passed as last argument of an operator, the brackets can be
+safely ommited in ruby, leading to a nicer syntax:</p>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Procs</h2>
+
+<p>Procs can be seen as anonymous operators that can be passed as arguments and
+used as any other kind of value. For instance, one may define the <code>double</code>
+operator shown previously, using the anonymous syntax this time:</p>
+<div class="highlight"><pre><span class="o">-&gt;</span><span class="p">(</span><span class="n">x</span><span class="p">){</span> <span class="n">x</span><span class="o">*</span><span class="mi">2</span> <span class="p">}</span>
+</pre>
+</div>
+
+<p>A typical usage of Procs in Alf is the <code>restrict</code> and <code>extend</code> operators.
+Observe how, in the second case, the Proc is actually mapped to a key in a
+Hash:</p>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">status</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="p">})</span>
+<span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">big_name</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">})</span>
+</pre>
+</div>

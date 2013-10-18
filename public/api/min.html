@@ -1,0 +1,28 @@
+<h1>Min</h1>
+
+<p>Minimal value</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">min</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="no">AttrName</span><span class="o">|</span><span class="p">(</span><span class="no">Tuple</span><span class="o">-&gt;</span><span class="no">Numeric</span><span class="p">))</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">min</span><span class="p">(</span><span class="ss">:qty</span><span class="p">)</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">min</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">price</span> <span class="p">}</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">min</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">price</span> <span class="p">})</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>Returns the smallest of input values.</p>
+
+<h2>Implementation notes</h2>
+
+<p>This aggregate function must only be used with comparable types. As of
+current Alf version, it does not aggregate empty sets correctly.</p>

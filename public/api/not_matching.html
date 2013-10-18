@@ -1,0 +1,48 @@
+<h1>Not_matching</h1>
+
+<p>Aka &#39;where not exists&#39;</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">not_matching</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">not_matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">supplies</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'not_matching(suppliers, supplies)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes a relation as a subset of <code>left</code> tuples for which no tuple from
+<code>right</code> would join on common attributes.</p>
+
+<p>This operator is the inverse of <code>matching</code>, as the shortcut definition
+below shows. It keeps all tuples from <code>left</code> but those that matches on
+right.</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">not_matching</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+  <span class="n">minus</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">matching</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">))</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def not_matching(left, right)
+  minus(left, matching(left, right))
+end'})">Try it!</a></div>
+
+<p>The synonym &#39;where not exists&#39; comes from the fact that, since right
+attributes do not appear in the result, it may seem more intuitive to
+think about this operator as filtering tuples from left where <em>there does
+not exist</em> any tuple from right that <em>would</em> join. In SQL-ish terms:</p>
+<div class="highlight"><pre><span class="no">SELECT</span> <span class="o">*</span> <span class="no">FROM</span> <span class="n">left</span> <span class="no">WHERE</span> <span class="no">NOT</span> <span class="no">EXISTS</span> <span class="p">(</span><span class="no">SELECT</span> <span class="o">*</span> <span class="no">FROM</span> <span class="n">right</span> <span class="no">WHERE</span> <span class="o">[</span><span class="n">join</span> <span class="n">condition</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Implementation notes</h2>
+
+<p>As for join and matching, you must take care of ensuring that the list of
+common attributes on which the (not) matching applies corresponds to what
+you want. Renamings and projections are worth having at hand.
+Alternatively, shortcuts can be considered (see <code>matching</code> and <code>join</code>).</p>

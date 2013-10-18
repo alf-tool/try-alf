@@ -1,0 +1,22 @@
+<h1>Between</h1>
+
+<p>Between (inclusive)</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">between</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">,</span> <span class="n">min</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">,</span> <span class="n">max</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">between</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>This predicates checks whether a value (<code>val</code>) is between two bounds <code>min</code>
+and <code>max</code>, inclusive on both sides.</p>
+
+<h2>Implementation notes</h2>
+
+<p>This predicate is equivalent to <code>gte(_val_,_min_) &amp; lte(_val_,_max_)</code>.</p>

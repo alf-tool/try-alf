@@ -1,0 +1,24 @@
+<h1>Neq</h1>
+
+<p>Not equal to</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">neq</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">neq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">neq</span><span class="p">(</span><span class="ss">:supplier_city</span><span class="p">,</span> <span class="ss">:part_city</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>This predicates checks whether two values are different.</p>
+
+<h2>Implementation notes</h2>
+
+<p>This predicate is equivalent to <code>-&gt;(t){ _left_ != _right_ }</code>.</p>

@@ -13,6 +13,10 @@ body {
   -webkit-box-shadow: 1px 1px 8px gray;
   box-shadow: 1px 1px 8px gray;
   font-size: 16px;
+  padding-bottom: 20px;
+}
+a:hover {
+  cursor: pointer;
 }
 header {
   margin-bottom: 20px;
@@ -152,26 +156,135 @@ form.formats-form label.radio {
 }
 article {
   background: white;
-  margin-bottom: 20px;
-  padding: 7px 0px 7px 0px;
+  min-height: 300px;
   border: 1px solid black;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
-  min-height: 300px;
-  padding: 15px;
-  font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif", "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
-  font-size: 18px; 
   box-shadow: 1px 1px 8px gray;
 }
-article h1 {
-  font-size: 24px;
-  padding: 10px 0px;
+article.cheatsheet table {
+  font-size: 85%;
 }
-article ul li {
-  padding-bottom: 5px;
-}
-table .code {
+article.cheatsheet table .code {
   font-family: Courier;
-  font-size: 90%;
+}
+.doc-menu {
+  margin-left: 0px;
+  background: white;  
+  border: 1px solid black;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  box-shadow: 1px 1px 8px gray;
+  padding: 12px;
+}
+.doc-menu li.active {
+  font-weight: bold;
+}
+
+article {
+  font-family:Helvetica !important;
+}
+article h1, h2, h3, h4, h5, h6 {
+  border: 0 !important;
+}
+article h1 {
+  font-size: 170% !important;
+  border-top: 4px solid #aaa !important;
+  padding-top: .5em !important;
+  margin-top: 1.5em !important;
+}
+article h2 {
+  font-size: 150% !important;
+  margin-top: 1.5em !important;
+  border-top: 4px solid #e0e0e0 !important;
+  padding-top: .5em !important;
+}
+article h3 {
+  font-size: 130% !important;
+  margin-top: 1em !important;
+}
+article p {
+  margin: 1em 0 !important;
+  line-height: 1.5em !important;
+}
+article ul {
+  margin: 1em 0 1em 2em !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+article ol {
+  margin: 1em 0 1em 2em !important;
+}
+article ol ol {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+article ul ul,
+article ul ol,
+article ol ol,
+article ol ul {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+article blockquote {
+  margin: 1em 0 !important;
+  border-left: 5px solid #ddd !important;
+  padding-left: .6em !important;
+  color: #555 !important;
+}
+article dt {
+  font-weight: bold !important;
+  margin-left: 1em !important;
+}
+article dd {
+  margin-left: 2em !important;
+  margin-bottom: 1em !important;
+}
+article table {
+  margin: 1em 0 !important;
+}
+article table th {
+  border-bottom: 1px solid #bbb !important;
+  padding: .2em 1em !important;
+}
+article table td {
+  border-bottom: 1px solid #ddd !important;
+  padding: .2em 1em !important;
+}
+article pre {
+  margin: 1em 0 !important;
+  font-size: 90% !important;
+  background-color: #f8f8ff !important;
+  border: 1px solid #dedede !important;
+  padding: .5em !important;
+  line-height: 1.5em !important;
+  color: #444 !important;
+  overflow: auto !important;
+}
+article pre code {
+  padding: 0 !important;
+  font-size: 100% !important;
+  background-color: #f8f8ff !important;
+  border: none !important;
+}
+article code {
+  font-size: 90% !important;
+  background-color: #f8f8ff !important;
+  color: #444 !important;
+  padding: 0 .2em !important;
+  border: 1px solid #dedede !important;
+}
+article {
+  padding: 0px 25px;
+  padding-bottom: 25px;
+}
+div.try-this {
+  text-align: right;
+  font-size: 80%;
+  margin: 0px;
+  padding: 0px;
+  margin-top: -45px;
+  margin-right: 10px;
 }

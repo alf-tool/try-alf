@@ -1,31 +1,33 @@
 require 'alf-core'
-require 'alf-test'
-require 'alf-sequel'
-require 'sequel'
-
-ENV['DATABASE_URL'] ||= Alf::Test::Sap.sequel_uri(:memory)
-
-namespace :db do
-
-  desc "Create the database"
-  task :create do
-    db = ::Sequel.connect(ENV['DATABASE_URL'])
-    Alf::Test::Sap.install_sap_on(db)
-  end
-
-  desc "Migrate the database"
-  task :migrate do
-  end
-
-end
+require 'alf-doc'
+require 'json'
+require 'alf/doc/to_html'
 
 namespace :doc do
 
-  task :gen do
-    require 'json'
-    (Path.dir/"public/doc/").glob("*.yml") do |file|
-      file.sub_ext('.json').write(file.load.to_json)
+  task :json do
+    # generate doc.json
+    (Path.dir/"public/doc.json").write(Alf::Doc.all.tuple_extract.to_json)
+  end
+
+  task :api do
+    # generate API pages for every object
+    [:operators, :predicates, :aggregators].each do |kind|
+      Alf::Doc.query(kind).each do |obj|
+        target = (Path.dir/'public/api')/"#{obj.name}.html"
+        puts "#{obj.name} -> #{target}"
+        target.write Alf::Doc::ToHtml.new.send(kind.to_s[0...-1].to_sym, obj)
+      end
+    end
+  end
+
+  task :pages do
+    Alf::Doc.pages.each do |page|
+      target = page.relocate(page.parent, Path.dir/'public/api', ".html")
+      puts "#{page} -> #{target}"
+      target.write Alf::Doc::ToHtml.new.page(page.read)
     end
   end
 
 end
+task :default => [:"doc:json", :"doc:api", :"doc:pages"]

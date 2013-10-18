@@ -41,9 +41,8 @@ TryAlf = ::Rack::Builder.new do
       q.catch_all  = false
     }
   end
-  ['/', '/try/', '/about/', '/cheatsheet/'].each do |url|
-    map(url) do
-      run Rack::File.new("public/index.html")
-    end
-  end
+  IndexService = Rack::File.new("public")
+  run lambda{|env|
+    IndexService.call(env.merge('PATH_INFO' => "index.html"))
+  }
 end

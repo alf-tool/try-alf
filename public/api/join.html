@@ -1,0 +1,92 @@
+<h1>Join</h1>
+
+<p>Natural join</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">supplies</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'join(suppliers, supplies)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation resuting from joining tuples from <code>left</code> and <code>right</code>
+whose respective projections on common attributes are equal.</p>
+
+<h2>Implementation notes</h2>
+
+<p>Alf only support natural join for now. Other kinds of join can generally
+be computed through longer expressions. For instance, joining on attributes
+with different names requires some renaming first:</p>
+<div class="highlight"><pre><span class="c1"># suppose preferences has type Relation[supplier_id: String, ...]</span>
+<span class="c1"># suppose we want to join on suppliers.sid == preferences.supplier_id</span>
+<span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">rename</span><span class="p">(</span><span class="n">preferences</span><span class="p">,</span> <span class="ss">:supplier_id</span> <span class="o">=&gt;</span> <span class="ss">:sid</span><span class="p">))</span>
+</pre>
+</div>
+
+<p>Cross joins can be computed through operands having no attribute in common.
+For instance, all pairs of supplier and part identifiers can be computed
+as follows:</p>
+<div class="highlight"><pre><span class="n">pairs</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">),</span> <span class="n">project</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:pid</span><span class="o">]</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'pairs = join(project(suppliers, [:sid]), project(parts, [:pid]))'})">Try it!</a></div>
+
+<p>Non equi-joins can be computed through a latter restriction. For instance,
+the (supplier, part) pairs not located in the same city:</p>
+<div class="highlight"><pre><span class="n">ps</span> <span class="o">=</span> <span class="n">project</span><span class="p">(</span><span class="n">rename</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="ss">:city</span> <span class="o">=&gt;</span> <span class="ss">:part_city</span><span class="p">),</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:part_city</span><span class="o">]</span><span class="p">)</span>
+<span class="n">ss</span> <span class="o">=</span> <span class="n">project</span><span class="p">(</span><span class="n">rename</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">:city</span> <span class="o">=&gt;</span> <span class="ss">:supplier_city</span><span class="p">),</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:supplier_city</span><span class="o">]</span><span class="p">)</span>
+<span class="n">pairs</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span> <span class="n">ss</span><span class="p">)</span>
+<span class="n">project</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">pairs</span><span class="p">,</span> <span class="n">neq</span><span class="p">(</span><span class="ss">:part_city</span><span class="p">,</span> <span class="ss">:supplier_city</span><span class="p">)),</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:pid</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'ps = project(rename(parts, :city => :part_city), [:pid, :part_city])
+ss = project(rename(suppliers, :city => :supplier_city), [:sid, :supplier_city])
+pairs = join(ps, ss)
+project(restrict(pairs, neq(:part_city, :supplier_city)), [:sid, :pid])'})">Try it!</a></div>
+
+<p>As obviously demonstrated by the example above, such kind of query is
+rather cumbersome to write and verbous. Future versions of Alf will come
+with useful shortcuts and new operators. In the mean time, don&#39;t forget
+that defining your own shortcuts and operators is somewhat easy! Don&#39;t
+hesitate to contribute them if of general purpose.</p>
+
+<p>Last, natural joins tend to be error prone; in particular, you must take
+care of common attributes of your design on which you do not want to join
+(such as <code>latest_change</code> and <code>deleted</code> fields and the like). Renamings and
+projections are worth having at hand when joining.</p>
+
+<p>Alternatively, shortcuts can be considered. A (advanced) example below:</p>
+<div class="highlight"><pre><span class="c1"># The following shortcut joins `left` and `right` on `wish` attributes</span>
+<span class="c1"># only. Other common attributes are simply projected away from `right`</span>
+<span class="c1"># before joining.</span>
+<span class="k">def</span> <span class="nf">join_on</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">wish</span><span class="p">)</span>
+  <span class="n">commons</span> <span class="o">=</span> <span class="n">left</span><span class="o">.</span><span class="n">attr_list</span> <span class="o">&amp;</span> <span class="n">right</span><span class="o">.</span><span class="n">attr_list</span>
+  <span class="n">join</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">allbut</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">commons</span> <span class="o">-</span> <span class="n">wish</span><span class="p">))</span>
+<span class="k">end</span>
+
+<span class="c1"># observe here how part names have been discarded to avoid joining them</span>
+<span class="c1"># with supplier names (empty result guaranteed)</span>
+<span class="n">join_on</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# The following shortcut joins `left` and `right` on `wish` attributes
+# only. Other common attributes are simply projected away from `right`
+# before joining.
+def join_on(left, right, wish)
+  commons = left.attr_list & right.attr_list
+  join(left, allbut(right, commons - wish))
+end
+
+# observe here how part names have been discarded to avoid joining them
+# with supplier names (empty result guaranteed)
+join_on(suppliers, parts, [:city])'})">Try it!</a></div>

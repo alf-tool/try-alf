@@ -1,72 +1,71 @@
 <div class="row">
-<article ng-controller="DocController">
-  <div>
-    <h1 class="pull-left">Operators</h1>
-    <div class="pull-right">
-      <label class="radio inline">
-        <input type="radio" ng-model="docmode" value="examples">
-        examples
-      </label>
-      <label class="radio inline">
-        <input type="radio" ng-model="docmode" value="api">
-        api
-      </label>
+  <article class="cheatsheet" ng-controller="DocController">
+    <div>
+      <h1>Operators</h1>
+      <div style="text-align: right">
+        <label class="radio inline">
+          <input type="radio" ng-model="docmode" value="api">
+          api
+        </label>
+        <label class="radio inline">
+          <input type="radio" ng-model="docmode" value="examples">
+          examples
+        </label>
+      </div>
     </div>
-    <div class="clearfix"></div>
-  </div>
-  <table class="table table-condensed">
-    <tr>
-      <th>name</th>
-      <th ng-show="docmode == 'api'">description</th>
-      <th ng-show="docmode == 'api'">signature</th>
-      <th ng-show="docmode == 'api'">options</th>
-      <th ng-show="docmode == 'examples'">example</th>
-      <th ng-show="docmode == 'examples'"></th>
-    </tr>
-    <tr ng-repeat="op in operators | orderBy:'name'">
-      <td>{{op.name}}</td>
-      <td ng-show="docmode == 'api'">{{op.description}}</td>
-      <td ng-show="docmode == 'api'" class="code">{{op.signature}}</td>
-      <td ng-show="docmode == 'api'" class="code">{{op.options}}</td>
-      <td ng-show="docmode == 'examples'" class="code">{{op.example}}</td>
-      <td ng-show="docmode == 'examples'" class="code">
-        <i class="icon-play" ng-click="$state.transitionTo('try', {src: op.example})">
-      </td>
-    </tr>
-  </table>
+    <table class="table table-condensed">
+      <tr>
+        <th>name</th>
+        <th ng-show="docmode == 'api'">synopsis</th>
+        <th ng-show="docmode == 'api'">signature</th>
+        <th ng-show="docmode == 'api'">options</th>
+        <th ng-show="docmode == 'examples'">example</th>
+        <th ng-show="docmode == 'examples'"></th>
+      </tr>
+      <tr ng-repeat="op in doc.operators | orderBy:'name'">
+        <td>{{op.name}}</td>
+        <td ng-show="docmode == 'api'">{{op.synopsis}}</td>
+        <td ng-show="docmode == 'api'" class="code">{{op.signature}}</td>
+        <td ng-show="docmode == 'api'" class="code">{{op.options}}</td>
+        <td ng-show="docmode == 'examples'" class="code">{{op.examples[0]}}</td>
+        <td ng-show="docmode == 'examples'" class="code">
+          <a ng-click="$state.transitionTo('try', {src: op.examples[0]})">Try it!</a>
+        </td>
+      </tr>
+    </table>
 
-  <div>
-    <h1>Predicates</h1>
-  </div>
-  <table class="table table-condensed">
-    <tr>
-      <th>name</th>
-      <th>description</th>
-      <th>signature</th>
-      <th>example</th>
-    </tr>
-    <tr ng-repeat="op in predicates">
-      <td>{{op.name}}</td>
-      <td>{{op.description}}</td>
-      <td class="code">{{op.signature}}</td>
-      <td class="code">{{op.example}}</td>
-    </tr>
-  </table>
+    <div>
+      <h1>Predicates</h1>
+    </div>
+    <table class="table table-condensed">
+      <tr>
+        <th>name</th>
+        <th>synopsis</th>
+        <th>signature</th>
+        <th>example</th>
+      </tr>
+      <tr ng-repeat="op in doc.predicates">
+        <td>{{op.name}}</td>
+        <td>{{op.synopsis}}</td>
+        <td class="code">{{op.signature}}</td>
+        <td class="code">{{op.examples[0]}}</td>
+      </tr>
+    </table>
 
-  <div>
-    <h1>Aggregate functions</h1>
-  </div>
-  <table class="table table-condensed">
-    <tr>
-      <th>name</th>
-      <th>description</th>
-      <th>example</th>
-    </tr>
-    <tr ng-repeat="op in aggregators | orderBy: 'name'">
-      <td>{{op.name}}</td>
-      <td>{{op.description}}</td>
-      <td class="code">{{op.example}}</td>
-    </tr>
-  </table>
-</article>
+    <div>
+      <h1>Aggregate functions</h1>
+    </div>
+    <table class="table table-condensed">
+      <tr>
+        <th>name</th>
+        <th>synopsis</th>
+        <th>example</th>
+      </tr>
+      <tr ng-repeat="op in doc.aggregators | orderBy: 'name'">
+        <td>{{op.name}}</td>
+        <td>{{op.synopsis}}</td>
+        <td class="code">{{op.examples[0]}}</td>
+      </tr>
+    </table>
+  </article>
 </div>

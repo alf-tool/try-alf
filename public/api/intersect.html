@@ -1,0 +1,57 @@
+<h1>Intersect</h1>
+
+<p>Logical AND</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">intersect</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">intersect</span><span class="p">(</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'intersect(
+  restrict(suppliers, eq(:city, \'Paris\')),
+  restrict(suppliers, gt(:status, 10)))'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation as the set intersection of <code>left</code> and <code>right</code>
+tuples.</p>
+
+<p>The <code>left</code> and <code>right</code> relations must be intersect-compatible, which in
+short means that they must have same heading (type inheritance is partly
+supported through ruby&#39;s own type system, so that the actual behavior is
+slighlty more permissive).</p>
+
+<h2>Implementation notes</h2>
+
+<p>Unlike SQL, this operator ALWAYS remove duplicates. There is no way, in
+Alf, to compute <em>bags</em> of tuples and therefore no way to express something
+such as INTERSECT ALL.</p>
+
+<p>It is sometimes idiomatic in Alf to use <code>intersect</code> as a logical AND, such
+as the example below. So far, the optimizer/compiler is not smart enough
+to translate the former in the latter (which is likely to have a better
+query plan, especially when using the SQL compiler and usual SQL DBMSs).
+Any patch is welcome here too!</p>
+<div class="highlight"><pre><span class="n">intersect</span><span class="p">(</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'intersect(
+  restrict(suppliers, eq(:city, \'Paris\')),
+  restrict(suppliers, gt(:status, 10)))'})">Try it!</a></div>
+
+<p>is equivalent to</p>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, eq(:city, \'Paris\') & gt(:status, 10))'})">Try it!</a></div>

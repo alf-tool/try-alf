@@ -1,0 +1,64 @@
+<h1>Page</h1>
+
+<p>Pagination</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">page</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">ordering</span><span class="p">:</span> <span class="no">Ordering</span><span class="p">,</span> <span class="n">nth</span><span class="p">:</span> <span class="nb">Integer</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">page</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:status</span><span class="p">,</span> <span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">page_size</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'page(suppliers, [:status, :sid], 1, page_size: 3)'})">Try it!</a></div>
+<div class="highlight"><pre><span class="n">page</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:status</span><span class="p">,</span> <span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">page_size</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'page(suppliers, [:status, :sid], -1, page_size: 3)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes a relation by restricting the tuples of <code>operand</code> to those
+belonging to the <code>nth</code> page (starting at 1). When <code>nth</code> is negative, returns
+tuples that belong to the <code>nth</code> page from the end (e.g., -1 is last page).</p>
+
+<p>Formally, the page is defined by those tuples whose ranking according to
+<code>order</code> is such that <code>(nth-1)*page_size &lt;= rank &lt; nth*page_size</code>. In
+other words, this operator is actually equivalent to the following
+definition (ignoring negative page indexes for simplicity):</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">page</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">nth</span><span class="p">,</span> <span class="n">page_size</span><span class="p">)</span>
+  <span class="n">allbut</span><span class="p">(</span>
+    <span class="n">restrict</span><span class="p">(</span>
+      <span class="n">rank</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="ss">:rank</span><span class="p">),</span>
+      <span class="n">lte</span><span class="p">((</span><span class="n">nth</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">page_size</span><span class="p">,</span> <span class="ss">:rank</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">lt</span><span class="p">(</span><span class="ss">:rank</span><span class="p">,</span> <span class="n">nth</span><span class="o">*</span><span class="n">page_size</span><span class="p">)),</span>
+    <span class="o">[</span><span class="ss">:rank</span><span class="o">]</span><span class="p">)</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def page(operand, order, nth, page_size)
+  allbut(
+    restrict(
+      rank(operand, order, :rank),
+      lte((nth-1)*page_size, :rank) & lt(:rank, nth*page_size)),
+    [:rank])
+end'})">Try it!</a></div>
+
+<p>As of current Alf version, for this operator to be semantically sound and
+deterministic, <code>order</code> MUST be a total order, that is, it must at least
+cover a candidate key. As of current Alf version, no error is raised if
+this is not the case but that might change in future versions.</p>
+
+<h2>Implementation notes</h2>
+
+<p>Contrary to the longer expression shown above, this operator compiles to
+SQL (rank does not, so far) at the cost of having to provide a total
+order.</p>
+
+<p>As the result is a relation and relations are not ordered by definition,
+the order in which tuples can be observed in the result (e.g. through
+explicit tuple iteration, casting to an array, json encoding) is NOT
+guaranteed to follow <code>order</code>.</p>

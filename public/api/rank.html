@@ -1,0 +1,41 @@
+<h1>Rank</h1>
+
+<p>Tuple ranking</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">rank</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">order</span><span class="p">:</span> <span class="no">Ordering</span><span class="p">,</span> <span class="n">as</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">rank</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:status</span><span class="o">]</span><span class="p">,</span> <span class="ss">:ranking</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'rank(suppliers, [:status], :ranking)'})">Try it!</a></div>
+<div class="highlight"><pre><span class="n">rank</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:status</span><span class="p">,</span> <span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">:ranking</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'rank(suppliers, [:status, :sid], :ranking)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Extends tuples from the input relation with a new attribute (<code>as</code>)
+capturing the tuple position with respect to <code>order</code>.</p>
+
+<p>The ranking of a tuple <code>t</code> is more precisely defined as the number of
+tuples from the input operand that strictly come before <code>t</code> if they were
+all ordered according to <code>order</code>. &#39;Equal&#39; tuples with respect to <code>order</code>
+are not counted in this ranking.</p>
+
+<p>This means that, unless <code>order</code> is a total order, duplicate ranking may
+be observed in practice. In contrast, if <code>order</code> covers a candidate key
+then the ranking attribute (<code>as</code>) is unique, and therefore defines an
+additional candidate key on the resulting relation.</p>
+
+<h2>Implementation notes</h2>
+
+<p>Note that this operator does not compile to SQL so far. The <code>page</code> and
+<code>frame</code> operators provide useful alternatives when the aim is to compute
+a subset of tuples based on their ranking according to an order.</p>

@@ -1,0 +1,35 @@
+<h1>Project</h1>
+
+<p>Keep a subset of attributes.</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'project(suppliers, [:city])'})">Try it!</a></div>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'project(suppliers, [:city], allbut: true)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation obtained by projecting operand&#39;s tuples on a subset
+of their attributes.</p>
+
+<p>This operator supports an ALL BUT variant, through the <code>allbut</code> option.
+When set to true, the operator <em>removes</em> specified attributes instead of
+keeping them. An <code>allbut</code> operator is also provided that has the same
+effect.</p>
+
+<h2>Implementation notes</h2>
+
+<p>Unlike SQL, this operator ALWAYS remove duplicates. There is no way, in
+Alf, to compute <em>bags</em> of tuples.</p>

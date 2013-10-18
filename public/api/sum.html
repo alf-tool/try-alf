@@ -1,0 +1,29 @@
+<h1>Sum</h1>
+
+<p>Arithmetic sum</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">sum</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="no">AttrName</span><span class="o">|</span><span class="p">(</span><span class="no">Tuple</span><span class="o">-&gt;</span><span class="no">Numeric</span><span class="p">))</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">sum</span><span class="p">(</span><span class="ss">:qty</span><span class="p">)</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">price</span> <span class="p">}</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="n">sum</span><span class="p">(</span><span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="n">t</span><span class="o">.</span><span class="n">price</span> <span class="p">})</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>Computes <code>v1 + v2 + ... + vn</code>.</p>
+
+<h2>Implementation notes</h2>
+
+<p>This aggregate function should only be used with numeric types. As of
+current Alf version, it does not aggregate empty sets correctly on
+non-numeric data types.</p>

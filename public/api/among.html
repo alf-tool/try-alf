@@ -1,0 +1,23 @@
+<h1>Among</h1>
+
+<p>Among a set of values</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">among</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="no">Alpha</span><span class="o">|</span><span class="no">AttrName</span><span class="p">,</span> <span class="n">vals</span><span class="p">:</span> <span class="no">Set</span><span class="o">&lt;</span><span class="no">Alpha</span><span class="o">&gt;</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">among</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="o">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>This predicates checks whether <code>val</code> belongs to the set of values <code>vals</code>.</p>
+
+<h2>Implementation notes</h2>
+
+<p>The set <code>vals</code> may only contain pure values, attribute names are not
+supported. Any enumerable of such values is supported in practice, e.g.
+an Array literal.</p>

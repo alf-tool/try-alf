@@ -1,0 +1,29 @@
+<h1>Rename</h1>
+
+<p>Rename attributes</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">rename</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">renaming</span><span class="p">:</span> <span class="no">Renaming</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">rename</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">:sid</span> <span class="o">=&gt;</span> <span class="ss">:supplier_id</span><span class="p">,</span> <span class="ss">:city</span> <span class="o">=&gt;</span> <span class="ss">:lives_in</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'rename(suppliers, :sid => :supplier_id, :city => :lives_in)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the same relation as <code>operand</code> expect that some attributes have
+been renamed.</p>
+
+<h2>Implementation notes</h2>
+
+<p>As of current version, renamings can only be expressed through a Hash
+mapping input to output attribute names.</p>
+
+<p>Other ways of specifying renamining will be added in future versions, such
+as prefixing, postfixing, renaming through a Proc, etc. Any patch towards
+these improvements is welcome.</p>

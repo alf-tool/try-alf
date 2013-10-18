@@ -1,15 +1,8 @@
-function DocController($scope, $http) {
-  $scope.operators = [];
-  $scope.predicates = [];
-  $scope.aggregators = [];
+function DocController($scope, $http, $stateParams) {
+  $scope.doc = [];
+  $scope.current = $stateParams['obj'] || 'intro';
   $scope.docmode = "examples";
-  $http.get('/doc/operators.json').success(function(data) {
-    $scope.operators = data;
-  });
-  $http.get('/doc/predicates.json').success(function(data) {
-    $scope.predicates = data;
-  });
-  $http.get('/doc/aggregators.json').success(function(data) {
-    $scope.aggregators = data;
+  $http.get('/doc.json').success(function(data) {
+    $scope.doc = data;
   });
 }

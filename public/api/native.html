@@ -1,0 +1,30 @@
+<h1>Native</h1>
+
+<p>User-defined tuple predicate</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">native</span><span class="p">(</span><span class="n">predicate</span><span class="p">:</span> <span class="p">(</span><span class="no">Tuple</span> <span class="o">-&gt;</span> <span class="no">Boolean</span><span class="p">))</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">city</span> <span class="o">==</span> <span class="s1">&#39;London&#39;</span> <span class="p">}</span>
+</pre>
+</div>
+
+<h2>Description</h2>
+
+<p>So called &#39;native&#39; predicates are functions computing truth values from
+tuples.</p>
+
+<h2>Implementation notes</h2>
+
+<p>Native predicates can be any ruby Proc object of arity 1. The argument
+will be a Tuple instance. the Proc SHOULD return true or false, but ruby
+patterns for boolean expressions are supported to (such a nil evaluating
+to false, etc.).</p>
+
+<p>Note that, as of current Alf version, native predicates cannot be delegated
+to an underlying data engine, and are not compiled to SQL in particular.
+Please always use predicate factories such as <code>eq(:city, &#39;London&#39;)</code> if
+possible, as they do not hurt logical optimizations and compilation.</p>

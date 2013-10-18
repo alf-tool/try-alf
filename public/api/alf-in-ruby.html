@@ -1,0 +1,194 @@
+<h1>Alf in Ruby</h1>
+
+<p>This page describes basic information for using Alf in Ruby programs. Please
+refer to the available examples, blog posts, and API documentation for further
+details.</p>
+
+<h2>Connect and query</h2>
+
+<p>The most immediate way to connect and query a data source using Alf is through
+<code>Alf.query</code>. For instance, suppose that you have the <a target="_blank"
+href="/downloads/sap.sqlite3">sap.sqlite3</a> database file available in the
+current folder. Then:</p>
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;alf&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;sqlite3&#39;</span>
+
+<span class="n">rel</span> <span class="o">=</span> <span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sap.sqlite3&quot;</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="nb">puts</span> <span class="n">rel</span>
+</pre>
+</div>
+
+<p><code>Alf.query</code>&#39;s first argument can actually be:</p>
+
+<ul>
+<li>A <a href="https://github.com/eregon/path">Path</a> or
+<a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/pathname/rdoc/Pathname.html">Pathname</a>,
+or string path to a sqlite file with a <code>.db</code>, <code>.sqlite</code> or <code>.sqlite3</code> extension,
+as in the example above.</li>
+<li><p>A <a href="https://github.com/eregon/path">Path</a> or
+<a href="http://www.ruby-doc.org/stdlib-1.9.3/libdoc/pathname/rdoc/Pathname.html">Pathname</a>
+instance to a folder</p>
+<div class="highlight"><pre><span class="c1"># Let query .csv/.json files in the current folder</span>
+<span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">Path</span><span class="o">.</span><span class="n">pwd</span><span class="p">)</span> <span class="k">do</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="k">end</span>
+</pre>
+</div></li>
+<li><p>A database URL recognized by
+<a href="http://sequel.rubyforge.org/rdoc/files/doc/opening_databases_rdoc.html">Sequel</a>:</p>
+<div class="highlight"><pre><span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;postgres://user:password@host/dbname&#39;</span><span class="p">)</span> <span class="k">do</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="k">end</span>
+</pre>
+</div></li>
+<li><p>A <a href="http://sequel.rubyforge.org/rdoc/files/doc/opening_databases_rdoc.html">Sequel</a>
+<code>Database</code> instance (to use connection pooling)</p>
+<div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="o">::</span><span class="no">Sequel</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;postgres://user:password@host/dbname&#39;</span><span class="p">)</span>
+<span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">db</span><span class="p">)</span> <span class="k">do</span>
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="k">end</span>
+</pre>
+</div></li>
+</ul>
+
+<h2>Relation</h2>
+
+<p><code>Alf.query</code> always returns the query result as a <code>Alf::Relation</code> instance. The
+latter is an in-memory relation, that is, a set of tuples entirely detached
+from the concrete datasource it actually comes from.</p>
+
+<p>This <code>Relation</code> has a bunch of useful methods, as demonstrated by the
+following example:</p>
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;alf&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;sqlite3&#39;</span>
+
+<span class="n">rel</span> <span class="o">=</span> <span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sap.sqlite3&quot;</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># info and metadata</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">size</span>     <span class="c1"># number of tuples</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">empty?</span>   <span class="c1"># is it an empty set of tuples?</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">attr_list</span>  <span class="c1"># the list of attribute names as an Alf::AttrList</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">heading</span>    <span class="c1"># information about types as a Alf::Heading</span>
+
+<span class="c1"># export methods</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">to_a</span>     <span class="c1"># an array of ruby hashes</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">to_text</span>  <span class="c1"># the ascii table result</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">to_json</span>  <span class="c1"># all tuples, but in json</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">to_csv</span>   <span class="c1"># all tuples, but in csv</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">to_yaml</span>  <span class="c1"># all tuples, but in yaml</span>
+
+<span class="c1"># algebra methods</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">)</span> <span class="c1"># the entire algebra, in postfix, OO syntax</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
+
+<span class="c1"># iteration</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">supplier</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">supplier</span><span class="o">.</span><span class="n">name</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<p><code>Alf::Relation</code> implements a pure immutable value, with Alf&#39;s relational
+algebra shipped with an object-oriented style. It consistently implements
+<code>hash</code>, <code>==</code> and <code>eql?</code>, you can use it as a Hash key, compare relations for
+equality, and so on. No surprise. BUT. The object-oriented relational algebra
+implemented by <code>Relation</code> comes at a price: immediate evaluation, no
+optimization, in-memory implementation. Called on a <code>Relation</code>, a relational
+operator returns a <code>Relation</code>.</p>
+
+<p>For this reason, working with the <code>Relation</code> class is not always a good
+choice. This is for example the case when you want to incrementally build
+complex queries against a data source, avoid loading all tuples in memory, or
+profit from the query optimizer.</p>
+
+<h2>Relvar</h2>
+
+<p><code>Relvar</code> stands for <code>relation variable</code>. Conceptually, a relvar is a variable
+whose value is a relation. Thus, it has a location (where is the value
+located?) and it can be updated. In addition, we distinguish between two kinds
+of relvars: <em>base</em> relvars (aka tables) and <em>virtual</em> variables (aka views).</p>
+
+<p>Alf uses the concept of relvar as a localized, virtual, set of tuples attached
+to the concrete datasource(s) it comes from. Unlike <code>Relation</code>, <code>Relvar</code> does
+not keep the tuples in memory and always recomputes them if needed. It does
+<strong>not</strong> implement <code>hash</code>, <code>==</code> and <code>eql?</code> with respect to the set of tuples it
+virtually denotes, but according to the relational expression it captures and
+the datasources it is attached to.</p>
+
+<p>As <code>Relvar</code> instances are attached to particular data sources, they can only
+be obtained in the context of at least one database connection (see next
+section). Once obtained, they have an object-oriented API very similar to the
+one of <code>Relation</code>. A few differences and additional methods though:</p>
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;alf&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;sqlite3&#39;</span>
+
+<span class="c1"># See next section about this</span>
+<span class="no">Alf</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;sap.sqlite3&quot;</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">conn</span><span class="o">|</span>
+
+  <span class="c1"># Get a relvar, but remember that you can no longer use it when</span>
+  <span class="c1"># the connection has been closed!</span>
+  <span class="n">relv</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">relvar</span> <span class="k">do</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="c1"># Returns the set of tuples as a Relation</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">value</span>
+
+  <span class="c1"># algebra</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">)</span>  <span class="c1"># returns another relvar, no actual computation</span>
+
+  <span class="c1"># update (VERY experimental, use with care, especially on virtual relvars)</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">predicate</span><span class="p">)</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">tuples</span><span class="p">)</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">upsert</span><span class="p">(</span><span class="n">tuples</span><span class="p">)</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">updating</span><span class="p">,</span> <span class="n">predicate</span><span class="p">)</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">affect</span><span class="p">(</span><span class="n">relation</span><span class="p">)</span>
+
+  <span class="c1"># locking (even more experimental)</span>
+  <span class="n">relv</span><span class="o">.</span><span class="n">lock</span><span class="p">{</span>
+    <span class="c1"># executes the block with a lock on all underlying base relvars</span>
+  <span class="p">}</span>
+
+<span class="k">end</span>
+</pre>
+</div>
+
+<h2>Lower-level connection API</h2>
+
+<p>When using relvars instead of relations and when building more complex
+software, <code>Alf</code>&#39;s facade API is simply not enough. The following example shows
+more about hacking with lower-level <code>Alf::Database</code> and
+<code>Alf::Database::Connection</code> objects:</p>
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;alf&#39;</span>
+<span class="nb">require</span> <span class="s1">&#39;sqlite3&#39;</span>
+
+<span class="c1"># Declare configuration once for all (as well as some options not</span>
+<span class="c1"># covered here).</span>
+<span class="no">DB</span> <span class="o">=</span> <span class="no">Alf</span><span class="o">::</span><span class="no">Database</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;sap.sqlite3&quot;</span><span class="p">)</span>
+
+<span class="c1"># Connect where you want!, the `conn` object is NOT thread-safe</span>
+<span class="c1"># Connection is automatically closed when the block is exited.</span>
+<span class="no">DB</span><span class="o">.</span><span class="n">connect</span> <span class="k">do</span> <span class="o">|</span><span class="n">conn</span><span class="o">|</span>
+  <span class="n">rel</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">query</span> <span class="k">do</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="k">end</span>
+  <span class="nb">puts</span> <span class="n">rel</span>
+<span class="k">end</span>
+
+<span class="c1"># Yet another way of obtaining a connection. You MUST ensure that</span>
+<span class="c1"># you properly disconnect</span>
+<span class="k">begin</span>
+  <span class="n">conn</span> <span class="o">=</span> <span class="no">DB</span><span class="o">.</span><span class="n">connection</span>
+  <span class="n">conn</span><span class="o">.</span><span class="n">query</span> <span class="k">do</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">ensure</span>
+  <span class="n">conn</span><span class="o">.</span><span class="n">close</span> <span class="k">if</span> <span class="n">conn</span>
+<span class="k">end</span>
+</pre>
+</div>

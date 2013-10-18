@@ -1,0 +1,44 @@
+<h1>How to learn Alf?</h1>
+
+<p>This documentation comes with a log of examples that you can try online. This
+is probably one of the most efficient ways to learn. More specifically, here
+is a possible roadmap:</p>
+
+<ul>
+<li>Start with the documentation of a relational operator,</li>
+<li>Try the examples, play with them,</li>
+<li>Read the description and implementation notes,</li>
+<li>Try to understand the definitions when an operator can be defined in terms
+of other operators. Those definitions use the closure property of relational
+algebra a lot. From there, jump to another operator.</li>
+<li>If needed, have a loot at predicates and other concepts to better understand
+the language and operator signatures.</li>
+</ul>
+
+<p>The query language aims at being as intuitive as possible, even if some
+background is definitely needed. Two main directions here:</p>
+
+<ul>
+<li>Make sure to eventually read the <a href="/doc/relational-basics">relational
+basics</a>.</li>
+<li>If you do not know ruby, make sure to eventually read the <a href="/doc/ruby-basics">ruby
+basics</a>.</li>
+</ul>
+
+<h1>How to get started outside of try-alf.org ?</h1>
+
+<p>Alf comes as a ruby gem. You need ruby &gt;= 1.9.3.</p>
+<div class="highlight"><pre><span class="n">gem</span> <span class="n">install</span> <span class="n">alf</span> <span class="o">[</span><span class="n">sqlite3</span><span class="o">]</span> <span class="o">[</span><span class="n">pg</span><span class="o">]</span>
+</pre>
+</div>
+
+<p>Once installed, the command line tool is available:</p>
+<div class="highlight"><pre><span class="n">alf</span> <span class="o">--</span><span class="n">help</span>
+<span class="n">alf</span> <span class="o">--</span><span class="n">examples</span> <span class="n">show</span> <span class="n">suppliers</span>
+<span class="n">alf</span> <span class="o">--</span><span class="n">db</span><span class="o">=</span><span class="s2">&quot;postgres://user:password@host/database&quot;</span> <span class="n">show</span> <span class="n">tablename</span>
+</pre>
+</div>
+
+<p>Have a look at the <a href="/doc/alf-in-ruby">Alf in Ruby</a> and <a href="/doc/alf-in-shell">Alf in
+Shell</a> pages for getting started depending on the kind of
+context in which you plan to use it.</p>

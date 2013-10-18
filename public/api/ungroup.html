@@ -1,0 +1,30 @@
+<h1>Ungroup</h1>
+
+<p>Inverse of group</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">ungroup</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">rva</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">ungroup</span><span class="p">(</span><span class="n">group</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="ss">:suppliers</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">),</span> <span class="ss">:suppliers</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'ungroup(group(suppliers, [:city], :suppliers, allbut: true), :suppliers)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation obtained by ungrouping a relation-valued attribute
+<code>rva</code>. Ungrouping <code>rva</code> leads as many tuples as in <code>rva</code>, each extended
+with the other attributes of <code>operand</code>.</p>
+
+<p><code>rva</code> must be a relation-valued attribute. It should not itself contain
+any attribute whose name clashes with an attribute of <code>operand</code>.</p>
+
+<h2>Implementation notes</h2>
+
+<p>This operator does not compile to SQL so far. Contributions are welcome
+to provide it with a SQL compilation for SQL DBMSs that support this kind
+of feature (e.g. PostgreSQL with JSON data type)</p>

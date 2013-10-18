@@ -1,0 +1,34 @@
+<h1>Unwrap</h1>
+
+<p>Inverse of wrap</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">unwrap</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">tva</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">unwrap</span><span class="p">(</span><span class="n">wrap</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="p">,</span> <span class="ss">:status</span><span class="o">]</span><span class="p">,</span> <span class="ss">:extra</span><span class="p">),</span> <span class="ss">:extra</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'unwrap(wrap(suppliers, [:city, :status], :extra), :extra)'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation obtained by unwrapping a tuple-valued attribute
+<code>tva</code>. Unwrapping of <code>tva</code> on an input tuple <code>t</code> consists in removing
+<code>tva</code> from <code>t</code> and extending the result with <code>tva</code>&#39;s own attributes:</p>
+<div class="highlight"><pre><span class="no">Tuple</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tva</span><span class="p">:</span> <span class="no">Tuple</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="mi">3</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="no">Tuple</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+</pre>
+</div>
+
+<p><code>tva</code> must be a tuple-valued attribute. It should not itself contain any
+attribute whose name clashes with an attribute of <code>operand</code>. In the
+examples above, <code>tva</code> may not contain an attribute called <code>x</code>.</p>
+
+<h2>Implementation notes</h2>
+
+<p>This operator does not compile to SQL so far. Contributions are welcome
+to provide it with a SQL compilation for SQL DBMSs that support this kind
+of feature (e.g. PostgreSQL with JSON data type)</p>

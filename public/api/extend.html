@@ -1,0 +1,35 @@
+<h1>Extend</h1>
+
+<p>Extend input tuples with derived/computed attributes</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="no">TupleComputation</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span>
+  <span class="n">big</span><span class="p">:</span>   <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">},</span>
+  <span class="n">small</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">downcase</span> <span class="p">})</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'extend(suppliers,
+  big:   ->(t){ t.name.upcase },
+  small: ->(t){ t.name.downcase })'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes a relation which is the same as <code>operand</code>, except that each of
+its tuples has new attributes whose value is the result of evaluating the
+tuple expressions specified in <code>ext</code>.</p>
+
+<h2>Implementation notes</h2>
+
+<p>As of current Alf version, this operator cannot be translated to SQL code.
+That means that all computations are done in ruby, which may seriously
+hurt performance.</p>
+
+<p>Similarly, as <code>extend</code> tends to be a showstopper during compilation, it is
+strongly recommanded to use it as high as possible in query expressions
+trees so as to delegate the largest possible query parts to data engines.</p>

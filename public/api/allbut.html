@@ -1,0 +1,39 @@
+<h1>Allbut</h1>
+
+<p>Projects a subset of attributes away.</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">allbut</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'allbut(suppliers, [:city])'})">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>Computes the relation obtained by removing a subset of attributes from
+<code>operand</code> tuples.</p>
+
+<p>This operator is the inverse of <code>project</code>. While the latter <em>keeps</em>
+attributes, this one <em>removes</em> them. <code>project</code> actually supports an allbut
+variant, which is equivalent to this operator. In other words, this
+operator can be seen as being the following shortcut:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
+  <span class="n">project</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def allbut(operand, attributes)
+  project(operand, attributes, allbut: true)
+end'})">Try it!</a></div>
+
+<h2>Implementation notes</h2>
+
+<p>Unlike SQL, this operator ALWAYS remove duplicates. There is no way, in
+Alf, to compute <em>bags</em> of tuples.</p>

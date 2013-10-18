@@ -1,0 +1,205 @@
+<h1>Relational basics</h1>
+
+<p>This page describes the necessary background on relational theory to
+understand Alf. Note that it only covers the concepts needed to understand the
+relational <em>algebra</em>; that is, nothing is said about database schemas, normal
+forms, transactions, ACID properties, and so on. Refer to standard database
+literature for those.</p>
+
+<p>The background given below is a rephrasing of what can be found in <em>The Third
+Manifesto</em> (TTM), by Hugh Darwen and C.J. Date. See
+<a href="http://www.thethirdmanifesto.com">www.thethirdmanifesto.com</a> or <a href="http://www.amazon.com/Databases-Types-Relational-Model-3rd/dp/0321399420">the TTM
+book</a>.</p>
+
+<h2>A theory of types</h2>
+
+<p>To understand what relational algebra is about, we need to briefly review a
+few concepts about types. Forget about object-oriented programming for a
+moment (if you are a developer) and examine the following definitions:</p>
+
+<ul>
+<li>A <em>type</em> is a (finite) <strong>set</strong> of values. A <em>subtype</em> is a subset. Sets are
+<strong>not ordered</strong> and have <strong>no duplicates</strong>.</li>
+<li>A <em>value</em> is an element of a type. We say that the value <em>belongs to</em> the
+type.</li>
+<li>A value is <strong>immutable</strong>, intrinsically <strong>typed</strong>, has no localization in
+time and space, and can be of arbitrary complexity.</li>
+<li>A type is always accompanied with an equality operator, say <code>==</code>, that
+allows checking if two of its elements actually denote the same value. The
+notion of &#39;duplicate&#39; precisely relies on this operator in an obvious way.</li>
+</ul>
+
+<p>Oh! and,</p>
+
+<ul>
+<li>NULL is <strong>not</strong> a value. Precisely, &#39;&#39;treating NULL as a value&#39;&#39; on one side
+and &#39;&#39;keeping a theory simple enough to be of any practical yet sound use&#39;&#39;
+on the other side are conflictual requirements. Therefore, here, NULL is not
+a value.</li>
+</ul>
+
+<h3>A few examples</h3>
+
+<p>The simplest scalar types are well known: </p>
+
+<blockquote>
+<blockquote>
+<ul>
+<li>(the set of) Boolean(s), Integer(s), Decimal(s), String(s), ...</li>
+</ul>
+</blockquote>
+</blockquote>
+
+<p>There are others, of course: </p>
+
+<blockquote>
+<blockquote>
+<ul>
+<li>(the set of) Color(s), Size(s), Weight(s), Range(s), Coordinate(s), ... </li>
+</ul>
+</blockquote>
+</blockquote>
+
+<p>And even a few that people don&#39;t always expect to be types: </p>
+
+<blockquote>
+<blockquote>
+<ul>
+<li>(the set of) List(s), Set(s), Tree(s), Graph(s), ...</li>
+</ul>
+</blockquote>
+</blockquote>
+
+<p>Roughly, surrounding a set of immutable elements for which an equality
+operator makes sense <em>is</em> defining a type. Implementing it is another story,
+of course.</p>
+
+<h2>Tuples and Relations</h2>
+
+<p>Tuples and relations are values as well. In contrast to integers or strings
+however, tuples and relations are not scalar; they have an internal
+&#39;&#39;structure&#39;&#39;. Apart from that, they are values and they have a type. Let&#39;s
+have a closer look at that.</p>
+
+<h3>Tuple</h3>
+
+<ul>
+<li>A <em>tuple</em> is a set of attribute (name, value) pairs. It is such that no two
+pairs have the same name.</li>
+<li>A tuple being a set, it is not particularly ordered.</li>
+<li>A tuple being a value, it is immutable.</li>
+</ul>
+
+<p>We will denote tuple literals as follows (we assume that a Color type exists):</p>
+<div class="highlight"><pre><span class="c1"># The product whose id is &#39;P1&#39;,</span>
+<span class="c1">#  * is named &#39;Nut&#39;, </span>
+<span class="c1">#  * has a color denoted by &#39;red&#39;, and </span>
+<span class="c1">#  * is known to be heavy.</span>
+<span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P1&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Nut&#39;</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="n">heavy</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>The type of a tuple is simply defined in terms of its heading. A <em>heading</em> is
+defined as a set of attribute (name, type name) pairs. For example, the
+heading of the tuple show above is:</p>
+<div class="highlight"><pre><span class="no">Heading</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">,</span> <span class="n">heavy</span><span class="p">:</span> <span class="no">Boolean</span><span class="p">)</span>
+</pre>
+</div>
+
+<h3>Relation</h3>
+
+<ul>
+<li>A <em>relation</em> is a set of tuples of same heading</li>
+<li>A relation being a set, it is not particularly ordered and does not have
+duplicates.</li>
+<li>A relation being a value, it is immutable.</li>
+</ul>
+
+<p>We will denote relation literals as follows:</p>
+<div class="highlight"><pre><span class="no">Relation</span><span class="p">(</span><span class="o">[</span>
+  <span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P1&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Nut&#39;</span><span class="p">,</span>   <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span>   <span class="n">heavy</span><span class="p">:</span> <span class="kp">true</span><span class="p">),</span>
+  <span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P2&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Bolt&#39;</span><span class="p">,</span>  <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">),</span> <span class="n">heavy</span><span class="p">:</span> <span class="kp">false</span><span class="p">),</span>
+  <span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P3&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Screw&#39;</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>  <span class="n">heavy</span><span class="p">:</span> <span class="kp">false</span><span class="p">)</span>
+<span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>The type of a relation is simply defined in terms of its heading. For example,
+the heading of the relation show above is:</p>
+<div class="highlight"><pre><span class="no">Heading</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">,</span> <span class="n">heavy</span><span class="p">:</span> <span class="no">Boolean</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>A few consequences</h2>
+
+<p>The following list of bullets are logical consequences of the definitions
+above. Alf considers them as part of its specification; if you see Alf
+behaving differently from what is being said here, then it&#39;s a bug or a
+limitation of the current version... for which patches are welcome!</p>
+
+<ul>
+<li>Tuples and relations may contain values of any complexity, provided that the
+corresponding type is consistent with the theory of types stated above.</li>
+<li>In particular, tuples and relations may contain... tuples and relations.</li>
+</ul>
+
+<p>The following points are other logical consequences of the definitions above.
+Alf considers them as pre-conditions of all relational operators, without
+necessarily enforcing them:</p>
+
+<ul>
+<li>All tuples that are member of a relation must have the same &quot;structure&quot;,
+precisely, the same heading than the relation itself</li>
+<li>Tuples and relations never contain NULL</li>
+<li>No left-right ordering of attributes applies to tuples and relations</li>
+<li>No tuple ordering applies to relations</li>
+</ul>
+
+<p>That said, Alf does however provide a few facilities that make it more
+comfortable for the user to deal with any deviations from the theory stated
+here, as they might occur in any SQL product(s) you might be using as a data
+source.</p>
+
+<h2>Relational algebra</h2>
+
+<p>Relational algebra is to relations what elementary algebra is to numbers and
+quantities in formulae and equations. Consider the following elementary
+formula:</p>
+<div class="highlight"><pre><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>Evaluating this formula with <code>x = 5</code> and <code>y = 3</code> yields a value for <code>z</code>:</p>
+<div class="highlight"><pre><span class="mi">16</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>Thanks to known properties of the operators, like associativity or
+commutativity, formulae can be manipulated. For example, the formula above can
+be rewritten into the following equivalent form:</p>
+<div class="highlight"><pre><span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">+</span>  <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">)</span> 
+</pre>
+</div>
+
+<p>Relational algebra is similar, but applies to relations. For example:</p>
+<div class="highlight"><pre><span class="c1">#  Who are supppliers located in London or in Paris?</span>
+<span class="n">union</span><span class="p">(</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '#  Who are supppliers located in London or in Paris?
+union(
+  restrict(suppliers, city: \'Paris\'),
+  restrict(suppliers, city: \'London\'))'})">Try it!</a></div>
+
+<p>Can be rephrased/rewritten as</p>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, eq(:city, \'Paris\') | eq(:city, \'London\'))'})">Try it!</a></div>
+
+<p>This is kind or rewriting is of particular importance for query optimization,
+but that&#39;s far beyond the basics!</p>
