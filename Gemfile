@@ -6,9 +6,6 @@ gem 'thin'
 gem "sequel",  "~> 4.2"
 gem "rack-robustness", "~> 1.1"
 gem "rack-timeout"
-gem "redcarpet"
-gem "albino", "~> 1.3.3"
-gem "wlang", "~> 2.0"
 gem "rake"
 
 gem "alf-core",   :git => "git://github.com/alf-tool/alf-core.git"
@@ -30,4 +27,7 @@ end
 
 group :development do
   gem "sqlite3", "~> 1.3"
+  gem "redcarpet"
+  gem "albino", "~> 1.3.3"
+  gem "wlang", "~> 2.0"
 end
