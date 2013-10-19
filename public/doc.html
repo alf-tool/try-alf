@@ -1,44 +1,46 @@
 <div class="row" ng-controller="DocController">
-  <div class="doc-menu span2">
-    <p>Basics</p>
-    <ul>
-      <li ng-class="{active: current == 'intro'}">
-        <a ng-click="$state.transitionTo('doc', {obj: 'intro'})">Intro</a>
-      </li>
-      <li ng-class="{active: current == 'ruby-basics'}">
-        <a ng-click="$state.transitionTo('doc', {obj: 'ruby-basics'})">Ruby</a>
-      </li>
-      <li ng-class="{active: current == 'relational-basics'}">
-        <a ng-click="$state.transitionTo('doc', {obj: 'relational-basics'})">Relational</a>
-      </li>
-      <li ng-class="{active: current == 'alf-in-ruby'}">
-        <a ng-click="$state.transitionTo('doc', {obj: 'alf-in-ruby'})">Alf in Ruby</a>
-      </li>
-      <li ng-class="{active: current == 'alf-in-shell'}">
-        <a ng-click="$state.transitionTo('doc', {obj: 'alf-in-shell'})">Alf in Shell</a>
-      </li>
-    </ul>
-    <p>Operators</p>
-    <ul>
-      <li ng-repeat="obj in doc.operators"
-          ng-class="{active: current == obj.name}">
-        <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
-      </li>
-    </ul>
-    <p>Predicates</p>
-    <ul>
-      <li ng-repeat="obj in doc.predicates"
-          ng-class="{active: current == obj.name}">
-        <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
-      </li>
-    </ul>
-    <p>Aggregators</p>
-    <ul>
-      <li ng-repeat="obj in doc.aggregators"
-          ng-class="{active: current == obj.name}">
-        <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
-      </li>
-    </ul>
+  <div class="span2">
+    <div class="doc-menu">
+      <p>Basics</p>
+      <ul>
+        <li ng-class="{active: current == 'intro'}">
+          <a ng-click="$state.transitionTo('doc', {obj: 'intro'})">Intro</a>
+        </li>
+        <li ng-class="{active: current == 'ruby-basics'}">
+          <a ng-click="$state.transitionTo('doc', {obj: 'ruby-basics'})">Ruby</a>
+        </li>
+        <li ng-class="{active: current == 'relational-basics'}">
+          <a ng-click="$state.transitionTo('doc', {obj: 'relational-basics'})">Relational</a>
+        </li>
+        <li ng-class="{active: current == 'alf-in-ruby'}">
+          <a ng-click="$state.transitionTo('doc', {obj: 'alf-in-ruby'})">Alf in Ruby</a>
+        </li>
+        <li ng-class="{active: current == 'alf-in-shell'}">
+          <a ng-click="$state.transitionTo('doc', {obj: 'alf-in-shell'})">Alf in Shell</a>
+        </li>
+      </ul>
+      <p>Operators</p>
+      <ul>
+        <li ng-repeat="obj in doc.operators"
+            ng-class="{active: current == obj.name}">
+          <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
+        </li>
+      </ul>
+      <p>Predicates</p>
+      <ul>
+        <li ng-repeat="obj in doc.predicates"
+            ng-class="{active: current == obj.name}">
+          <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
+        </li>
+      </ul>
+      <p>Aggregators</p>
+      <ul>
+        <li ng-repeat="obj in doc.aggregators"
+            ng-class="{active: current == obj.name}">
+          <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
+        </li>
+      </ul>
+    </div>
   </div>
   <div class="span10">
     <article id="api" class="doc">
