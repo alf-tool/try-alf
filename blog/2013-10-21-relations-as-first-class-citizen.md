@@ -44,7 +44,7 @@ Well, Alf is a database connectivity library but it is first and foremost a
 proposal for a new _kind_ of database connectivity, or a paradigm shift if you
 want. This new paradigm is called **Relations as First-Class Citizen** and it
 makes Alf very different from the projects aforementionned. The difference
-lies in the kind of abstraction that the library expose to the software
+lies in the kind of abstraction that the library exposes to the software
 developer: SQL queries for the former, _Relations_ for the latter.
 
 In almost all [but](http://www.datomic.com/)
@@ -81,10 +81,10 @@ qry  = qry.project(qry[:name], qry[:city])
 qry  = qry.where(qry[:city].eq(location))
 ```
 
-**Relations as First-Class Citizen** changes this to abstract from SQL and
-expose true relations instead. In the example below, `suppliers` is a
-relation, `restrict` is a relational operator and its invocation returns
-another relation.
+The **Relations as First-Class Citizen** paradigm changes this by abstracting
+from SQL and exposing true relations instead. In the example below,
+`suppliers` is a relation, `restrict` is a relational operator and its
+invocation returns another relation:
 
 ```try
 location = ... # from user input
@@ -106,13 +106,14 @@ abstracting from SQL is an important change in practice:
     restrict(suppliers, ->(t){ t.name =~ /J|B/ })
     ```
 
-  While powerful, this is very important challenge in practice that comes at a
-  cost: as any abstraction, it leaks and you must be aware of the drawbacks
-  and limitations. We'll come back to this point at the end of this blog post.
+  While powerful, this is very challenging in practice and comes at a cost: as
+  any abstraction, it leaks and you must be aware of the drawbacks and
+  limitations. We'll come back to this point at the end of this blog post.
 
-* While SQL is a calculus the **Relations as First-Class Citizen** paradigm
-  supposes an algebra. We claim that an algebra exposes better abstractions
-  for software engineering, as the rest of this paper will explain.
+* SQL is a calculus. In contrast, the **Relations as First-Class Citizen**
+  paradigm relies on the availibility of an algebra. We claim that an algebra
+  exposes better abstractions for software engineering, as the rest of this
+  post will explain.
 
 ## SQL, Relational Calculus vs. Relational Algebra
 
@@ -300,9 +301,9 @@ Alf contributes an example of the general framework outlined there.
 ## Limitations and future work
 
 The approach outlined here opens an avenue for further optimization,
-experimentation and research. We close this paper with an overview of our own
-future work in this area. We also draw the reader attention on Alf's current
-limitations.
+experimentation and research. We close this blog post with an overview of our
+own future work in this area. We also draw the reader attention on Alf's
+current limitations.
 
 ### Towards high-level, domain-specific relational operators
 
@@ -398,10 +399,10 @@ computed by Alf in Ruby and cannot be translated back to the SQL engine. This
 has serious performance implications, of course. As of current Alf version,
 this is in true as soon as you use a ruby block (e.g. `->(t){ ... }`).
 
-While an obvious limitation, all other approaches we are aware of either have
-a similar problem or forbid such queries in the first place (and are hence
-less expressive). This calls for further symbiosis and interoperability
-between heterogeneous type systems (SQL and Ruby in the present case).
+All other approaches we are aware of either have a similar problem or forbid
+such queries in the first place (and are hence less expressive). This calls
+for further symbiosis and interoperability between heterogeneous type systems
+(SQL and Ruby in the present case).
 
 ### What about updates?
 
