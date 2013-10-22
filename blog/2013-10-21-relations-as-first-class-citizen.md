@@ -91,6 +91,11 @@ location = ... # from user input
 restrict(suppliers, :city => location)
 ```
 
+Alf does just that: it expose relations as first class citizen to the software
+developer. It has two main modes, with and without lazy evaluation, the
+details of which are out of scope of this general blog post (see [Alf in
+Ruby](/doc/alf-in-ruby))
+
 ### What does really change?
 
 This paradigm shift may not seem very significant at first glance, but
