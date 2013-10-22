@@ -373,6 +373,7 @@ end
 # End of the viewpoint
 
 # Query as usual. This is entirely transparent.
+# Check it yourself, supplier S2 no longer exists in this viewpoint.
 restrict(supplies, sid: 'S1')
 ```
 
