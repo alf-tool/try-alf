@@ -37,9 +37,17 @@ tryalf.filter('atob', function() {
   };
 });
 
+tryalf.factory('Page', function(){
+  var title = 'default';
+  return {
+    title: function() { return $("h1").first().text(); },
+  };
+});
+
 tryalf.run(
-  [ '$rootScope', '$state', '$stateParams',
-  function ($rootScope, $state, $stateParams) {
+  [ '$rootScope', '$state', '$stateParams', 'Page',
+  function ($rootScope, $state, $stateParams, Page) {
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
+    $rootScope.Page = Page;
   }]);
