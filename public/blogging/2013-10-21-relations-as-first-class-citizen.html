@@ -47,17 +47,17 @@ proposal for a new <em>kind</em> of database connectivity, or a paradigm shift i
 want. This new paradigm is called <strong>Relations as First-Class Citizen</strong> and it
 makes Alf very different from the projects aforementionned. The difference
 lies in the kind of abstraction that the library expose to the software
-developer: SQL queries for the former, Relations for the latter.</p>
+developer: SQL queries for the former, <em>Relations</em> for the latter.</p>
 
 <p>In almost all <a href="http://www.datomic.com/">but</a>
 <a href="https://github.com/dkubb/axiom">a</a>
 <a href="http://dbappbuilder.sourceforge.net/Rel.php">few</a> database connectivity
-layers, the developer is indeed exposed to SQL queries. The SQL
-query is often abstracted behind a higher-level API for manipulating its
-abstract syntax tree (AST). But even in this case, the exposed abstraction is
-a SQL query. The fact is that a SQL query, even when abstracted behind an AST,
-tends to be a very poor abstraction for developing software. Before
-substantiating this claim, let illustrate our proposed approach with a simple
+layers, the developer is indeed exposed to SQL queries. The SQL query is often
+abstracted behind a higher-level API for manipulating its abstract syntax tree
+(AST). But even in this case, the exposed abstraction is a SQL query. The fact
+is that a SQL query, even when abstracted behind an AST, tends to be a very
+poor abstraction for developing software. Before substantiating this claim,
+let us illustrate the difference between our approach and those with a simple
 example.</p>
 
 <h3>Example</h3>
@@ -70,8 +70,9 @@ all; we all know the cost in terms of maintenance, security, etc.</p>
 </pre>
 </div>
 
-<p>Common high-level approaches are slighlty more abstract. While more secure and
-flexible, they still expose a SQL query abstraction:</p>
+<p>Common high-level approaches are slightly more abstract. While more secure and
+flexible, they still expose a SQL query abstraction. In the following example,
+using <a href="https://github.com/rails/arel">ARel</a>:</p>
 <div class="highlight"><pre><span class="n">city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
 <span class="n">qry</span>  <span class="o">=</span> <span class="no">Arel</span><span class="o">::</span><span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:suppliers</span><span class="p">)</span>
 <span class="n">qry</span>  <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">qry</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span><span class="p">,</span> <span class="n">qry</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
@@ -403,7 +404,7 @@ consider the following query:</p>
 invocation is only partially compiled to SQL. The <code>uppercased</code> attribute is
 computed by Alf in Ruby and cannot be translated back to the SQL engine. This
 has serious performance implications, of course. As of current Alf version,
-this is in true as soon as you use a ruby block (e.g. <code>-&gt;(t){ ... }</code>).</p>
+this is in true as soon as you use a ruby block (e.g. <code>->(t){ ... }</code>).</p>
 
 <p>While an obvious limitation, all other approaches we are aware of either have
 a similar problem or forbid such queries in the first place (and are hence
@@ -421,4 +422,4 @@ chosen subset of relational operators supporting updates.</p>
 
 <p>Arrived here? Kudos. Stay tuned, we&#39;ll provide more material soon. In the mean
 time, enjoy Alf. Any question or contribution (of any kind) can be adressed by
-sending an email to Bernard Lambeau (see the <a href="/about/">About</a> page). </p>
+sending an email to Bernard Lambeau (see the <a href="/about/">About</a> page).</p>
