@@ -1,7 +1,0 @@
-human: |-
-  Get suppliers located in London.
-alternatives:
-  - query: |-
-      restrict(suppliers, city: 'London')
-  - query: |-
-      matching(suppliers, Relation(city: 'London'))

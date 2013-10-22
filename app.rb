@@ -17,11 +17,6 @@ PublicUrl = (Path.dir/'public').glob("*").map{|p| "/#{p.basename}"}
 TryAlf = ::Rack::Builder.new do
   use Rack::CommonLogger
   use Rack::Static, urls: PublicUrl, root: "public"
-  map '/one' do
-    run lambda{|env|
-      Alf::Rack::Response.new(env){|r| r.body = Queries.sample }
-    }
-  end
   map '/query' do
     use Rack::Timeout
     Rack::Timeout.timeout = 0.1

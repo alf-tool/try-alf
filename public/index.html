@@ -30,6 +30,7 @@
   <script src="/js/app.js"></script>
   <script src="/js/controllers/query-controller.js"></script>
   <script src="/js/controllers/doc-controller.js"></script>
+  <script src="/js/controllers/blog-controller.js"></script>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
@@ -49,11 +50,7 @@
   </script>
   <div class="container">
     <div class="row">
-      <a href="http://github.com/alf-tool/try-alf" target="_blank">
-        <img style="position: absolute; top: 0; right: 0; border: 0;"
-             src="/img/fork-on-github.png" alt="Fork on github">
-      </a>
-      <header>
+        <a href="https://github.com/alf-tool" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>      <header>
         <ul>
           <li ng-class="{active: $state.includes('try')}">
             <p><a ng-click="$state.transitionTo('try')">Try</a></p>
@@ -63,6 +60,9 @@
           </li>
           <li ng-class="{active: $state.includes('cheatsheet')}">
             <p><a ng-click="$state.transitionTo('cheatsheet')">Cheatsheet</a></p>
+          </li>
+          <li ng-class="{active: $state.includes('blog')}">
+            <p><a ng-click="$state.transitionTo('blog')">Blog</a></p>
           </li>
           <li ng-class="{active: $state.includes('about')}">
             <p><a ng-click="$state.transitionTo('about')">About</a></p>

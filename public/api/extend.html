@@ -1,9 +1,9 @@
 <h1>Extend</h1>
 
-<p>Extend input tuples with derived/computed attributes</p>
+<p>Extends input tuples with derived/computed attributes</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="no">TupleComputation</span><span class="p">)</span>
+<div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="no">TupleComputation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -27,7 +27,7 @@ tuple expressions specified in <code>ext</code>.</p>
 <h2>Implementation notes</h2>
 
 <p>As of current Alf version, this operator cannot be translated to SQL code.
-That means that all computations are done in ruby, which may seriously
+In other words, all computations are done in ruby, which may seriously
 hurt performance.</p>
 
 <p>Similarly, as <code>extend</code> tends to be a showstopper during compilation, it is

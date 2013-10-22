@@ -1,9 +1,9 @@
 <h1>Project</h1>
 
-<p>Keep a subset of attributes.</p>
+<p>Keeps only a subset of attributes.</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -21,8 +21,8 @@
 
 <h2>Description</h2>
 
-<p>Computes the relation obtained by projecting operand&#39;s tuples on a subset
-of their attributes.</p>
+<p>Computes the relation obtained by projecting tuples from <code>operand</code> on a
+subset of their attributes.</p>
 
 <p>This operator supports an ALL BUT variant, through the <code>allbut</code> option.
 When set to true, the operator <em>removes</em> specified attributes instead of

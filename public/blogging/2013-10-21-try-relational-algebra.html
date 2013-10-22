@@ -1,0 +1,97 @@
+<div class="blog-post-date">2013, October 21</div>
+
+<h1>Relations as First-Class Citizen - A Paradigm Shift for Database Connectivity</h1>
+
+<p>I&#39;m happy to announce that Alf v0.15.0 has just been released and with it,
+this web site! I&#39;ve been hacking on Alf on my free time for about two years
+now; I think it was time to share it in a slightly more official way that an
+(almost invisible) <a href="https://github.com/alf-tool">open-source project</a> on
+github.</p>
+
+<p>Alf is a modern, powerful implementation of relational algebra. It brings
+relational algebra where you don&#39;t necessarily expect it: in shell, in
+scripting and for building complex software (in ruby so far). Alf has an
+impressive list of features. Among them, it allows you to:</p>
+
+<ul>
+<li>Query .json, .csv, .yaml files and convert from one format to the other with
+ease,</li>
+<li>Query SQL databases with a sounder and more powerful query language than SQL
+itself,</li>
+<li>Export structured and so-called &quot;semi-structured&quot; query results in various
+exchange formats,</li>
+<li>Query multiple data sources as if they were one and only one database,</li>
+<li>Create database <em>viewpoints</em>, to provide your users with a true database
+interface while keeping them away from data they may not have access to,</li>
+<li>Define your own high-level, domain-specific, relational operators.</li>
+</ul>
+
+<p>Alf is very young and not all of the advanced features are stable and/or
+documented. I plan to spend some time in the next weeks and months to work on
+them, so stay tuned. In the mean time, you can play with Alf on this website,
+install <a href="https://rubygems.org/gems/alf">alf 0.15.0</a> and start playing with it
+on your own datasets and databases. I&#39;ll come with advanced material on this
+blog as soon as possible, I promise. The rest of this post explains the
+context of this work and why it exists in the first place.</p>
+
+<h2>Yet another database connectivity library?</h2>
+
+<p>We already have <a href="https://github.com/rails/arel">ARel</a>,
+<a href="http://sequel.rubyforge.org/">Sequel</a>,
+<a href="http://www.sqlalchemy.org/">SQLAlchemy</a>,
+<a href="http://www.sqlkorma.com/">Korma</a>,
+<a href="http://www.jooq.org/">jOOQ</a> and probably hundreds of similar projects. Do we
+really need one more?</p>
+
+<p>Well, Alf <em>is</em> a database connectivity library but it is first and foremost a
+proposal for a new <em>kind</em> of database connectivity, or a paradigm shift if you
+want. This new paradigm is called <strong>Relations as First-Class Citizen</strong> and
+that&#39;s very different from the projects aforementionned. The difference lies
+in the kind of abstraction that the library expose to the software developer.</p>
+
+<p>Indeed, in almost all <a href="http://www.datomic.com/">but</a>
+<a href="https://github.com/dkubb/axiom">a</a>
+<a href="http://dbappbuilder.sourceforge.net/Rel.php">few</a> database connectivity
+layers, the developer is exposed to SQL queries. In fact, the SQL query is
+very often abstracted behind a higher-level API for manipulating its abstract
+syntax tree (AST). But even in this case, the exposed abstraction is a SQL
+query. The fact is that a SQL query, even when abstracted behind its AST,
+tends to be a very poor abstraction for developing software. The reason why is
+subtle, so I now take some time to explain it in more depth.</p>
+
+<h2>SQL, Relational Calculus vs. Relational Algebra</h2>
+
+<p>SQL has been invented to allow <em>human beings</em> to query relational databases.
+In fact, SQL is nearest to (tuple) relational calculus than to relational
+algebra (for the sake of accuracy, it is a strange mix of both). In my
+opinion, it is important to understand the difference in nature between a
+calculus and an algebra:</p>
+
+<ul>
+<li>In a calculus, what you describe is the problem to solve, not how to solve
+it. Hence the &#39;<em>from ... select ... such that ...</em>&#39; declarative kind of
+question you actually ask to a SQL DBMS.</li>
+<li>In contrast, in an algebra you manipulate symbols, that denote <em>values</em>,
+through a predefined set of operators. You use those operators to <em>build</em>
+or <em>reach</em> the solution to your problem.</li>
+</ul>
+
+<p>It follows that an algebra tends to be less declarative than a calculus.
+Despite this, we do claim that relational algebra exposes better abstractions
+for developing software when it comes to manipulating data. Why is that so?</p>
+
+<h2>Querying databases vs. developing software</h2>
+
+<p>When you manually query a database (either a SQL, a NoSQL one or whatever) you
+generally know the problem at hand. Therefore, you welcome a declarative
+language that allows you expressing that problem and letting the underlying
+engine find the solution instead of having to describe the algorithm to
+compute it.</p>
+
+<p>Developping software is of a very different nature. As a software developer,
+you generally don&#39;t have one single problem at hand. Instead, you have a set
+of problems called <em>requirements</em> and you find a design that allows meeting
+them all. One of the most effective strategy for this is known as <em>divide and
+conquer</em>. A modular design, for example, helps achieving a good separation of
+concerns with respect to those requirements while ensuring that the software
+behaves as expected when all modules are integrated.</p>

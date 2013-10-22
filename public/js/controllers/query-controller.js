@@ -3,21 +3,32 @@ function QueryController($scope, $stateParams, $http, $filter) {
   $scope.mode     = "data";
   $scope.error    = "";
   $scope.src      = "";
-  $scope.query    = {};
   $scope.result   = "";
   $scope.format   = "text/plain";
 
   $scope.init = function(){
+    $http.get('/doc.json').success(function(data) {
+      $scope.examples = data['examples'];
+    });
     if ($stateParams.src) {
       $scope.src = $stateParams.src;
-      $scope.query = {human: "Type your query below..."}
-    } else {
-      $scope.getQueryAtRandom();
     }
+    $scope.editor.focus();
   }
-  
-  $scope.setQuery = function(q){
-    $scope.src = q['query'];
+
+  $scope.aceLoaded = function(editor) {
+    $scope.editor = editor;
+    editor.getSession().setTabSize(2);
+    $scope.init();
+  };
+
+  $scope.getQueryAtRandom = function(){
+    var item = null;
+    while (!item || item.source == $scope.src){
+      items = $scope.examples;
+      item  = items[Math.floor(Math.random()*items.length)];
+    }
+    $scope.src = item.source;
   }
 
   $scope.runQuery = function(){
@@ -42,17 +53,4 @@ function QueryController($scope, $stateParams, $http, $filter) {
   $scope.$watch("format", $scope.runQuery);
   $scope.$watch("mode",   $scope.runQuery);
   $scope.$watch("src",    $scope.runQuery);
-
-  $scope.getQueryAtRandom = function(){
-    $http.get("/one").success(function(data){
-      $scope.query = data;
-      $scope.src = data["alternatives"][0]['query'];
-    });
-  }
-  
-  $scope.aceLoaded = function(editor) {
-    $scope.editor = editor;
-    editor.getSession().setTabSize(2);
-    $scope.init();
-  };
 }

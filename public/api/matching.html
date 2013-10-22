@@ -3,7 +3,7 @@
 <p>Aka &#39;where exists&#39;</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">matching</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">matching</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -20,28 +20,29 @@
 <code>right</code> tuple would join on common attributes.</p>
 
 <p>This operator, also known as semi-join, can be explained through the
-shortcut definition below. As shown, it basically consists in joining
-<code>left</code> and <code>right</code> relations and then projecting back on <code>left</code>
-attributes.</p>
+definition below. As shown, it consists in joining <code>left</code> and <code>right</code>
+relations and projecting the result back on <code>left</code> attributes.</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">matching</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
   <span class="n">project</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">),</span> <span class="n">left</span><span class="o">.</span><span class="n">attr_list</span><span class="p">)</span>
 <span class="k">end</span>
+<span class="n">matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">supplies</span><span class="p">)</span>
 </pre>
 </div>
 
 <div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def matching(left, right)
   project(join(left, right), left.attr_list)
-end'})">Try it!</a></div>
+end
+matching(suppliers, supplies)'})">Try it!</a></div>
 
 <p>Or, in SQL terms:</p>
 <div class="highlight"><pre><span class="no">SELECT</span> <span class="n">left</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="n">left</span> <span class="no">NATURAL</span> <span class="no">JOIN</span> <span class="n">right</span>
 </pre>
 </div>
 
-<p>The synonym &#39;where exists&#39; comes from the fact that, since right
-attributes are projected away, it may seem more intuitive to think about
-this operator as filtering tuples from left where <em>there exists</em> some
-tuple at right that <em>would</em> join. In SQL-ish terms:</p>
+<p>The synonym &#39;where exists&#39; comes from the fact that, since right attributes
+are projected away, it may seem more intuitive to think about this operator
+as filtering tuples from left where <em>there exists</em> some tuple at right that
+<em>would</em> join. In SQL terms:</p>
 <div class="highlight"><pre><span class="no">SELECT</span> <span class="o">*</span> <span class="no">FROM</span> <span class="n">left</span> <span class="no">WHERE</span> <span class="no">EXISTS</span> <span class="p">(</span><span class="no">SELECT</span> <span class="o">*</span> <span class="no">FROM</span> <span class="n">right</span> <span class="no">WHERE</span> <span class="o">[</span><span class="n">join</span> <span class="n">condition</span><span class="o">]</span><span class="p">)</span>
 </pre>
 </div>
@@ -50,8 +51,9 @@ tuple at right that <em>would</em> join. In SQL-ish terms:</p>
 
 <p>As for (natural) <code>join</code>, you must take care of ensuring that the list of
 common attributes on which the matching applies corresponds to what you
-want. Renamings and projections are worth having at hand when joining.
-Alternatively, shortcuts can be considered. A (advanced) example below:</p>
+want. Renamings and projections are worth having at hand when using
+matching. Alternatively, shortcuts can be considered. A (advanced) example
+below:</p>
 <div class="highlight"><pre><span class="c1"># Same as matching(left, right) except that only attributes in `wish`</span>
 <span class="c1"># are take into account in matching.</span>
 <span class="k">def</span> <span class="nf">matching_on</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">wish</span><span class="p">)</span>

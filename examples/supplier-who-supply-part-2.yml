@@ -1,9 +1,0 @@
-human: |-
-  Get suppliers who supply part P2.
-alternatives:
-  - query: |-
-      matching(suppliers, restrict(supplies, pid: 'P2'))
-  - query: |-
-      project(
-        restrict(join(suppliers, supplies), pid: 'P2'),
-        [:sid, :name, :status, :city])

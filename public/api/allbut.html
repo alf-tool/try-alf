@@ -3,7 +3,7 @@
 <p>Projects a subset of attributes away.</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -22,16 +22,18 @@
 <p>This operator is the inverse of <code>project</code>. While the latter <em>keeps</em>
 attributes, this one <em>removes</em> them. <code>project</code> actually supports an allbut
 variant, which is equivalent to this operator. In other words, this
-operator can be seen as being the following shortcut:</p>
+operator can be understood as follows:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
   <span class="n">project</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
 <span class="k">end</span>
+<span class="n">allbut</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="p">,</span> <span class="ss">:status</span><span class="o">]</span><span class="p">)</span>
 </pre>
 </div>
 
 <div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def allbut(operand, attributes)
   project(operand, attributes, allbut: true)
-end'})">Try it!</a></div>
+end
+allbut(suppliers, [:city, :status])'})">Try it!</a></div>
 
 <h2>Implementation notes</h2>
 

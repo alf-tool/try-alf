@@ -3,7 +3,7 @@
 <p>String concatenation</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="no">AttrName</span><span class="o">|</span><span class="p">(</span><span class="no">Tuple</span><span class="o">-&gt;</span><span class="no">Numeric</span><span class="p">))</span>
+<div class="highlight"><pre><span class="n">concat</span><span class="p">(</span><span class="n">expr</span><span class="p">:</span> <span class="no">AttrName</span><span class="o">|</span><span class="p">(</span><span class="no">Tuple</span><span class="o">-&gt;</span><span class="no">Numeric</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="no">Aggregator</span>
 </pre>
 </div>
 
@@ -33,11 +33,10 @@ attributes. Ruby&#39;s <code>to_s</code> will be used on values prior to concate
 <p>The options are:</p>
 
 <ul>
-<li><code>_before_</code> starts the resulting string (defaults to &#39;&#39;)</li>
-<li><code>_after_</code> ends the resulting string (defaults to &#39;&#39;)</li>
-<li><code>_between_</code> is used between each value</li>
+<li><code>before</code> starts the resulting string (defaults to &#39;&#39;)</li>
+<li><code>after</code> ends the resulting string (defaults to &#39;&#39;)</li>
+<li><code>between</code> is used between each value</li>
 </ul>
 
 <p>As of current Alf version, the order in which the values are concatenated
-is not guaranteed. This function is thus non-deterministic so far and
-shoud probably be avoided if possible.</p>
+is not guaranteed. So far, this function is thus non-deterministic.</p>

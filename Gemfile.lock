@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/alf-tool/alf-core.git
-  revision: dedb258250e5681fa03fb5d0eee1bd407e800238
+  revision: 2f00f6a16b12882fb34aa4d9bae006653731dab1
   specs:
     alf-core (0.15.0)
       domain (~> 1.0)
@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: git://github.com/alf-tool/alf-doc.git
-  revision: 14a703cf2f77269a2a6d7b6097e5c294928f3d9b
+  revision: 36b3c74c992840cc56eedd46356fda1c44c0599a
   specs:
     alf-doc (0.15.0)
       alf-core (~> 0.15.0)
@@ -64,12 +64,12 @@ GEM
     rack-robustness (1.1.0)
     rack-timeout (0.0.4)
     rake (10.1.0)
-    redcarpet (2.3.0)
+    redcarpet (3.0.0)
     ruby_cop (1.0.5)
     sequel (4.3.0)
     sexpr (0.6.0)
     sqlite3 (1.3.8)
-    temple (0.6.6)
+    temple (0.6.7)
     thin (1.6.0)
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)

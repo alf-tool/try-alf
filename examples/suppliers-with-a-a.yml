@@ -1,7 +1,0 @@
-human: |-
-  Get suppliers who have a 'a' in their name (case insensitive)
-alternatives:
-  - query: |-
-      restrict(suppliers, ->(t){ t.name =~ /a/i })
-  - query: |-
-      restrict(suppliers, ->(t){ t.name.downcase.chars.include?('a') })

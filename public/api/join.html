@@ -3,7 +3,7 @@
 <p>Natural join</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -53,13 +53,13 @@ ss = project(rename(suppliers, :city => :supplier_city), [:sid, :supplier_city])
 pairs = join(ps, ss)
 project(restrict(pairs, neq(:part_city, :supplier_city)), [:sid, :pid])'})">Try it!</a></div>
 
-<p>As obviously demonstrated by the example above, such kind of query is
-rather cumbersome to write and verbous. Future versions of Alf will come
-with useful shortcuts and new operators. In the mean time, don&#39;t forget
-that defining your own shortcuts and operators is somewhat easy! Don&#39;t
-hesitate to contribute them if of general purpose.</p>
+<p>As obviously demonstrated by the example above, such query is rather
+cumbersome to write and verbous. Future versions of Alf will come with
+useful shortcuts and new operators. In the mean time, don&#39;t forget that
+defining your own shortcuts and operators is easy! Don&#39;t hesitate to
+contribute them if of general purpose.</p>
 
-<p>Last, natural joins tend to be error prone; in particular, you must take
+<p>Last, natural join tends to be error prone; in particular, you must take
 care of common attributes of your design on which you do not want to join
 (such as <code>latest_change</code> and <code>deleted</code> fields and the like). Renamings and
 projections are worth having at hand when joining.</p>

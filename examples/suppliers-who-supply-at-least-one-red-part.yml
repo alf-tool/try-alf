@@ -1,9 +1,0 @@
-human: |-
-  Get suppliers who supply at least one red part.
-alternatives:
-  - query: |-
-      red_parts = restrict(parts, color: 'Red')
-      matching(suppliers, matching(supplies, red_parts))
-  - query: |-
-      red_parts = project(restrict(parts, color: 'Red'), [:pid])
-      matching(suppliers, join(supplies, red_parts))

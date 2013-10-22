@@ -3,7 +3,7 @@
 <p>Relation-valued attribute</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">group</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">,</span> <span class="n">as</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">group</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">,</span> <span class="n">as</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -21,18 +21,16 @@
 
 <h2>Description</h2>
 
-<p>Computes the relation obtained by taking the allbut-projection of <code>operand</code>
-on <code>attributes</code> then extending each tuple <code>t</code> with a relation-valued
-attribute <code>as</code>; the latter is defined as a restriction/projection of
-operand. Restriction on tuples matching <code>t</code> and projected on <code>attributes</code>.</p>
+<p>Summarizes <code>operand</code> by all but the specified <code>attributes</code> and groups the
+latter under a relation-value attribute <code>as</code>.</p>
 
-<p>In other words, this operator could be formally defined as the following
-shortcut:</p>
+<p>This operator could be formally defined as the following shortcut:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">as</span><span class="p">)</span>
   <span class="kp">extend</span><span class="p">(</span>
     <span class="n">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">),</span>
     <span class="n">as</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">project</span><span class="p">(</span><span class="n">matching</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="no">Relation</span><span class="p">(</span><span class="n">t</span><span class="p">)),</span> <span class="n">attributes</span><span class="p">)</span> <span class="p">})</span>
 <span class="k">end</span>
+<span class="n">group</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:status</span><span class="o">]</span><span class="p">,</span> <span class="ss">:suppliers</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -40,7 +38,8 @@ shortcut:</p>
   extend(
     allbut(operand, attributes),
     as: ->(t){ project(matching(operand, Relation(t)), attributes) })
-end'})">Try it!</a></div>
+end
+group(suppliers, [:sid, :name, :status], :suppliers)'})">Try it!</a></div>
 
 <p>This operators supports an ALL BUT variant, through the <code>allbut</code> option.
 When set to true, the operator keeps specified attributes and groups all

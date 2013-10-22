@@ -1,0 +1,134 @@
+<h1>Alf in Shell</h1>
+
+<p>This page provides an introduction to using Alf in Shell. Please refer to <code>alf
+--help</code> and <code>alf help COMMAND</code> for further details. Note that, Alf does not
+currently provide ways to perform updates using the shell interface. The
+following section describe the most typical use cases of the commandline tool:</p>
+
+<ul>
+<li>Querying data from files (.json, .csv and the like)</li>
+<li>Querying SQL databases around</li>
+<li>Exporting data in various format</li>
+<li>Piping with alf itself... and other processes</li>
+<li>Keeping configuration in a .alfrc file</li>
+<li>Executing and analyzing complex queries</li>
+</ul>
+
+<h2>Querying data files</h2>
+
+<p>Alf recognizes various data formats such as <code>.csv</code>, <code>.json</code>, <code>.yaml</code> and so
+on. It allows you to query such files and export data in those formats.</p>
+
+<p>Suppose that you have the <a target="_blank"
+href="/downloads/suppliers.csv">suppliers.csv</a> file in the current folder.
+Visualizing the content of this file as a relation is as simple as:</p>
+<div class="highlight"><pre><span class="nv">$ </span>alf show suppliers
+</pre>
+</div>
+
+<p>Please note that the <code>.csv</code> extension must not be specified. In fact, Alf
+connects to the current folder as if it was a database, so that recognized
+files are seen as candidate relations. In other words, the example below
+works as soon as <code>suppliers</code> and <code>supplies</code> can be tracked to recognized files.
+Try it yourself using <a target="_blank" href="/downloads/suppliers.csv">suppliers.csv</a>
+and <a target="_blank" href="/downloads/supplies.json">supplies.json</a>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>alf show <span class="s2">&quot;join(suppliers, supplies)&quot;</span>
+</pre>
+</div>
+
+<h2>Querying databases</h2>
+
+<p>Querying databases is not different. The <code>--db</code> option allows you to specify
+which database to connect to. For instance, the invocations above are
+shortcuts for:</p>
+<div class="highlight"><pre><span class="nv">$ </span>alf --db<span class="o">=</span>. show suppliers
+</pre>
+</div>
+
+<p>Therefore, querying a SQLite database <a target="_blank"
+href="/downloads/sap.sqlite3">sap.sqlite3</a> in the current folder:</p>
+<div class="highlight"><pre>alf --db<span class="o">=</span>sap.sqlite3 show <span class="s2">&quot;restrict(suppliers, city: &#39;London&#39;)&quot;</span>
+</pre>
+</div>
+
+<p>And a postgresql database:</p>
+<div class="highlight"><pre>alf --db<span class="o">=</span>postgres://user:password@host/database show parts
+</pre>
+</div>
+
+<p>Alf example database (the suppliers and parts examplar) can also be used when
+learning alf:</p>
+<div class="highlight"><pre><span class="n">alf</span> <span class="o">--</span><span class="n">examples</span> <span class="n">show</span> <span class="n">suppliers</span>
+</pre>
+</div>
+
+<h2>Exporting data in various formats</h2>
+
+<p>By default, <code>alf show</code> outputs relations as a plain/text ascii table. You can
+of course specify other data output formats. For instance, exporting a query
+in .json can be done as follows:</p>
+<div class="highlight"><pre>alf --json show <span class="s2">&quot;restrict(suppliers, city: &#39;London&#39;)&quot;</span>
+</pre>
+</div>
+
+<p>Other data formats are available through <code>--csv</code> and <code>--yaml</code> and <code>--rash</code>
+(ruby hashes, one per line).</p>
+
+<h2>Piping and data conversion</h2>
+
+<p>Alf also supports receiving data from its standard input. Suppose for example
+that you want to restrict some json tuples outputted by some process, here a
+simple <code>cat</code>:</p>
+<div class="highlight"><pre><span class="n">cat</span> <span class="n">suppliers</span><span class="o">.</span><span class="n">json</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">json</span> <span class="n">show</span> <span class="s2">&quot;restrict(stdin, city: &#39;London&#39;)&quot;</span>
+</pre>
+</div>
+
+<p>That means that you can very easily use alf to convert from one data format
+to another one. Converting a .csv file to .json?</p>
+<div class="highlight"><pre><span class="n">cat</span> <span class="n">suppliers</span><span class="o">.</span><span class="n">csv</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">csv</span> <span class="o">--</span><span class="n">json</span> <span class="n">show</span> 
+</pre>
+</div>
+
+<h2>Using an .alfrc file</h2>
+
+<p>When invoked from the command line, Alf looks after a <code>.alfrc</code> in the current
+folder and its ancestors and loads its default configuration from there if
+found. A typical <code>.alfrc</code> file looks as follows:</p>
+<div class="highlight"><pre><span class="n">alfrc</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="c1"># Adapter to use, same as `--db=...`</span>
+  <span class="n">c</span><span class="o">.</span><span class="n">adapter</span> <span class="o">=</span> <span class="s2">&quot;postgres://user:password@host/database&quot;</span>
+
+  <span class="c1"># additional load paths, same as `-Ilib -Ispec`</span>
+  <span class="n">c</span><span class="o">.</span><span class="n">load_paths</span> <span class="o">|=</span> <span class="o">[</span> <span class="s2">&quot;lib&quot;</span><span class="p">,</span> <span class="s2">&quot;spec&quot;</span> <span class="o">]</span>
+
+  <span class="c1"># additional libraries to require, same as `-rfoo -rbar`</span>
+  <span class="n">c</span><span class="o">.</span><span class="n">requires</span> <span class="o">|=</span> <span class="o">[</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;bar&quot;</span><span class="o">]</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<p>See <code>Alf::Shell::Alfrc</code> for more information and available options.</p>
+
+<h2>Evaluating and analyzing complex queries</h2>
+
+<p>Passing queries between quotes may become cumbersome when they get complex.
+Hopefully, <code>Alf</code> recognizes files with an <code>.alf</code> extension and treat them
+in a special way. Suppose you have a complex query in a <code>complex-query.alf</code>
+file.</p>
+<div class="highlight"><pre><span class="n">suppliers_by_city</span> <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:status</span><span class="o">]</span><span class="p">,</span> <span class="ss">:suppliers</span><span class="p">)</span>
+<span class="n">parts_by_city</span>     <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="ss">:parts</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+<span class="n">joined</span>            <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">suppliers_by_city</span><span class="p">,</span> <span class="n">parts_by_city</span><span class="p">)</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">joined</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>Then, passing this file to <code>show</code> simply executes the complex query:</p>
+<div class="highlight"><pre><span class="nv">$ </span>alf --db<span class="o">=</span>... show complex-query.alf
+</pre>
+</div>
+
+<p>In addition, you can always verify how Alf optimize and execute your queries
+using the <code>explain</code> command:</p>
+<div class="highlight"><pre><span class="nv">$ </span>alf --db<span class="o">=</span>... explain complex-query.alf
+</pre>
+</div>

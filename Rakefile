@@ -29,5 +29,13 @@ namespace :doc do
     end
   end
 
+  task :blog do
+    (Path.dir/"blog").glob("*.md") do |page|
+      target = page.relocate(page.parent, Path.dir/'public/blogging/', ".html")
+      puts "#{page} -> #{target}"
+      target.write Alf::Doc::ToHtml.new.page(page.read)
+    end
+  end
+
 end
-task :default => [:"doc:json", :"doc:api", :"doc:pages"]
+task :default => [:"doc:json", :"doc:api", :"doc:pages", :"doc:blog"]

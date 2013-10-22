@@ -2,18 +2,9 @@
   <div id="editor" class="row">
     <div class="header">
       <p class="human pull-left">
-        <span>{{query.human}}</span>
+        <span>Type your query or <a ng-click="getQueryAtRandom()">get one at random</a></span>
       </p>
       <p class="alternatives pull-right">
-        <span ng-repeat="q in query.alternatives"
-              ng-click="setQuery(q)"
-              class="badge"
-              ng-class="{'badge-info': q['query']==src}">
-          {{$index+1}}
-        </span>
-        <i class="icon-repeat"
-           title="Get a query at random"
-           ng-click="getQueryAtRandom()"/>
         <i class="icon-bookmark"
            title="Bookmark this query"
            ng-click="$state.transitionTo('try', {src: src})"/>

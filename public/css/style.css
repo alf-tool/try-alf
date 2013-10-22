@@ -36,7 +36,7 @@ header li {
   display: block;
   float: left;
   background: white;
-  width: 120px;
+  width: 115px;
   height: 40px;
   margin: 0px;
   padding: 0px;
@@ -193,11 +193,11 @@ article h1 {
   font-size: 170% !important;
   border-top: 4px solid #aaa !important;
   padding-top: .5em !important;
-  margin-top: 1.5em !important;
+  margin-top: 1em !important;
 }
 article h2 {
   font-size: 150% !important;
-  margin-top: 1.5em !important;
+  margin-top: 1em !important;
   border-top: 4px solid #e0e0e0 !important;
   padding-top: .5em !important;
 }
@@ -287,4 +287,10 @@ div.try-this {
   padding: 0px;
   margin-top: -45px;
   margin-right: 10px;
+  margin-bottom: 25px;
+  padding-top: 5px;
+}
+.blog-post-date {
+  text-align: right;
+  padding-top: 15px;
 }

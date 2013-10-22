@@ -1,0 +1,4 @@
+suppliers_by_city = group(suppliers, [:sid, :name, :status], :suppliers)
+parts_by_city     = group(parts, [:city], :parts, allbut: true)
+joined            = join(suppliers_by_city, parts_by_city)
+restrict(joined, city: "London")

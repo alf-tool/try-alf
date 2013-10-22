@@ -3,7 +3,7 @@
 <p>Predicate-based filtering</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="no">Predicate</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="no">Predicate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -32,5 +32,5 @@ predicate evaluates to TRUE.</p>
 <h2>Implementation notes</h2>
 
 <p>As of current Alf version, native predicates (through ruby <code>Proc</code> objects)
-cannot be optimized nor compiled to SQL. The use of high-level predicates
+cannot be optimized nor compiled to SQL. The use of predicate factories
 (<code>eq</code>, <code>gt</code>, etc.) is strongly recommanded.</p>

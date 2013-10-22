@@ -21,6 +21,10 @@ tryalf.config(function($stateProvider, $urlRouterProvider){
         url: "/doc/{obj:.*}",
         templateUrl: "/doc.html",
     })
+    .state('blog', {
+        url: "/blog/{page:.*}",
+        templateUrl: "/blog.html",
+    })
     .state('about', {
         url: "/about/",
         templateUrl: "/about.html",

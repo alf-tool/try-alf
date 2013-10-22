@@ -3,7 +3,7 @@
 <p>Aggregate and compute</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">,</span> <span class="n">aggs</span><span class="p">:</span> <span class="no">Summarization</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">,</span> <span class="n">aggs</span><span class="p">:</span> <span class="no">Summarization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -30,7 +30,7 @@
 on <code>by</code> attributes then extending each tuple <code>t</code> with the result of
 aggregations defined by <code>aggs</code> on the tuples from <code>operand</code> matching <code>t</code>.</p>
 
-<p>In SQL-ish terms, <code>SELECT [by], [agg] FROM operand GROUP BY [by]</code>.</p>
+<p>In SQL terms, <code>SELECT [by], [agg] FROM operand GROUP BY [by]</code>.</p>
 
 <h2>Implementation notes</h2>
 

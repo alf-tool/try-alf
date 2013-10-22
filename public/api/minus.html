@@ -3,7 +3,7 @@
 <p>Logical AND NOT</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">minus</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">minus</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -20,24 +20,24 @@
 
 <h2>Description</h2>
 
-<p>Computes the relation as the set difference of <code>left</code> and <code>right</code> tuples.</p>
+<p>Computes the relation as the set difference of <code>left</code> and <code>right</code>.</p>
 
-<p>The <code>left</code> and <code>right</code> relations must be minus-compatible, which in
-short means that they must have same heading (type inheritance is partly
-supported through ruby&#39;s own type system, so that the actual behavior is
-slighlty more permissive).</p>
+<p>The <code>left</code> and <code>right</code> relations must be minus-compatible, which meaning
+that they must have same heading (type inheritance is partly supported
+through ruby&#39;s own type system, so that the actual behavior is slighlty more
+permissive).</p>
 
 <h2>Implementation notes</h2>
 
 <p>Unlike SQL, this operator ALWAYS remove duplicates. There is no way, in
 Alf, to compute <em>bags</em> of tuples and therefore no way to express something
-such as EXCEPT ALL.</p>
+such as SQL&#39;s EXCEPT ALL.</p>
 
-<p>It is sometimes idiomatic in Alf to use <code>intersect</code> as a logical AND NOT,
-such as the example below. So far, the optimizer/compiler is not smart
-enough to translate the former in the latter (which is likely to have a
-better query plan, especially when using the SQL compiler and usual SQL
-DBMSs). Any patch is welcome here too!</p>
+<p>It is sometimes idiomatic in Alf to use <code>intersect</code> as a logical AND NOT, as
+illustrated below. So far, the optimizer/compiler is not smart enough to
+translate the former into the latter (which is likely to have a better query
+plan when using faithful SQL compilation and available SQL DBMSs). Any patch
+is welcome here too!</p>
 <div class="highlight"><pre><span class="n">minus</span><span class="p">(</span>
   <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)),</span>
   <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">10</span><span class="p">)))</span>
