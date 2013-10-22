@@ -64,19 +64,19 @@ example.</p>
 
 <p>In Java/JDBC for instance, queries are simple SQL strings. No abstraction at
 all; we all know the cost in terms of maintenance, security, etc.</p>
-<div class="highlight"><pre><span class="n">String</span> <span class="n">city</span> <span class="o">=</span> <span class="o">...</span> <span class="c1">// from user input;</span>
+<div class="highlight"><pre><span class="n">String</span> <span class="n">location</span> <span class="o">=</span> <span class="o">...</span> <span class="c1">// from user input;</span>
 <span class="n">String</span> <span class="n">qry</span>  <span class="o">=</span> <span class="s">&quot;SELECT name, city FROM suppliers WHERE&quot;</span><span class="o">;</span>
-       <span class="n">qry</span> <span class="o">+=</span> <span class="s">&quot;city=&#39;&quot;</span> <span class="o">+</span> <span class="n">city</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="o">;</span>
+       <span class="n">qry</span> <span class="o">+=</span> <span class="s">&quot;city=&#39;&quot;</span> <span class="o">+</span> <span class="n">location</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="o">;</span>
 </pre>
 </div>
 
 <p>Common high-level approaches are slightly more abstract. While more secure and
 flexible, they still expose a SQL query abstraction. In the following example,
 using <a href="https://github.com/rails/arel">ARel</a>:</p>
-<div class="highlight"><pre><span class="n">city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
+<div class="highlight"><pre><span class="n">location</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
 <span class="n">qry</span>  <span class="o">=</span> <span class="no">Arel</span><span class="o">::</span><span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:suppliers</span><span class="p">)</span>
 <span class="n">qry</span>  <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">qry</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span><span class="p">,</span> <span class="n">qry</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
-<span class="n">qry</span>  <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">qry</span><span class="o">[</span><span class="ss">:city</span><span class="o">].</span><span class="n">eq</span><span class="p">(</span><span class="n">city</span><span class="p">))</span>
+<span class="n">qry</span>  <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">qry</span><span class="o">[</span><span class="ss">:city</span><span class="o">].</span><span class="n">eq</span><span class="p">(</span><span class="n">location</span><span class="p">))</span>
 </pre>
 </div>
 
@@ -84,16 +84,18 @@ using <a href="https://github.com/rails/arel">ARel</a>:</p>
 expose true relations instead. In the example below, <code>suppliers</code> is a
 relation, <code>restrict</code> is a relational operator and its invocation returns
 another relation.</p>
-<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">location</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">:city</span> <span class="o">=&gt;</span> <span class="n">location</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, city: \'London\')'})">Try it!</a></div>
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'location = ... # from user input
+restrict(suppliers, :city => location)'})">Try it!</a></div>
 
 <h3>What does really change?</h3>
 
-<p>This paradigm change may not seem very important or significant at first
-glance. Abstracting from SQL is a very significant shift, though:</p>
+<p>This paradigm shift may not seem very significant at first glance, but
+abstracting from SQL is an important change in practice:</p>
 
 <ul>
 <li><p>First, when exposing SQL as an software abstraction, you also expose its
@@ -169,9 +171,10 @@ more generally, to manipulating data. Why is that so?</p>
 
 <p>When you (manually) query a database (either a SQL, a NoSQL one or whatever)
 you generally know the problem at hand. Therefore, you welcome a declarative
-language that allows you expressing that problem and letting the underlying
-engine find the solution instead of having to describe the algorithm to
-compute it. This is what SQL offers to you. This is what <a href="https://bernardopires.com/2013/10/try-logic-programming-a-gentle-introduction-to-prolog/">logic
+language since it allows you to express that problem while leaving to the
+underlying engine the job of finding the solution instead of having to
+describe the algorithm to compute it. This is what SQL offers to you. This is
+what <a href="https://bernardopires.com/2013/10/try-logic-programming-a-gentle-introduction-to-prolog/">logic
 programming</a>
 and <a href="http://en.wikipedia.org/wiki/Constraint_programming">constraint
 programming</a> offer too.</p>
@@ -201,7 +204,7 @@ illustrates this on our running example.</p>
 <h2>The struggle of SQL with abstraction and reuse</h2>
 
 <p>In the SQL query below observe the coupling induced by <code>s.city = p.city</code>
-between the main selection and the where clause:</p>
+between the <code>FROM</code> clause and the <code>EXISTS</code> subquery:</p>
 <div class="highlight"><pre><span class="no">SELECT</span> <span class="no">DISTINCT</span> <span class="n">city</span>
 <span class="no">FROM</span> <span class="n">suppliers</span> <span class="no">AS</span> <span class="n">s</span>
 <span class="no">WHERE</span> <span class="no">EXISTS</span> <span class="p">(</span>
@@ -381,6 +384,50 @@ Mappers</a>:</p>
 <p>Alf already has a few high-level operators such as <a href="/doc/matching">matching</a>
 or <a href="/doc/page">page</a>. The next release should include a few others currently
 evaluated on case studies: <code>ite</code>, <code>image</code>, <code>abstract</code>, <code>quota</code>, etc.</p>
+
+<h3>Database viewpoints</h3>
+
+<p>The closure property of relational algebra also opens the ability to define
+composable database viewpoints. Viewpoints provide a very effective
+abstraction mechanism for implementing complex security/privacy requirements,
+as well as providing context-aware database interfaces.</p>
+
+<p>Without entering the details here, the following example illustrates the
+approach by hacking on Ruby&#39;s <code>super</code> mechanism. Suppose we want to provide a
+database viewpoint on suppliers and parts located in London:</p>
+<div class="highlight"><pre><span class="c1"># Start of the viewpoint</span>
+<span class="k">def</span> <span class="nf">suppliers</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="k">def</span> <span class="nf">parts</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="k">def</span> <span class="nf">supplies</span>
+  <span class="c1"># restore foreign keys given the previous restrictions</span>
+  <span class="n">matching</span><span class="p">(</span><span class="n">matching</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="n">suppliers</span><span class="p">)</span>
+<span class="k">end</span>
+<span class="c1"># End of the viewpoint</span>
+
+<span class="c1"># Query as usual. This is entirely transparent.</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">sid</span><span class="p">:</span> <span class="s1">&#39;S1&#39;</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# Start of the viewpoint
+def suppliers
+  restrict(super, city: \'London\')
+end
+def parts
+  restrict(super, city: \'London\')
+end
+def supplies
+  # restore foreign keys given the previous restrictions
+  matching(matching(super, parts), suppliers)
+end
+# End of the viewpoint
+
+# Query as usual. This is entirely transparent.
+restrict(supplies, sid: \'S1\')'})">Try it!</a></div>
 
 <h3>Reconciling heterogeneous type systems</h3>
 

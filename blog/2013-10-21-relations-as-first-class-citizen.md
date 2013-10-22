@@ -65,9 +65,9 @@ all; we all know the cost in terms of maintenance, security, etc.
 
 
 ```java
-String city = ... // from user input;
+String location = ... // from user input;
 String qry  = "SELECT name, city FROM suppliers WHERE";
-       qry += "city='" + city + "'";
+       qry += "city='" + location + "'";
 ```
 
 Common high-level approaches are slightly more abstract. While more secure and
@@ -75,10 +75,10 @@ flexible, they still expose a SQL query abstraction. In the following example,
 using [ARel](https://github.com/rails/arel):
 
 ```
-city = ... # from user input
+location = ... # from user input
 qry  = Arel::Table.new(:suppliers)
 qry  = qry.project(qry[:name], qry[:city])
-qry  = qry.where(qry[:city].eq(city))
+qry  = qry.where(qry[:city].eq(location))
 ```
 
 **Relations as First-Class Citizen** changes this to abstract from SQL and
@@ -87,13 +87,14 @@ relation, `restrict` is a relational operator and its invocation returns
 another relation.
 
 ```try
-restrict(suppliers, city: 'London')
+location = ... # from user input
+restrict(suppliers, :city => location)
 ```
 
 ### What does really change?
 
-This paradigm change may not seem very important or significant at first
-glance. Abstracting from SQL is a very significant shift, though:
+This paradigm shift may not seem very significant at first glance, but
+abstracting from SQL is an important change in practice:
 
 * First, when exposing SQL as an software abstraction, you also expose its
   type system. SQL's type system is poor and old. Developers need rich type
@@ -161,9 +162,10 @@ more generally, to manipulating data. Why is that so?
 
 When you (manually) query a database (either a SQL, a NoSQL one or whatever)
 you generally know the problem at hand. Therefore, you welcome a declarative
-language that allows you expressing that problem and letting the underlying
-engine find the solution instead of having to describe the algorithm to
-compute it. This is what SQL offers to you. This is what [logic
+language since it allows you to express that problem while leaving to the
+underlying engine the job of finding the solution instead of having to
+describe the algorithm to compute it. This is what SQL offers to you. This is
+what [logic
 programming](https://bernardopires.com/2013/10/try-logic-programming-a-gentle-introduction-to-prolog/)
 and [constraint
 programming](http://en.wikipedia.org/wiki/Constraint_programming) offer too.
@@ -193,7 +195,7 @@ illustrates this on our running example.
 ## The struggle of SQL with abstraction and reuse
 
 In the SQL query below observe the coupling induced by `s.city = p.city`
-between the main selection and the where clause:
+between the `FROM` clause and the `EXISTS` subquery:
 
 ```
 SELECT DISTINCT city
@@ -344,6 +346,35 @@ join(suppliers, group(join(supplies, parts), [:sid], :supplied_parts, allbut: tr
 Alf already has a few high-level operators such as [matching](/doc/matching)
 or [page](/doc/page). The next release should include a few others currently
 evaluated on case studies: `ite`, `image`, `abstract`, `quota`, etc.
+
+### Database viewpoints
+
+The closure property of relational algebra also opens the ability to define
+composable database viewpoints. Viewpoints provide a very effective
+abstraction mechanism for implementing complex security/privacy requirements,
+as well as providing context-aware database interfaces.
+
+Without entering the details here, the following example illustrates the
+approach by hacking on Ruby's `super` mechanism. Suppose we want to provide a
+database viewpoint on suppliers and parts located in London:
+
+```try
+# Start of the viewpoint
+def suppliers
+  restrict(super, city: 'London')
+end
+def parts
+  restrict(super, city: 'London')
+end
+def supplies
+  # restore foreign keys given the previous restrictions
+  matching(matching(super, parts), suppliers)
+end
+# End of the viewpoint
+
+# Query as usual. This is entirely transparent.
+restrict(supplies, sid: 'S1')
+```
 
 ### Reconciling heterogeneous type systems
 
