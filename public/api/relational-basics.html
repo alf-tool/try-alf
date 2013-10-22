@@ -189,17 +189,20 @@ be rewritten into the following equivalent form:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '#  Who are supppliers located in London or in Paris?
-union(
-  restrict(suppliers, city: \'Paris\'),
-  restrict(suppliers, city: \'London\'))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyAgV2hvIGFyZSBzdXBwcGxpZXJzIGxvY2F0ZWQgaW4gTG9uZG9uIG9yIGlu
+IFBhcmlzPwp1bmlvbigKICByZXN0cmljdChzdXBwbGllcnMsIGNpdHk6ICdQ
+YXJpcycpLAogIHJlc3RyaWN0KHN1cHBsaWVycywgY2l0eTogJ0xvbmRvbicp
+KQ==
+" target="_blank">Try it!</a></div>
 
 <p>Can be rephrased/rewritten as</p>
 <div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, eq(:city, \'Paris\') | eq(:city, \'London\'))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cmVzdHJpY3Qoc3VwcGxpZXJzLCBlcSg6Y2l0eSwgJ1BhcmlzJykgfCBlcSg6
+Y2l0eSwgJ0xvbmRvbicpKQ==
+" target="_blank">Try it!</a></div>
 
 <p>This is kind or rewriting is of particular importance for query optimization,
 but that&#39;s far beyond the basics!</p>

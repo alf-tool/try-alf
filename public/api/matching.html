@@ -12,7 +12,8 @@
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'matching(suppliers, supplies)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=bWF0Y2hpbmcoc3VwcGxpZXJzLCBzdXBwbGllcyk=
+" target="_blank">Try it!</a></div>
 
 <h2>Description</h2>
 
@@ -29,10 +30,10 @@ relations and projecting the result back on <code>left</code> attributes.</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def matching(left, right)
-  project(join(left, right), left.attr_list)
-end
-matching(suppliers, supplies)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=ZGVmIG1hdGNoaW5nKGxlZnQsIHJpZ2h0KQogIHByb2plY3Qoam9pbihsZWZ0
+LCByaWdodCksIGxlZnQuYXR0cl9saXN0KQplbmQKbWF0Y2hpbmcoc3VwcGxp
+ZXJzLCBzdXBwbGllcyk=
+" target="_blank">Try it!</a></div>
 
 <p>Or, in SQL terms:</p>
 <div class="highlight"><pre><span class="no">SELECT</span> <span class="n">left</span><span class="o">.</span><span class="n">*</span> <span class="no">FROM</span> <span class="n">left</span> <span class="no">NATURAL</span> <span class="no">JOIN</span> <span class="n">right</span>
@@ -66,12 +67,12 @@ below:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# Same as matching(left, right) except that only attributes in `wish`
-# are take into account in matching.
-def matching_on(left, right, wish)
-  matching(left, project(right, wish))
-end
-
-# observe here how part names have been discarded to avoid matching them
-# with supplier names (empty result guaranteed)
-matching_on(suppliers, parts, [:city])'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyBTYW1lIGFzIG1hdGNoaW5nKGxlZnQsIHJpZ2h0KSBleGNlcHQgdGhhdCBv
+bmx5IGF0dHJpYnV0ZXMgaW4gYHdpc2hgCiMgYXJlIHRha2UgaW50byBhY2Nv
+dW50IGluIG1hdGNoaW5nLgpkZWYgbWF0Y2hpbmdfb24obGVmdCwgcmlnaHQs
+IHdpc2gpCiAgbWF0Y2hpbmcobGVmdCwgcHJvamVjdChyaWdodCwgd2lzaCkp
+CmVuZAoKIyBvYnNlcnZlIGhlcmUgaG93IHBhcnQgbmFtZXMgaGF2ZSBiZWVu
+IGRpc2NhcmRlZCB0byBhdm9pZCBtYXRjaGluZyB0aGVtCiMgd2l0aCBzdXBw
+bGllciBuYW1lcyAoZW1wdHkgcmVzdWx0IGd1YXJhbnRlZWQpCm1hdGNoaW5n
+X29uKHN1cHBsaWVycywgcGFydHMsIFs6Y2l0eV0p
+" target="_blank">Try it!</a></div>

@@ -86,7 +86,7 @@ from SQL and exposing true relations instead. In the example below,
 `suppliers` is a relation, `restrict` is a relational operator and its
 invocation returns another relation:
 
-```try
+```
 location = ... # from user input
 restrict(suppliers, :city => location)
 ```

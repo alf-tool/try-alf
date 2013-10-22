@@ -12,7 +12,9 @@
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'union(project(suppliers, [:city]), project(parts, [:city]))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=dW5pb24ocHJvamVjdChzdXBwbGllcnMsIFs6Y2l0eV0pLCBwcm9qZWN0KHBh
+cnRzLCBbOmNpdHldKSk=
+" target="_blank">Try it!</a></div>
 
 <h2>Description</h2>
 
@@ -43,13 +45,15 @@ Any patch is welcome here too!</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'union(
-  restrict(suppliers, city: \'Paris\'),
-  restrict(suppliers, city: \'London\'))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=dW5pb24oCiAgcmVzdHJpY3Qoc3VwcGxpZXJzLCBjaXR5OiAnUGFyaXMnKSwK
+ICByZXN0cmljdChzdXBwbGllcnMsIGNpdHk6ICdMb25kb24nKSk=
+" target="_blank">Try it!</a></div>
 
 <p>is equivalent to</p>
 <div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">eq</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, eq(:city, \'Paris\') | eq(:city, \'London\'))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cmVzdHJpY3Qoc3VwcGxpZXJzLCBlcSg6Y2l0eSwgJ1BhcmlzJykgfCBlcSg6
+Y2l0eSwgJ0xvbmRvbicpKQ==
+" target="_blank">Try it!</a></div>

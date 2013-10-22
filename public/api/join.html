@@ -12,7 +12,8 @@
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'join(suppliers, supplies)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=am9pbihzdXBwbGllcnMsIHN1cHBsaWVzKQ==
+" target="_blank">Try it!</a></div>
 
 <h2>Description</h2>
 
@@ -37,7 +38,9 @@ as follows:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'pairs = join(project(suppliers, [:sid]), project(parts, [:pid]))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cGFpcnMgPSBqb2luKHByb2plY3Qoc3VwcGxpZXJzLCBbOnNpZF0pLCBwcm9q
+ZWN0KHBhcnRzLCBbOnBpZF0pKQ==
+" target="_blank">Try it!</a></div>
 
 <p>Non equi-joins can be computed through a latter restriction. For instance,
 the (supplier, part) pairs not located in the same city:</p>
@@ -48,10 +51,13 @@ the (supplier, part) pairs not located in the same city:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'ps = project(rename(parts, :city => :part_city), [:pid, :part_city])
-ss = project(rename(suppliers, :city => :supplier_city), [:sid, :supplier_city])
-pairs = join(ps, ss)
-project(restrict(pairs, neq(:part_city, :supplier_city)), [:sid, :pid])'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cHMgPSBwcm9qZWN0KHJlbmFtZShwYXJ0cywgOmNpdHkgPT4gOnBhcnRfY2l0
+eSksIFs6cGlkLCA6cGFydF9jaXR5XSkKc3MgPSBwcm9qZWN0KHJlbmFtZShz
+dXBwbGllcnMsIDpjaXR5ID0+IDpzdXBwbGllcl9jaXR5KSwgWzpzaWQsIDpz
+dXBwbGllcl9jaXR5XSkKcGFpcnMgPSBqb2luKHBzLCBzcykKcHJvamVjdChy
+ZXN0cmljdChwYWlycywgbmVxKDpwYXJ0X2NpdHksIDpzdXBwbGllcl9jaXR5
+KSksIFs6c2lkLCA6cGlkXSk=
+" target="_blank">Try it!</a></div>
 
 <p>As obviously demonstrated by the example above, such query is rather
 cumbersome to write and verbous. Future versions of Alf will come with
@@ -79,14 +85,14 @@ projections are worth having at hand when joining.</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# The following shortcut joins `left` and `right` on `wish` attributes
-# only. Other common attributes are simply projected away from `right`
-# before joining.
-def join_on(left, right, wish)
-  commons = left.attr_list & right.attr_list
-  join(left, allbut(right, commons - wish))
-end
-
-# observe here how part names have been discarded to avoid joining them
-# with supplier names (empty result guaranteed)
-join_on(suppliers, parts, [:city])'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyBUaGUgZm9sbG93aW5nIHNob3J0Y3V0IGpvaW5zIGBsZWZ0YCBhbmQgYHJp
+Z2h0YCBvbiBgd2lzaGAgYXR0cmlidXRlcwojIG9ubHkuIE90aGVyIGNvbW1v
+biBhdHRyaWJ1dGVzIGFyZSBzaW1wbHkgcHJvamVjdGVkIGF3YXkgZnJvbSBg
+cmlnaHRgCiMgYmVmb3JlIGpvaW5pbmcuCmRlZiBqb2luX29uKGxlZnQsIHJp
+Z2h0LCB3aXNoKQogIGNvbW1vbnMgPSBsZWZ0LmF0dHJfbGlzdCAmIHJpZ2h0
+LmF0dHJfbGlzdAogIGpvaW4obGVmdCwgYWxsYnV0KHJpZ2h0LCBjb21tb25z
+IC0gd2lzaCkpCmVuZAoKIyBvYnNlcnZlIGhlcmUgaG93IHBhcnQgbmFtZXMg
+aGF2ZSBiZWVuIGRpc2NhcmRlZCB0byBhdm9pZCBqb2luaW5nIHRoZW0KIyB3
+aXRoIHN1cHBsaWVyIG5hbWVzIChlbXB0eSByZXN1bHQgZ3VhcmFudGVlZCkK
+am9pbl9vbihzdXBwbGllcnMsIHBhcnRzLCBbOmNpdHldKQ==
+" target="_blank">Try it!</a></div>

@@ -12,12 +12,16 @@
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'group(suppliers, [:sid, :name, :status], :suppliers)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=Z3JvdXAoc3VwcGxpZXJzLCBbOnNpZCwgOm5hbWUsIDpzdGF0dXNdLCA6c3Vw
+cGxpZXJzKQ==
+" target="_blank">Try it!</a></div>
 <div class="highlight"><pre><span class="n">group</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="ss">:suppliers</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'group(suppliers, [:city], :suppliers, allbut: true)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=Z3JvdXAoc3VwcGxpZXJzLCBbOmNpdHldLCA6c3VwcGxpZXJzLCBhbGxidXQ6
+IHRydWUp
+" target="_blank">Try it!</a></div>
 
 <h2>Description</h2>
 
@@ -34,12 +38,12 @@ latter under a relation-value attribute <code>as</code>.</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def group(operand, attributes, as)
-  extend(
-    allbut(operand, attributes),
-    as: ->(t){ project(matching(operand, Relation(t)), attributes) })
-end
-group(suppliers, [:sid, :name, :status], :suppliers)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=ZGVmIGdyb3VwKG9wZXJhbmQsIGF0dHJpYnV0ZXMsIGFzKQogIGV4dGVuZCgK
+ICAgIGFsbGJ1dChvcGVyYW5kLCBhdHRyaWJ1dGVzKSwKICAgIGFzOiAtPih0
+KXsgcHJvamVjdChtYXRjaGluZyhvcGVyYW5kLCBSZWxhdGlvbih0KSksIGF0
+dHJpYnV0ZXMpIH0pCmVuZApncm91cChzdXBwbGllcnMsIFs6c2lkLCA6bmFt
+ZSwgOnN0YXR1c10sIDpzdXBwbGllcnMp
+" target="_blank">Try it!</a></div>
 
 <p>This operators supports an ALL BUT variant, through the <code>allbut</code> option.
 When set to true, the operator keeps specified attributes and groups all

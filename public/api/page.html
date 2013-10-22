@@ -12,12 +12,16 @@
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'page(suppliers, [:status, :sid], 1, page_size: 3)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cGFnZShzdXBwbGllcnMsIFs6c3RhdHVzLCA6c2lkXSwgMSwgcGFnZV9zaXpl
+OiAzKQ==
+" target="_blank">Try it!</a></div>
 <div class="highlight"><pre><span class="n">page</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:status</span><span class="p">,</span> <span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">page_size</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'page(suppliers, [:status, :sid], -1, page_size: 3)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cGFnZShzdXBwbGllcnMsIFs6c3RhdHVzLCA6c2lkXSwgLTEsIHBhZ2Vfc2l6
+ZTogMyk=
+" target="_blank">Try it!</a></div>
 
 <h2>Description</h2>
 
@@ -39,13 +43,12 @@ words, this operator is almost equivalent to the following definition
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def page(operand, order, nth, page_size)
-  allbut(
-    restrict(
-      rank(operand, order, :rank),
-      lte((nth-1)*page_size, :rank) & lt(:rank, nth*page_size)),
-    [:rank])
-end'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=ZGVmIHBhZ2Uob3BlcmFuZCwgb3JkZXIsIG50aCwgcGFnZV9zaXplKQogIGFs
+bGJ1dCgKICAgIHJlc3RyaWN0KAogICAgICByYW5rKG9wZXJhbmQsIG9yZGVy
+LCA6cmFuayksCiAgICAgIGx0ZSgobnRoLTEpKnBhZ2Vfc2l6ZSwgOnJhbmsp
+ICYgbHQoOnJhbmssIG50aCpwYWdlX3NpemUpKSwKICAgIFs6cmFua10pCmVu
+ZA==
+" target="_blank">Try it!</a></div>
 
 <p>As of current Alf version, for this operator to be semantically sound and
 deterministic, <code>order</code> MUST be a total order, that is, it must at least

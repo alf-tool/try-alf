@@ -12,17 +12,23 @@
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, city: \'Paris\', status: 20)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cmVzdHJpY3Qoc3VwcGxpZXJzLCBjaXR5OiAnUGFyaXMnLCBzdGF0dXM6IDIw
+KQ==
+" target="_blank">Try it!</a></div>
 <div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, eq(city: \'Paris\') & gt(:status, 20))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cmVzdHJpY3Qoc3VwcGxpZXJzLCBlcShjaXR5OiAnUGFyaXMnKSAmIGd0KDpz
+dGF0dXMsIDIwKSk=
+" target="_blank">Try it!</a></div>
 <div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">city</span> <span class="o">==</span> <span class="s1">&#39;Paris&#39;</span> <span class="ow">and</span> <span class="n">t</span><span class="o">.</span><span class="n">status</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="p">})</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(suppliers, ->(t){ t.city == \'Paris\' and t.status > 20 })'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cmVzdHJpY3Qoc3VwcGxpZXJzLCAtPih0KXsgdC5jaXR5ID09ICdQYXJpcycg
+YW5kIHQuc3RhdHVzID4gMjAgfSk=
+" target="_blank">Try it!</a></div>
 
 <h2>Description</h2>
 

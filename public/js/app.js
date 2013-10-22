@@ -31,9 +31,9 @@ tryalf.config(function($stateProvider, $urlRouterProvider){
     });
 });
 
-tryalf.filter('markdown', function() {
+tryalf.filter('atob', function() {
   return function(input) {
-    markdown.toHTML(input);
+    return btoa(input);
   };
 });
 

@@ -11,7 +11,7 @@ function QueryController($scope, $stateParams, $http, $filter) {
       $scope.examples = data['examples'];
     });
     if ($stateParams.src) {
-      $scope.src = $stateParams.src;
+      $scope.src = atob($stateParams.src);
     }
     $scope.editor.focus();
   }

@@ -12,12 +12,15 @@
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'frame(suppliers, [:status, :sid], 0, 3)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=ZnJhbWUoc3VwcGxpZXJzLCBbOnN0YXR1cywgOnNpZF0sIDAsIDMp
+" target="_blank">Try it!</a></div>
 <div class="highlight"><pre><span class="n">frame</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[[</span><span class="ss">:status</span><span class="p">,</span> <span class="ss">:asc</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:desc</span><span class="o">]]</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'frame(suppliers, [[:status, :asc], [:sid, :desc]], 1, 2)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=ZnJhbWUoc3VwcGxpZXJzLCBbWzpzdGF0dXMsIDphc2NdLCBbOnNpZCwgOmRl
+c2NdXSwgMSwgMik=
+" target="_blank">Try it!</a></div>
 
 <h2>Description</h2>
 
@@ -39,14 +42,12 @@ operator is actually equivalent to the following definition:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'def frame(operand, order, offset, limit)
-  allbut(
-    restrict(
-      rank(operand, order, :rank),
-      lte(offset, :rank) & lt(:rank, offset+limit)),
-    [:rank])
-end
-frame(suppliers, [:city, :sid], 2, 3)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=ZGVmIGZyYW1lKG9wZXJhbmQsIG9yZGVyLCBvZmZzZXQsIGxpbWl0KQogIGFs
+bGJ1dCgKICAgIHJlc3RyaWN0KAogICAgICByYW5rKG9wZXJhbmQsIG9yZGVy
+LCA6cmFuayksCiAgICAgIGx0ZShvZmZzZXQsIDpyYW5rKSAmIGx0KDpyYW5r
+LCBvZmZzZXQrbGltaXQpKSwKICAgIFs6cmFua10pCmVuZApmcmFtZShzdXBw
+bGllcnMsIFs6Y2l0eSwgOnNpZF0sIDIsIDMp
+" target="_blank">Try it!</a></div>
 
 <p>As of current Alf version, for this operator to be semantically sound and
 deterministic, <code>order</code> MUST be a total order, that is, it must at least

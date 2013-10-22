@@ -89,9 +89,6 @@ invocation returns another relation:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'location = ... # from user input
-restrict(suppliers, :city => location)'})">Try it!</a></div>
-
 <h3>What does really change?</h3>
 
 <p>This paradigm shift may not seem very significant at first glance, but
@@ -107,8 +104,10 @@ language (Ruby in our case), with all its power:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# Get suppliers whose name matches a Ruby regular expression.
-restrict(suppliers, ->(t){ t.name =~ /J|B/ })'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyBHZXQgc3VwcGxpZXJzIHdob3NlIG5hbWUgbWF0Y2hlcyBhIFJ1YnkgcmVn
+dWxhciBleHByZXNzaW9uLgpyZXN0cmljdChzdXBwbGllcnMsIC0+KHQpeyB0
+Lm5hbWUgPX4gL0p8Qi8gfSk=
+" target="_blank">Try it!</a></div>
 
 <p>While powerful, this is very challenging in practice and comes at a cost: as
 any abstraction, it leaks and you must be aware of the drawbacks and
@@ -151,11 +150,13 @@ or <em>reach</em> the solution to your problem:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# Get the cities where at least one supplier is located, provided
-# at least one part is located there too.
-cities_from_suppliers = project(suppliers, [:city])
-cities_from_parts     = project(parts, [:city])
-intersect(cities_from_suppliers, cities_from_parts)'})">Try it!</a></div></li>
+<div class="try-this"><a href="/?src=IyBHZXQgdGhlIGNpdGllcyB3aGVyZSBhdCBsZWFzdCBvbmUgc3VwcGxpZXIg
+aXMgbG9jYXRlZCwgcHJvdmlkZWQKIyBhdCBsZWFzdCBvbmUgcGFydCBpcyBs
+b2NhdGVkIHRoZXJlIHRvby4KY2l0aWVzX2Zyb21fc3VwcGxpZXJzID0gcHJv
+amVjdChzdXBwbGllcnMsIFs6Y2l0eV0pCmNpdGllc19mcm9tX3BhcnRzICAg
+ICA9IHByb2plY3QocGFydHMsIFs6Y2l0eV0pCmludGVyc2VjdChjaXRpZXNf
+ZnJvbV9zdXBwbGllcnMsIGNpdGllc19mcm9tX3BhcnRzKQ==
+" target="_blank">Try it!</a></div></li>
 </ul>
 
 <p>Relational calculus and relation algebra are known to be equivalent in
@@ -278,15 +279,16 @@ further joined:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# Get the cities where at least one supplier is located, provided
-# at least one part is located there too.
-cities_from_suppliers = project(suppliers, [:city])
-cities_from_parts     = project(parts, [:city])
-building_block = intersect(cities_from_suppliers, cities_from_parts)
-
-# Join the set of cities obtained previously with `cities` so as to also
-# display their country.
-join(building_block, cities)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyBHZXQgdGhlIGNpdGllcyB3aGVyZSBhdCBsZWFzdCBvbmUgc3VwcGxpZXIg
+aXMgbG9jYXRlZCwgcHJvdmlkZWQKIyBhdCBsZWFzdCBvbmUgcGFydCBpcyBs
+b2NhdGVkIHRoZXJlIHRvby4KY2l0aWVzX2Zyb21fc3VwcGxpZXJzID0gcHJv
+amVjdChzdXBwbGllcnMsIFs6Y2l0eV0pCmNpdGllc19mcm9tX3BhcnRzICAg
+ICA9IHByb2plY3QocGFydHMsIFs6Y2l0eV0pCmJ1aWxkaW5nX2Jsb2NrID0g
+aW50ZXJzZWN0KGNpdGllc19mcm9tX3N1cHBsaWVycywgY2l0aWVzX2Zyb21f
+cGFydHMpCgojIEpvaW4gdGhlIHNldCBvZiBjaXRpZXMgb2J0YWluZWQgcHJl
+dmlvdXNseSB3aXRoIGBjaXRpZXNgIHNvIGFzIHRvIGFsc28KIyBkaXNwbGF5
+IHRoZWlyIGNvdW50cnkuCmpvaW4oYnVpbGRpbmdfYmxvY2ssIGNpdGllcyk=
+" target="_blank">Try it!</a></div>
 
 <p>What if cities come from somewhere else? A .csv file, another database or
 whatever datasource?</p>
@@ -303,16 +305,15 @@ whatever datasource?</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# Get the cities... (unchanged, just inlined)
-building_block = intersect(project(suppliers, [:city]), project(parts, [:city]))
-
-# Join them...
-# Might be Relation.load(\'cities.csv\'); we use a literal for execution on try-alf.org
-cities = Relation([
-  {city: \'London\', country: \'England\'},
-  {city: \'Paris\',  country: \'France\'}
-])
-join(building_block, cities)'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyBHZXQgdGhlIGNpdGllcy4uLiAodW5jaGFuZ2VkLCBqdXN0IGlubGluZWQp
+CmJ1aWxkaW5nX2Jsb2NrID0gaW50ZXJzZWN0KHByb2plY3Qoc3VwcGxpZXJz
+LCBbOmNpdHldKSwgcHJvamVjdChwYXJ0cywgWzpjaXR5XSkpCgojIEpvaW4g
+dGhlbS4uLgojIE1pZ2h0IGJlIFJlbGF0aW9uLmxvYWQoJ2NpdGllcy5jc3Yn
+KTsgd2UgdXNlIGEgbGl0ZXJhbCBmb3IgZXhlY3V0aW9uIG9uIHRyeS1hbGYu
+b3JnCmNpdGllcyA9IFJlbGF0aW9uKFsKICB7Y2l0eTogJ0xvbmRvbicsIGNv
+dW50cnk6ICdFbmdsYW5kJ30sCiAge2NpdHk6ICdQYXJpcycsICBjb3VudHJ5
+OiAnRnJhbmNlJ30KXSkKam9pbihidWlsZGluZ19ibG9jaywgY2l0aWVzKQ==
+" target="_blank">Try it!</a></div>
 
 <p>Relational algebra and RFCC can be seen as a purely functional kind of
 programming where immutable values are relations and functions are relational
@@ -350,20 +351,18 @@ longer expressions. Alf comes with such a facility, as illustrated below:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# It relation `test` contains at least one tuple return `then_relation`,
-# otherwise return `else_relation`
-def ite(test, then_relation, else_relation)
-  union(
-    matching(then_relation, project(test, [])),
-    not_matching(else_relation, project(test, [])))
-end
-
-# It there are at least one Red part, show suppliers in London, otherwise
-# show suppliers in Paris
-ite(
-  restrict(parts, color: \'Red\'),
-  restrict(suppliers, city: \'London\'),
-  restrict(suppliers, city: \'Paris\'))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyBJdCByZWxhdGlvbiBgdGVzdGAgY29udGFpbnMgYXQgbGVhc3Qgb25lIHR1
+cGxlIHJldHVybiBgdGhlbl9yZWxhdGlvbmAsCiMgb3RoZXJ3aXNlIHJldHVy
+biBgZWxzZV9yZWxhdGlvbmAKZGVmIGl0ZSh0ZXN0LCB0aGVuX3JlbGF0aW9u
+LCBlbHNlX3JlbGF0aW9uKQogIHVuaW9uKAogICAgbWF0Y2hpbmcodGhlbl9y
+ZWxhdGlvbiwgcHJvamVjdCh0ZXN0LCBbXSkpLAogICAgbm90X21hdGNoaW5n
+KGVsc2VfcmVsYXRpb24sIHByb2plY3QodGVzdCwgW10pKSkKZW5kCgojIEl0
+IHRoZXJlIGFyZSBhdCBsZWFzdCBvbmUgUmVkIHBhcnQsIHNob3cgc3VwcGxp
+ZXJzIGluIExvbmRvbiwgb3RoZXJ3aXNlCiMgc2hvdyBzdXBwbGllcnMgaW4g
+UGFyaXMKaXRlKAogIHJlc3RyaWN0KHBhcnRzLCBjb2xvcjogJ1JlZCcpLAog
+IHJlc3RyaWN0KHN1cHBsaWVycywgY2l0eTogJ0xvbmRvbicpLAogIHJlc3Ry
+aWN0KHN1cHBsaWVycywgY2l0eTogJ1BhcmlzJykp
+" target="_blank">Try it!</a></div>
 
 <p>While the example above is contrived, our experience suggests that the <code>ite</code>
 relational operator proves very useful in practice when dealing with complex
@@ -380,7 +379,9 @@ Mappers</a>:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'join(suppliers, group(join(supplies, parts), [:sid], :supplied_parts, allbut: true))'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=am9pbihzdXBwbGllcnMsIGdyb3VwKGpvaW4oc3VwcGxpZXMsIHBhcnRzKSwg
+WzpzaWRdLCA6c3VwcGxpZWRfcGFydHMsIGFsbGJ1dDogdHJ1ZSkp
+" target="_blank">Try it!</a></div>
 
 <p>Alf already has a few high-level operators such as <a href="/doc/matching">matching</a>
 or <a href="/doc/page">page</a>. The next release should include a few others currently
@@ -415,22 +416,17 @@ database viewpoint on suppliers and parts located in London:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: '# Start of the viewpoint
-def suppliers
-  restrict(super, city: \'London\')
-end
-def parts
-  restrict(super, city: \'London\')
-end
-def supplies
-  # restore foreign keys given the previous restrictions
-  matching(matching(super, parts), suppliers)
-end
-# End of the viewpoint
-
-# Query as usual. This is entirely transparent.
-# Check it yourself, supplier S2 no longer exists in this viewpoint.
-restrict(supplies, sid: \'S1\')'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=IyBTdGFydCBvZiB0aGUgdmlld3BvaW50CmRlZiBzdXBwbGllcnMKICByZXN0
+cmljdChzdXBlciwgY2l0eTogJ0xvbmRvbicpCmVuZApkZWYgcGFydHMKICBy
+ZXN0cmljdChzdXBlciwgY2l0eTogJ0xvbmRvbicpCmVuZApkZWYgc3VwcGxp
+ZXMKICAjIHJlc3RvcmUgZm9yZWlnbiBrZXlzIGdpdmVuIHRoZSBwcmV2aW91
+cyByZXN0cmljdGlvbnMKICBtYXRjaGluZyhtYXRjaGluZyhzdXBlciwgcGFy
+dHMpLCBzdXBwbGllcnMpCmVuZAojIEVuZCBvZiB0aGUgdmlld3BvaW50Cgoj
+IFF1ZXJ5IGFzIHVzdWFsLiBUaGlzIGlzIGVudGlyZWx5IHRyYW5zcGFyZW50
+LgojIENoZWNrIGl0IHlvdXJzZWxmLCBzdXBwbGllciBTMiBubyBsb25nZXIg
+ZXhpc3RzIGluIHRoaXMgdmlld3BvaW50LgpyZXN0cmljdChzdXBwbGllcywg
+c2lkOiAnUzEnKQ==
+" target="_blank">Try it!</a></div>
 
 <h3>Reconciling heterogeneous type systems</h3>
 
@@ -446,9 +442,10 @@ consider the following query:</p>
 </pre>
 </div>
 
-<div class="try-this" ><a ng-click="$state.transitionTo('try', {src: 'restrict(
-  extend(suppliers, uppercased: ->(t){ t.name.upcase }),
-  city: \'Paris\', uppercased: \'JONES\')'})">Try it!</a></div>
+<div class="try-this"><a href="/?src=cmVzdHJpY3QoCiAgZXh0ZW5kKHN1cHBsaWVycywgdXBwZXJjYXNlZDogLT4o
+dCl7IHQubmFtZS51cGNhc2UgfSksCiAgY2l0eTogJ1BhcmlzJywgdXBwZXJj
+YXNlZDogJ0pPTkVTJyk=
+" target="_blank">Try it!</a></div>
 
 <p>If you take a look at the query plan, you&#39;ll observe that the <code>restrict</code>
 invocation is only partially compiled to SQL. The <code>uppercased</code> attribute is

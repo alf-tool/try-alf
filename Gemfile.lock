@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: git://github.com/alf-tool/alf-doc.git
-  revision: 36b3c74c992840cc56eedd46356fda1c44c0599a
+  revision: 5babcbf82310b26ab5fa2ae610cf2c5f4ba9a674
   specs:
     alf-doc (0.15.0)
       alf-core (~> 0.15.0)

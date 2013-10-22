@@ -29,7 +29,7 @@
         <td ng-show="docmode == 'api'" class="code">{{op.options}}</td>
         <td ng-show="docmode == 'examples'" class="code">{{op.examples[0]}}</td>
         <td ng-show="docmode == 'examples'" class="code">
-          <a ng-click="$state.transitionTo('try', {src: op.examples[0]})">Try it!</a>
+          <a href="/?src={{ op.examples[0] | atob }}" target="_blank">Try it!</a>
         </td>
       </tr>
     </table>
