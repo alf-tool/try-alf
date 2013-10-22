@@ -239,7 +239,8 @@ WHERE EXISTS (
 ```
 
 There is actually a few ways to write such query without breaking abstraction
-levels. For example, obverse how `q1` is preserved in the query below:
+levels. For example, obverse how our original query is preserved as `q1` in
+the query below:
 
 ```
 WITH q1 AS (
