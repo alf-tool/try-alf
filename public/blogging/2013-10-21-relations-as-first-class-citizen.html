@@ -3,10 +3,10 @@
 <h1>Relations as First-Class Citizen - A Paradigm Shift for Software/Database Collaboration</h1>
 
 <p>I&#39;m happy to announce that Alf v0.15.0 has just been released and with it,
-this web site! I&#39;ve been hacking on Alf on my free time for about two years
-now; I think it was time to share it in a slightly more official way that an
-(almost invisible) <a href="https://github.com/alf-tool">open-source project</a> on
-github.</p>
+this web site! I&#39;ve been hacking on Alf during my free time for about two
+years now; I think it was time to share it in a slightly more official way
+than as an (almost invisible) <a href="https://github.com/alf-tool">open-source
+project</a> on github.</p>
 
 <p>Alf is a modern, powerful implementation of relational algebra. It brings
 relational algebra where you don&#39;t necessarily expect it: in shell, in
@@ -45,20 +45,20 @@ connecting to databases from code. Do we really need one more?</p>
 <p>Well, Alf is a database connectivity library but it is first and foremost a
 proposal for a new <em>kind</em> of database connectivity, or a paradigm shift if you
 want. This new paradigm is called <strong>Relations as First-Class Citizen</strong> and it
-makes Alf very different from the projects aforementionned. The difference
+makes Alf very different from the projects mentioned above. The difference
 lies in the kind of abstraction that the library exposes to the software
-developer: SQL queries for the former, <em>Relations</em> for the latter.</p>
+developer: SQL queries with these libraries, <em>Relations</em> for Alf.</p>
 
 <p>In almost all <a href="http://www.datomic.com/">but</a>
 <a href="https://github.com/dkubb/axiom">a</a>
 <a href="http://dbappbuilder.sourceforge.net/Rel.php">few</a> database connectivity
 layers, the developer is indeed exposed to SQL queries. The SQL query is often
 abstracted behind a higher-level API for manipulating its abstract syntax tree
-(AST). But even in this case, the exposed abstraction is a SQL query. The fact
-is that a SQL query, even when abstracted behind an AST, tends to be a very
-poor abstraction for developing software. Before substantiating this claim,
-let us illustrate the difference between our approach and those with a simple
-example.</p>
+(AST). But even in this case, the exposed abstraction is an SQL query. The
+fact is that a SQL query, even when abstracted behind an AST, tends to be a
+very poor abstraction for developing software. Before substantiating this
+claim, let us illustrate the difference between our approach and a few others
+with a simple example.</p>
 
 <h3>Example</h3>
 
@@ -91,7 +91,7 @@ invocation returns another relation:</p>
 
 <p>Alf does just that: it exposes relations as first class citizen to the
 software developer. It currently supports two main modes, with and without
-lazy evaluation, the details of which are out of scope of this general blog
+lazy evaluation, the details of which are out of scope for this blog
 post (see <a href="/doc/alf-in-ruby">Alf in Ruby</a>).</p>
 
 <h3>What does really change?</h3>
@@ -100,7 +100,7 @@ post (see <a href="/doc/alf-in-ruby">Alf in Ruby</a>).</p>
 abstracting from SQL is an important change in practice:</p>
 
 <ul>
-<li><p>First, when exposing SQL as an software abstraction, you also expose its
+<li><p>First, when exposing SQL as a software abstraction, you also expose its
 type system. SQL&#39;s type system is poor and old. Developers need rich type
 systems. In our new paradigm, the type system is the one of the host
 language (Ruby in our case), with all its power:</p>
@@ -114,9 +114,9 @@ dWxhciBleHByZXNzaW9uLgpyZXN0cmljdChzdXBwbGllcnMsIC0+KHQpeyB0
 Lm5hbWUgPX4gL0p8Qi8gfSk=
 " target="_blank">Try it!</a></div>
 
-<p>While powerful, this is very challenging in practice and comes at a cost: as
-any abstraction, it leaks and you must be aware of the drawbacks and
-limitations. We&#39;ll come back to this point at the end of this blog post.</p></li>
+<p>While powerful, this is very challenging in practice and comes at a cost.
+There are drawbacks and limitations that you must be aware of. We&#39;ll come
+back to this point at the end of this blog post.</p></li>
 <li><p>SQL is a calculus. In contrast, the <strong>Relations as First-Class Citizen</strong>
 paradigm relies on the availibility of an algebra. We claim that an algebra
 exposes better abstractions for software engineering, as the rest of this
@@ -126,7 +126,7 @@ post will explain.</p></li>
 <h2>SQL, Relational Calculus vs. Relational Algebra</h2>
 
 <p>SQL has been invented to allow <em>human beings</em> to query relational databases.
-In fact, SQL is nearest to (tuple) relational calculus than to relational
+In fact, SQL is nearer to (tuple) relational calculus than to relational
 algebra (for the sake of accuracy, it is a strange mix of both). To understand
 our proposal, it is important to understand the difference in nature between a
 calculus and an algebra:</p>
@@ -167,7 +167,7 @@ ZnJvbV9zdXBwbGllcnMsIGNpdGllc19mcm9tX3BhcnRzKQ==
 <p>Relational calculus and relation algebra are known to be equivalent in
 expressiveness. This is what allows Alf to compile the second form above to
 something similar to the former one and to send it to an underlying SQL DBMS
-(a feature obviously limited by the ability to reconcilie the respective type
+(a feature obviously limited by the ability to reconcile the respective type
 systems, see later). However, as shown by the example above, a calculus is
 more declarative than an algebra. In other words, the latter looks more like
 an algorithm. Despite this, we do claim that relational algebra exposes better
@@ -189,17 +189,17 @@ programming</a> offer too.</p>
 <p>Developping software is of a very different nature. As a software developer,
 you generally don&#39;t have one single problem at hand. Instead, you have a set
 of problems called <em>requirements</em> and you find a design that allows meeting
-them all. One of the most effective strategy for this is <em>divide and conquer</em>.
+them all. One of the most effective strategies for this is <em>divide and conquer</em>.
 A modular design, for example, helps achieving a good separation of concerns
 with respect to those requirements while ensuring that the software behaves as
 expected when all modules are put together.</p>
 
-<p>The declarative styles of programming cited above are very nice for solving
-very specific and well isolated sub-problems of your requirements space
-(especially logic and constraint programming as they also allow searching
-through an entire solution space). In contrast, they are of almost no aid for
-putting the architectural pieces together. Yet, putting the pieces together is
-something software engineers do every single day.</p>
+<p>The declarative styles of programming such as SQL&#39;s are very nice for solving
+very specific and well isolated sub-problems of your requirements space (logic
+and constraint programming too, as they also allow searching through an entire
+solution space, for optimization problems for instance). In contrast, they are
+of almost no aid for putting the architectural pieces together. Yet, putting
+the pieces together is something software engineers do every single day.</p>
 
 <p>When it comes to manipulating data, putting <em>relations</em> together is much
 easier than putting <em>SQL queries</em> together, because the semantics of &quot;putting
@@ -225,15 +225,15 @@ between the <code>FROM</code> clause and the <code>EXISTS</code> subquery:</p>
 stop shining as soon a join is involved, not even talking about more complex
 queries. Indeed, even if possible, it is not idiomatic to build SQL queries
 from various parts constructed in a really independent way. Common
-connectivity libraries actually do a very hard job at trying to maintain the
-illusion that it is possible, but they generally fail at doing so. To convince
-yourself, suppose the following additional requirement:</p>
+connectivity libraries try very hard job to maintain the illusion that it is
+possible, but they generally fail at doing so. To convince yourself, suppose
+the following additional requirement:</p>
 <div class="highlight"><pre><span class="c1"># Join the set of cities obtained previously with `cities` so as to also display their country.</span>
 </pre>
 </div>
 
-<p>The most immediate way of writing such query seriously breaks separation of
-concerns because you&#39;ll need to know a lot about how the previous building
+<p>The most straightforward way of writing such query seriously breaks separation
+of concerns because you&#39;ll need to know a lot about how the previous building
 block has been written. In particular, observe how the <code>SELECT</code> and <code>FROM</code>
 clauses have to change:</p>
 <div class="highlight"><pre><span class="no">SELECT</span> <span class="no">DISTINCT</span> <span class="n">s</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">country</span> 
@@ -245,8 +245,9 @@ clauses have to change:</p>
 </pre>
 </div>
 
-<p>There is actually a few ways to write such query without breaking abstraction
-levels. For example, obverse how <code>q1</code> is preserved in the query below:</p>
+<p>There are actually a few ways to write such query without breaking abstraction
+levels. For example, obverse how our original query is preserved as <code>q1</code> in
+the query below:</p>
 <div class="highlight"><pre><span class="no">WITH</span> <span class="n">q1</span> <span class="no">AS</span> <span class="p">(</span>
        <span class="no">SELECT</span> <span class="no">DISTINCT</span> <span class="n">city</span>
        <span class="no">FROM</span> <span class="n">suppliers</span> <span class="no">AS</span> <span class="n">s</span>
@@ -331,7 +332,7 @@ Alf contributes an example of the general framework outlined there.</p>
 
 <p>The approach outlined here opens an avenue for further optimization,
 experimentation and research. We close this blog post with an overview of our
-own future work in this area. We also draw the reader attention on Alf&#39;s
+own future work in this area. We also draw the reader&#39;s attention on Alf&#39;s
 current limitations.</p>
 
 <h3>Towards high-level, domain-specific relational operators</h3>
@@ -371,7 +372,7 @@ aWN0KHN1cHBsaWVycywgY2l0eTogJ1BhcmlzJykp
 
 <p>While the example above is contrived, our experience suggests that the <code>ite</code>
 relational operator proves very useful in practice when dealing with complex
-data visibility and privacy requirements. Interresting enough, you can check
+data visibility and privacy requirements. Interesting enough, you can check
 that the compilation involves only one SQL query sent to the underlying DBMS,
 resulting in important performance improvements compared to other approaches
 relying on an <code>if/then/else</code> statement in the host language.</p>
@@ -456,7 +457,7 @@ YXNlZDogJ0pPTkVTJyk=
 invocation is only partially compiled to SQL. The <code>uppercased</code> attribute is
 computed by Alf in Ruby and cannot be translated back to the SQL engine. This
 has serious performance implications, of course. As of current Alf version,
-this is in true as soon as you use a ruby block (e.g. <code>->(t){ ... }</code>).</p>
+this is the case as soon as you use a ruby block (e.g. <code>->(t){ ... }</code>).</p>
 
 <p>All other approaches we are aware of either have a similar problem or forbid
 such queries in the first place (and are hence less expressive). This calls

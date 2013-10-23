@@ -3,10 +3,10 @@
 # Relations as First-Class Citizen - A Paradigm Shift for Software/Database Collaboration
 
 I'm happy to announce that Alf v0.15.0 has just been released and with it,
-this web site! I've been hacking on Alf on my free time for about two years
-now; I think it was time to share it in a slightly more official way that an
-(almost invisible) [open-source project](https://github.com/alf-tool) on
-github.
+this web site! I've been hacking on Alf during my free time for about two
+years now; I think it was time to share it in a slightly more official way
+than as an (almost invisible) [open-source
+project](https://github.com/alf-tool) on github.
 
 Alf is a modern, powerful implementation of relational algebra. It brings
 relational algebra where you don't necessarily expect it: in shell, in
@@ -43,20 +43,20 @@ connecting to databases from code. Do we really need one more?
 Well, Alf is a database connectivity library but it is first and foremost a
 proposal for a new _kind_ of database connectivity, or a paradigm shift if you
 want. This new paradigm is called **Relations as First-Class Citizen** and it
-makes Alf very different from the projects aforementionned. The difference
+makes Alf very different from the projects mentioned above. The difference
 lies in the kind of abstraction that the library exposes to the software
-developer: SQL queries for the former, _Relations_ for the latter.
+developer: SQL queries with these libraries, _Relations_ for Alf.
 
 In almost all [but](http://www.datomic.com/)
 [a](https://github.com/dkubb/axiom)
 [few](http://dbappbuilder.sourceforge.net/Rel.php) database connectivity
 layers, the developer is indeed exposed to SQL queries. The SQL query is often
 abstracted behind a higher-level API for manipulating its abstract syntax tree
-(AST). But even in this case, the exposed abstraction is a SQL query. The fact
-is that a SQL query, even when abstracted behind an AST, tends to be a very
-poor abstraction for developing software. Before substantiating this claim,
-let us illustrate the difference between our approach and those with a simple
-example.
+(AST). But even in this case, the exposed abstraction is an SQL query. The
+fact is that a SQL query, even when abstracted behind an AST, tends to be a
+very poor abstraction for developing software. Before substantiating this
+claim, let us illustrate the difference between our approach and a few others
+with a simple example.
 
 ### Example
 
@@ -93,7 +93,7 @@ restrict(suppliers, :city => location)
 
 Alf does just that: it exposes relations as first class citizen to the
 software developer. It currently supports two main modes, with and without
-lazy evaluation, the details of which are out of scope of this general blog
+lazy evaluation, the details of which are out of scope for this blog
 post (see [Alf in Ruby](/doc/alf-in-ruby)).
 
 ### What does really change?
@@ -101,7 +101,7 @@ post (see [Alf in Ruby](/doc/alf-in-ruby)).
 This paradigm shift may not seem very significant at first glance, but
 abstracting from SQL is an important change in practice:
 
-* First, when exposing SQL as an software abstraction, you also expose its
+* First, when exposing SQL as a software abstraction, you also expose its
   type system. SQL's type system is poor and old. Developers need rich type
   systems. In our new paradigm, the type system is the one of the host
   language (Ruby in our case), with all its power:
@@ -111,9 +111,9 @@ abstracting from SQL is an important change in practice:
     restrict(suppliers, ->(t){ t.name =~ /J|B/ })
     ```
 
-  While powerful, this is very challenging in practice and comes at a cost: as
-  any abstraction, it leaks and you must be aware of the drawbacks and
-  limitations. We'll come back to this point at the end of this blog post.
+  While powerful, this is very challenging in practice and comes at a cost.
+  There are drawbacks and limitations that you must be aware of. We'll come
+  back to this point at the end of this blog post.
 
 * SQL is a calculus. In contrast, the **Relations as First-Class Citizen**
   paradigm relies on the availibility of an algebra. We claim that an algebra
@@ -123,7 +123,7 @@ abstracting from SQL is an important change in practice:
 ## SQL, Relational Calculus vs. Relational Algebra
 
 SQL has been invented to allow _human beings_ to query relational databases.
-In fact, SQL is nearest to (tuple) relational calculus than to relational
+In fact, SQL is nearer to (tuple) relational calculus than to relational
 algebra (for the sake of accuracy, it is a strange mix of both). To understand
 our proposal, it is important to understand the difference in nature between a
 calculus and an algebra:
@@ -157,7 +157,7 @@ calculus and an algebra:
 Relational calculus and relation algebra are known to be equivalent in
 expressiveness. This is what allows Alf to compile the second form above to
 something similar to the former one and to send it to an underlying SQL DBMS
-(a feature obviously limited by the ability to reconcilie the respective type
+(a feature obviously limited by the ability to reconcile the respective type
 systems, see later). However, as shown by the example above, a calculus is
 more declarative than an algebra. In other words, the latter looks more like
 an algorithm. Despite this, we do claim that relational algebra exposes better
@@ -179,17 +179,17 @@ programming](http://en.wikipedia.org/wiki/Constraint_programming) offer too.
 Developping software is of a very different nature. As a software developer,
 you generally don't have one single problem at hand. Instead, you have a set
 of problems called _requirements_ and you find a design that allows meeting
-them all. One of the most effective strategy for this is _divide and conquer_.
+them all. One of the most effective strategies for this is _divide and conquer_.
 A modular design, for example, helps achieving a good separation of concerns
 with respect to those requirements while ensuring that the software behaves as
 expected when all modules are put together.
 
-The declarative styles of programming cited above are very nice for solving
-very specific and well isolated sub-problems of your requirements space
-(especially logic and constraint programming as they also allow searching
-through an entire solution space). In contrast, they are of almost no aid for
-putting the architectural pieces together. Yet, putting the pieces together is
-something software engineers do every single day.
+The declarative styles of programming such as SQL's are very nice for solving
+very specific and well isolated sub-problems of your requirements space (logic
+and constraint programming too, as they also allow searching through an entire
+solution space, for optimization problems for instance). In contrast, they are
+of almost no aid for putting the architectural pieces together. Yet, putting
+the pieces together is something software engineers do every single day.
 
 When it comes to manipulating data, putting _relations_ together is much
 easier than putting _SQL queries_ together, because the semantics of "putting
@@ -216,16 +216,16 @@ This kind of coupling explains why SQL-driven database connectivity librairies
 stop shining as soon a join is involved, not even talking about more complex
 queries. Indeed, even if possible, it is not idiomatic to build SQL queries
 from various parts constructed in a really independent way. Common
-connectivity libraries actually do a very hard job at trying to maintain the
-illusion that it is possible, but they generally fail at doing so. To convince
-yourself, suppose the following additional requirement:
+connectivity libraries try very hard job to maintain the illusion that it is
+possible, but they generally fail at doing so. To convince yourself, suppose
+the following additional requirement:
 
 ```
 # Join the set of cities obtained previously with `cities` so as to also display their country.
 ```
 
-The most immediate way of writing such query seriously breaks separation of
-concerns because you'll need to know a lot about how the previous building
+The most straightforward way of writing such query seriously breaks separation
+of concerns because you'll need to know a lot about how the previous building
 block has been written. In particular, observe how the `SELECT` and `FROM`
 clauses have to change:
 
@@ -238,7 +238,7 @@ WHERE EXISTS (
 )
 ```
 
-There is actually a few ways to write such query without breaking abstraction
+There are actually a few ways to write such query without breaking abstraction
 levels. For example, obverse how our original query is preserved as `q1` in
 the query below:
 
@@ -308,7 +308,7 @@ Alf contributes an example of the general framework outlined there.
 
 The approach outlined here opens an avenue for further optimization,
 experimentation and research. We close this blog post with an overview of our
-own future work in this area. We also draw the reader attention on Alf's
+own future work in this area. We also draw the reader's attention on Alf's
 current limitations.
 
 ### Towards high-level, domain-specific relational operators
@@ -336,7 +336,7 @@ ite(
 
 While the example above is contrived, our experience suggests that the `ite`
 relational operator proves very useful in practice when dealing with complex
-data visibility and privacy requirements. Interresting enough, you can check
+data visibility and privacy requirements. Interesting enough, you can check
 that the compilation involves only one SQL query sent to the underlying DBMS,
 resulting in important performance improvements compared to other approaches
 relying on an `if/then/else` statement in the host language.
@@ -403,7 +403,7 @@ If you take a look at the query plan, you'll observe that the `restrict`
 invocation is only partially compiled to SQL. The `uppercased` attribute is
 computed by Alf in Ruby and cannot be translated back to the SQL engine. This
 has serious performance implications, of course. As of current Alf version,
-this is in true as soon as you use a ruby block (e.g. `->(t){ ... }`).
+this is the case as soon as you use a ruby block (e.g. `->(t){ ... }`).
 
 All other approaches we are aware of either have a similar problem or forbid
 such queries in the first place (and are hence less expressive). This calls
