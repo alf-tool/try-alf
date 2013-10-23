@@ -47,16 +47,13 @@ makes Alf very different from the projects mentioned above. The difference
 lies in the kind of abstraction that the library exposes to the software
 developer: SQL queries with these libraries, _Relations_ for Alf.
 
-In almost all [but](http://www.datomic.com/)
-[a](https://github.com/dkubb/axiom)
-[few](http://dbappbuilder.sourceforge.net/Rel.php) database connectivity
-layers, the developer is indeed exposed to SQL queries. The SQL query is often
-abstracted behind a higher-level API for manipulating its abstract syntax tree
-(AST). But even in this case, the exposed abstraction is an SQL query. The
-fact is that a SQL query, even when abstracted behind an AST, tends to be a
-very poor abstraction for developing software. Before substantiating this
-claim, let us illustrate the difference between our approach and a few others
-with a simple example.
+In almost all database connectivity layers, the developer is indeed exposed to
+SQL queries. The SQL query is often abstracted behind a higher-level API for
+manipulating its abstract syntax tree (AST). But even in this case, the
+exposed abstraction is an SQL query. The fact is that a SQL query, even when
+abstracted behind an AST, tends to be a very poor abstraction for developing
+software. Before substantiating this claim, let us illustrate the difference
+between our approach and a few others with a simple example.
 
 ### Example
 
@@ -212,7 +209,7 @@ WHERE EXISTS (
 )
 ```
 
-This kind of coupling explains why SQL-driven database connectivity librairies
+This kind of coupling explains why SQL-driven database connectivity libraries
 stop shining as soon a join is involved, not even talking about more complex
 queries. Indeed, even if possible, it is not idiomatic to build SQL queries
 from various parts constructed in a really independent way. Common
