@@ -19,7 +19,7 @@ TryAlf = ::Rack::Builder.new do
   use Rack::Static, urls: PublicUrl, root: "public"
   map '/query' do
     use Rack::Timeout
-    Rack::Timeout.timeout = 0.1
+    Rack::Timeout.timeout = 1
     use Alf::Rack::Connect do |cfg|
       cfg.database = Alf::Database.new(SequelDb, DbOptions)
     end
