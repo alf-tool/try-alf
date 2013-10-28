@@ -312,10 +312,9 @@ WHERE (city = ...)
 
 What happened? In short, `Sequel`'s join does not correspond to a _algebraic_
 join of its operands. Instead, its specification looks like "adds a term to
-the `SQL` query's `FROM` clause", whose algebraic semantics is far from
-obvious (here you can blame `SQL` itself). Observe in particular that the
-following algebraic equivalence does not hold, preventing us from designing as
-above:
+the `SQL` query's `FROM` clause", whose data semantics is far from obvious
+(here you can blame `SQL` itself). Observe in particular that the following
+algebraic equivalence does not hold, preventing us from designing as above:
 
 ```
 suppliers
@@ -343,7 +342,7 @@ purely algebraic way. Unfortunately, that way is not idiomatic and leads to
 complex SQL queries, that may have bad execution plans (at least in major
 open-source DBMSs). In the example at hand, using Sequel's `from_self` in a
 systematic way (e.g. on every reusable piece) is safe from the point of view
-of algebraic composition:
+of composition and reuse:
 
 ```
 def suppliers_in(city)
@@ -371,9 +370,9 @@ with_country(suppliers_in(requester_city))
 # ) AS 't1'
 ```
 
-The complete recipe for using SQL in an purely algebraic way is more complex,
-of course. I won't provide the full details here, let me know if a dedicated
-post is welcome. Instead, let see how our new paradigm helps.
+The complete recipe for using SQL in such a "safe" way is more complex, of
+course. I won't provide the details in this blog post, but let me know if a
+dedicated one is welcome. For now, let see how our new paradigm helps.
 
 ## Relations provide a true abstraction mechanism
 

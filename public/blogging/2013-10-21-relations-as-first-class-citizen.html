@@ -329,10 +329,9 @@ in the process:</p>
 
 <p>What happened? In short, <code>Sequel</code>&#39;s join does not correspond to a <em>algebraic</em>
 join of its operands. Instead, its specification looks like &quot;adds a term to
-the <code>SQL</code> query&#39;s <code>FROM</code> clause&quot;, whose algebraic semantics is far from
-obvious (here you can blame <code>SQL</code> itself). Observe in particular that the
-following algebraic equivalence does not hold, preventing us from designing as
-above:</p>
+the <code>SQL</code> query&#39;s <code>FROM</code> clause&quot;, whose data semantics is far from obvious
+(here you can blame <code>SQL</code> itself). Observe in particular that the following
+algebraic equivalence does not hold, preventing us from designing as above:</p>
 <div class="highlight"><pre><span class="n">suppliers</span>
   <span class="o">.</span><span class="n">natural_join</span><span class="p">(</span><span class="n">cities</span><span class="p">)</span>
   <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">,</span> <span class="ss">:country</span><span class="p">)</span>
@@ -361,7 +360,7 @@ purely algebraic way. Unfortunately, that way is not idiomatic and leads to
 complex SQL queries, that may have bad execution plans (at least in major
 open-source DBMSs). In the example at hand, using Sequel&#39;s <code>from_self</code> in a
 systematic way (e.g. on every reusable piece) is safe from the point of view
-of algebraic composition:</p>
+of composition and reuse:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">suppliers_in</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
   <span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers</span><span class="o">]</span>
     <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">)</span>
@@ -388,9 +387,9 @@ of algebraic composition:</p>
 </pre>
 </div>
 
-<p>The complete recipe for using SQL in an purely algebraic way is more complex,
-of course. I won&#39;t provide the full details here, let me know if a dedicated
-post is welcome. Instead, let see how our new paradigm helps.</p>
+<p>The complete recipe for using SQL in such a &quot;safe&quot; way is more complex, of
+course. I won&#39;t provide the details in this blog post, but let me know if a
+dedicated one is welcome. For now, let see how our new paradigm helps.</p>
 
 <h2>Relations provide a true abstraction mechanism</h2>
 
