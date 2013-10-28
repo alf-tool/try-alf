@@ -1,6 +1,6 @@
 <div class="blog-post-date">2013, October 21</div>
 
-<h1>Relations as First-Class Citizen - A Paradigm Shift for Software/Database Collaboration</h1>
+<h1>Relations as First-Class Citizen - A Paradigm Shift for Software/Database Interoperability</h1>
 
 <p>I&#39;m happy to announce that Alf v0.15.0 has just been released and with it,
 this web site! I&#39;ve been hacking on Alf during my free time for about two
@@ -31,10 +31,17 @@ documented. I plan to spend some time in the next weeks and months to work on
 them, so stay tuned. In the mean time, you can play with Alf on this website,
 install <a href="https://rubygems.org/gems/alf">alf 0.15.0</a> and start playing with it
 on your own datasets and databases. I&#39;ll come with advanced material on this
-blog as soon as possible, I promise. The rest of this post explains the
-context of this work and why it exists in the first place.</p>
+blog as soon as possible, I promise.</p>
 
-<h2>Yet another database connectivity library?</h2>
+<p>The rest of this post explains the context of this work and why it exists in
+the first place. The <a href="#intro">section immediately following</a> provides a short
+overview of the proposed approach, explaining the title of this blog post. We
+then detail Alf&#39;s proposal, first from <a href="#theory">a theoretical perspective</a>
+then with an <a href="#practice">short example</a> illustrating the advantages. You can
+read those two sections in the order you want. <a href="#ongoing-work">Alf&#39;s limitations and features
+to come</a> are then discussed, before <a href="#conclusion">conclusion</a>.</p>
+
+<h2 id="intro">Yet another database connectivity library?</h2>
 
 <p>We already have <a href="https://github.com/rails/arel">ARel</a>,
 <a href="http://sequel.rubyforge.org/">Sequel</a>,
@@ -47,7 +54,7 @@ proposal for a new <em>kind</em> of database connectivity, or a paradigm shift i
 want. This new paradigm is called <strong>Relations as First-Class Citizen</strong> and it
 makes Alf very different from the projects mentioned above. The difference
 lies in the kind of abstraction that the library exposes to the software
-developer: SQL queries with these libraries, <em>Relations</em> for Alf.</p>
+developer: SQL queries with these libraries, <em>Relations</em> with Alf.</p>
 
 <p>In almost all database connectivity layers, the developer is indeed exposed to
 SQL queries. The SQL query is often abstracted behind a higher-level API for
@@ -71,7 +78,7 @@ all; we all know the cost in terms of maintenance, security (quotes in
 <p>Common high-level approaches are slightly more abstract. While more secure and
 flexible, they still expose a SQL query abstraction. In the following example,
 using <a href="https://github.com/rails/arel">Ruby/Arel</a>:</p>
-<div class="highlight"><pre><span class="n">location</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
+<div class="highlight"><pre><span class="n">location</span>  <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
 <span class="n">suppliers</span> <span class="o">=</span> <span class="no">Arel</span><span class="o">::</span><span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:suppliers</span><span class="p">)</span>
 <span class="n">qry</span> <span class="o">=</span> <span class="n">suppliers</span>
     <span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span><span class="p">,</span> <span class="n">suppliers</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
@@ -95,9 +102,9 @@ former relation as first argument; it returns another relation, and so on:</p>
 software developer. It currently supports two main modes, with and without
 lazy evaluation, and two styles, a functional one (shown here) and an
 Object-Oriented one. The details are out of scope for this blog post, but can
-be found them in <a href="/doc/alf-in-ruby">Alf in Ruby</a>.</p>
+be found in the &#39;<a href="/doc/alf-in-ruby">Alf in Ruby</a>&#39; documentation page.</p>
 
-<h3>What does really change?</h3>
+<h2 id="theory">What does really change, and why? &mdash; A theoretical aside</h2>
 
 <p>This paradigm shift may not seem very significant at first glance, that is, it
 may look like a simple syntactic issue. However, abstracting from SQL is an
@@ -133,11 +140,12 @@ limitations that you must be aware of. We&#39;ll come back to this point at the
 end of this blog post.</p></li>
 <li><p>SQL is a calculus. In contrast, the <strong>Relations as First-Class Citizen</strong>
 paradigm relies on the availibility of an algebra. We claim that an algebra
-exposes better abstractions for software engineering, as the rest of this
-post will explain.</p></li>
+exposes better abstractions for software engineering. The next subsections
+substantiate this claim from a theoretical point of view; an detailed
+example immediately follows.</p></li>
 </ul>
 
-<h2>SQL, Relational Calculus vs. Relational Algebra</h2>
+<h3>What: from Relational Calculus to Relational Algebra</h3>
 
 <p>SQL has been invented to allow <em>human beings</em> to query relational databases.
 In fact, SQL is nearer to (tuple) relational calculus than to relational
@@ -184,11 +192,11 @@ something similar to the former one and to send it to an underlying SQL DBMS
 (a feature obviously limited by the ability to reconcile the respective type
 systems, see later). However, as shown by the example above, a calculus is
 more declarative than an algebra. In other words, the latter looks more like
-an algorithm. Despite this, I do claim that relational algebra exposes better
+an algorithm. Despite this, we do claim that relational algebra exposes better
 abstractions for developing software when it comes to querying databases or,
 more generally, to manipulating data. Why is that so?</p>
 
-<h2>Querying databases vs. developing software</h2>
+<h3>Why? Querying Databases vs. Developing Software</h3>
 
 <p>When you (manually) query a database (either a SQL, a NoSQL one or whatever)
 you generally know the problem at hand. Therefore, you welcome a declarative
@@ -227,7 +235,7 @@ of using SQL, as exposed by the API of connectivity libraries. Alf proposes a
 new approach that is easier and more interoperable. The next two sections
 illustrate this on a concrete example.</p>
 
-<h2>Struggling with reuse and separation of concerns &mdash; An Example</h2>
+<h2 id="practice">The Paradigm Change in Action &mdash; An example</h2>
 
 <p>Let us take a concrete software engineering example on the <a href="http://en.wikipedia.org/wiki/Suppliers_and_Parts_database">suppliers and
 parts examplar</a>, to
@@ -241,7 +249,7 @@ which we add the following <code>cities</code> relation:</p>
 ZyBgY291bnRyeWAgbmFtZQpjaXRpZXM=
 " target="_blank">Try it!</a></div>
 
-<p>Suppose the suppliers themselves are the software users. Suppose also that the
+<p>Let suppose that the suppliers themselves are software users and that the
 following requirements must be met by the particular inferface showing the
 list of suppliers to the current user:</p>
 
@@ -254,7 +262,11 @@ city than himself.</li>
 
 <p>In terms of the query to be built, those requirements involve a restriction
 (<code>same city as</code>), a selection (<code>no status</code>) and a join (<code>with country name</code>).
-Writting a monolithic query is rather straightforward, here using
+Let compare the two approaches.</p>
+
+<h3>Struggling with separation of concerns and reuse</h3>
+
+<p>Writting a monolithic query is rather straightforward, here using
 <a href="http://sequel.rubyforge.org/">Sequel</a>:</p>
 <div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from context (authenticated user)</span>
 
@@ -290,7 +302,7 @@ according to some context. There is a desperate need for more support for this
 in DBMSs themselves. In the mean time, developers rely on the ability of host
 programming languages and third-party libraries.</p>
 
-<p>Back to our example, what about the following &quot;design&quot;?</p>
+<p>Back to our example above, what about the following &quot;design&quot;?</p>
 <div class="highlight"><pre><span class="c1"># Meet 1) and 2) together as a utility method: separation of concerns</span>
 <span class="k">def</span> <span class="nf">suppliers_in</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
   <span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers</span><span class="o">]</span>
@@ -388,10 +400,10 @@ of composition and reuse:</p>
 </div>
 
 <p>The complete recipe for using SQL in such a &quot;safe&quot; way is more complex, of
-course. I won&#39;t provide the details in this blog post, but let me know if a
+course. I won&#39;t provide the details in this blog post, let me know if a
 dedicated one is welcome. For now, let see how our new paradigm helps.</p>
 
-<h2>Relations provide a true abstraction mechanism</h2>
+<h3>Relation Algebra at the rescue</h3>
 
 <p>The <strong>Relations as First-Class Citizen</strong> paradigm aims at providing an
 interface that is <em>designed for</em> composition and reuse. We invite you to use
@@ -495,7 +507,7 @@ is not new. It was already suggested several years ago in Ben Moseley&#39;s famo
 <a href="http://shaffner.us/cs/papers/tarpit.pdf">Out of the Tar Pit</a>
 essay. Alf contributes an example of the general framework outlined there.</p>
 
-<h2>Limitations and ongoing work</h2>
+<h2 id="ongoing-work">Limitations and ongoing work</h2>
 
 <p>The approach proposed here opens an avenue for further optimization,
 experimentation and research. I close this blog post with an overview of my
@@ -640,15 +652,16 @@ post. Alf comes only with a very experimental interface for updates but a lot
 of work is still needed in this area. My general aim is to come with a well
 chosen subset of relational operators supporting updates.</p>
 
-<h2>Conclusion</h2>
+<h2 id="conclusion">Conclusion</h2>
 
 <p>Arrived here? Kudos. To summarize, I&#39;m convinced that <strong>Relations as
-First-class citizen</strong> provides better abstractions for software-database
-collaboration, more generally for handling the data manipulation subset of our
-software engineering requirements. In particular, I hope to have shown how
-current database connectivity approaches hurt separation of concerns and reuse
-(more generally, software design) and why favoring pure relational algebra
-over (idiomatic) SQL helps avoiding the trap.</p>
+First-class citizen</strong> provides better abstractions than existing approaches
+for software-database interoperability, or more generally, for handling the
+data manipulation subset of our software engineering requirements. In
+particular, I hope to have shown how current database connectivity approaches
+hurt separation of concerns and reuse (more generally, software design) and
+why favoring pure relational algebra over (idiomatic) SQL helps avoiding the
+trap.</p>
 
 <p>I can&#39;t close this blog post without putting some fairness back to the
 picture. Indeed, I must confess that comparing Alf to libraries such as
@@ -667,10 +680,10 @@ Classes/Objects for the latter. As you may already know from <a href="http://www
 writings of mine</a> I&#39;m not a
 huge fan of ORM. Without re-opening the war here, they hurt software design in
 far too many ways in my opinion. I&#39;m looking for other solutions for a while
-and ended-up with this one so far. That said, <code>Alf</code> is in a sense to <strong>RFCC</strong>
-what <code>Sequel</code>, <code>Arel</code> and the others are to <strong>ORM</strong>, so the comparison
-actually applies. Software abstraction boundaries are not clear enough to
-always avoid potentially harmful comparisons, I&#39;m affraid.</p>
+and ended-up with this one so far. That said, <code>Alf</code> is to <strong>RFCC</strong> what
+<code>Sequel</code>, <code>Arel</code> and the others are to <strong>ORM</strong>, so the comparison actually
+applies. Software abstraction boundaries are not clear enough to always avoid
+potentially harmful comparisons, I&#39;m affraid.</p>
 
 <p>That also means that our new paradigm goes (and need to go) further that
 simply providing an algebraic query language. Stay tuned, I&#39;ll provide more
@@ -678,7 +691,7 @@ material soon to use Alf in more complex software (such as the famous
 viewpoints). In the mean time, any question or contribution (of any kind) can
 be adressed by sending an email to Bernard Lambeau (see the <a href="/about/">About</a>
 page; I&#39;m easily found on the Internet too). I&#39;m currently looking for
-contributors both from the academics and industrial world for discussing,
+contributors both in the academics and in the industrial world for discussing,
 enhancing, testing and evaluating the approach, don&#39;t hesitate to contact me
 by email.</p>
 
