@@ -40,7 +40,7 @@ proposal, first from [a theoretical perspective](#theory) then with an [short
 example](#practice) illustrating the advantages. You can read those two
 sections in the order you want. [Alf's limitations and features to
 come](#ongoing-work) are then briefly discussed, before
-[concluding](#conclusion) with a more general perspective.
+[concluding](#conclusion) with a slightly broader perspective.
 
 <h2 id="intro">Yet another database connectivity library?</h2>
 
