@@ -7,6 +7,7 @@ gem "sequel",  "~> 4.2"
 gem "rack-robustness", "~> 1.1"
 gem "rack-timeout"
 gem "rake"
+gem 'sprockets', '~> 2.0'
 
 gem "alf-core",   :git => "git://github.com/alf-tool/alf-core.git"
 gem "alf-doc",    :git => "git://github.com/alf-tool/alf-doc.git"

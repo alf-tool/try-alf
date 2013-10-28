@@ -1,4 +1,5 @@
 require 'path'
+require 'sprockets'
 require 'rack/robustness'
 require 'rack/timeout'
 require 'alf-core'
@@ -17,6 +18,12 @@ PublicUrl = (Path.dir/'public').glob("*").map{|p| "/#{p.basename}"}
 TryAlf = ::Rack::Builder.new do
   use Rack::CommonLogger
   use Rack::Static, urls: PublicUrl, root: "public"
+  map '/assets' do
+    environment = Sprockets::Environment.new
+    environment.append_path 'assets/css'
+    environment.append_path 'assets/js'
+    run environment
+  end
   map '/query' do
     use Rack::Robustness do |g|
       g.status 400
