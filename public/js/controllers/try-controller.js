@@ -1,4 +1,4 @@
-function QueryController($scope, $stateParams, $http, $filter) {
+function TryController($scope, $stateParams, $http, $filter, $window) {
 
   $scope.mode     = "data";
   $scope.error    = "";
@@ -53,4 +53,9 @@ function QueryController($scope, $stateParams, $http, $filter) {
   $scope.$watch("format", $scope.runQuery);
   $scope.$watch("mode",   $scope.runQuery);
   $scope.$watch("src",    $scope.runQuery);
+
+  $scope.bookmark = function(){
+    var qry = $filter("atob")($scope.src);
+    $window.location = "/?src=" + qry;
+  }
 }

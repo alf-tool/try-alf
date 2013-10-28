@@ -1,4 +1,4 @@
-<div ng-controller="QueryController">
+<div ng-controller="TryController">
   <h1 style="display: none">Try</h1>
   <div id="editor" class="row">
     <div class="header">
@@ -8,7 +8,7 @@
       <p class="alternatives pull-right">
         <i class="icon-bookmark"
            title="Bookmark this query"
-           ng-click="$state.transitionTo('try', {src: src})"/>
+           ng-click="bookmark()"/>
       </p>
       <div class="clearfix"></div>
     </div>
