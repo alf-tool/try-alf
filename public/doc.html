@@ -4,40 +4,40 @@
       <p>Basics</p>
       <ul>
         <li ng-class="{active: current == 'intro'}">
-          <a ng-click="$state.transitionTo('doc', {obj: 'intro'})">Intro</a>
+          <a href="/doc/intro">Intro</a>
         </li>
         <li ng-class="{active: current == 'ruby-basics'}">
-          <a ng-click="$state.transitionTo('doc', {obj: 'ruby-basics'})">Ruby</a>
+          <a href="/doc/ruby-basics">Ruby</a>
         </li>
         <li ng-class="{active: current == 'relational-basics'}">
-          <a ng-click="$state.transitionTo('doc', {obj: 'relational-basics'})">Relational</a>
+          <a href="/doc/relational-basics">Relational</a>
         </li>
         <li ng-class="{active: current == 'alf-in-ruby'}">
-          <a ng-click="$state.transitionTo('doc', {obj: 'alf-in-ruby'})">Alf in Ruby</a>
+          <a href="/doc/alf-in-ruby">Alf in Ruby</a>
         </li>
         <li ng-class="{active: current == 'alf-in-shell'}">
-          <a ng-click="$state.transitionTo('doc', {obj: 'alf-in-shell'})">Alf in Shell</a>
+          <a href="/doc/alf-in-shell">Alf in Shell</a>
         </li>
       </ul>
       <p>Operators</p>
       <ul>
         <li ng-repeat="obj in doc.operators"
             ng-class="{active: current == obj.name}">
-          <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
+          <a href="/doc/{{obj.name}}">{{obj.name}}</a>
         </li>
       </ul>
       <p>Predicates</p>
       <ul>
         <li ng-repeat="obj in doc.predicates"
             ng-class="{active: current == obj.name}">
-          <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
+          <a href="/doc/{{obj.name}}">{{obj.name}}</a>
         </li>
       </ul>
       <p>Aggregators</p>
       <ul>
         <li ng-repeat="obj in doc.aggregators"
             ng-class="{active: current == obj.name}">
-          <a ng-click="$state.transitionTo('doc', {obj: obj.name})">{{obj.name}}</a>
+          <a href="/doc/{{obj.name}}">{{obj.name}}</a>
         </li>
       </ul>
     </div>
