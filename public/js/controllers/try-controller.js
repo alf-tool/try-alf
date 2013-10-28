@@ -1,10 +1,12 @@
-function TryController($scope, $stateParams, $http, $filter, $window) {
+function TryController($scope, $stateParams, $http, $filter, $window, $timeout) {
 
   $scope.mode     = "data";
   $scope.error    = "";
   $scope.src      = "";
   $scope.result   = "";
   $scope.format   = "text/plain";
+  $scope.inProgress = false;
+  $scope.waitTimer = null;
 
   $scope.init = function(){
     $http.get('/doc.json').success(function(data) {
@@ -16,12 +18,6 @@ function TryController($scope, $stateParams, $http, $filter, $window) {
     $scope.editor.focus();
   }
 
-  $scope.aceLoaded = function(editor) {
-    $scope.editor = editor;
-    editor.getSession().setTabSize(2);
-    $scope.init();
-  };
-
   $scope.getQueryAtRandom = function(){
     var item = null;
     while (!item || item.source == $scope.src){
@@ -32,21 +28,33 @@ function TryController($scope, $stateParams, $http, $filter, $window) {
   }
 
   $scope.runQuery = function(){
-    if ($scope.src) {
+    var qry = $scope.src;
+    if ($scope.inProgress) {
+      $scope.result = "in progress...";
+      $timeout.cancel($scope.waitTimer);
+      $scope.waitTimer = $timeout($scope.runQuery, 200);
+    } else {
+      if (!qry) { return; }
+      $scope.inProgress = true;
       $http({
-        method: 'POST',
+        method: "POST",
         url: "/query/" + $scope.mode,
-        data: $scope.src,
+        data: qry,
         headers: { "Accept": $scope.format }
-      }).success(function(data){
-        if ($scope.format == "application/json") {
-          data = $filter('json')(data);
+      })
+      .success(function(data){
+        if (qry == $scope.src){
+          $scope.result = data;
+          $scope.error = "";
         }
-        $scope.result = data;
-        $scope.error = "";
-      }).error(function(data){
-        $scope.error = data;
-        $scope.result = "";
+        $scope.inProgress = false;
+      })
+      .error(function(data){
+        if (qry == $scope.src){
+          $scope.result = "";
+          $scope.error = data;
+        }
+        $scope.inProgress = false;
       });
     }
   }
@@ -58,4 +66,10 @@ function TryController($scope, $stateParams, $http, $filter, $window) {
     var qry = $filter("atob")($scope.src);
     $window.location = "/?src=" + qry;
   }
+
+  $scope.aceLoaded = function(editor) {
+    $scope.editor = editor;
+    editor.getSession().setTabSize(2);
+    $scope.init();
+  };
 }

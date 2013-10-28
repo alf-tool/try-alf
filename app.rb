@@ -18,18 +18,14 @@ TryAlf = ::Rack::Builder.new do
   use Rack::CommonLogger
   use Rack::Static, urls: PublicUrl, root: "public"
   map '/query' do
-    use Rack::Timeout
-    Rack::Timeout.timeout = 1
-    use Alf::Rack::Connect do |cfg|
-      cfg.database = Alf::Database.new(SequelDb, DbOptions)
-    end
     use Rack::Robustness do |g|
       g.status 400
       g.content_type "text/plain"
       g.body{|ex| ex.message }
-      g.ensure(true){|ex|
-        puts ex.message
-      }
+    end
+    use Rack::Timeout; Rack::Timeout.timeout = 1
+    use Alf::Rack::Connect do |cfg|
+      cfg.database = Alf::Database.new(SequelDb, DbOptions)
     end
     run Alf::Rack::Query.new{|q|
       q.type_check = true

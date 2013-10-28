@@ -6,6 +6,7 @@
         <span>Type your query or <a ng-click="getQueryAtRandom()">get one at random</a></span>
       </p>
       <p class="alternatives pull-right">
+        <img src="/img/ajax-loader.gif" ng-show="inProgress"/>
         <i class="icon-bookmark"
            title="Bookmark this query"
            ng-click="bookmark()"/>
@@ -20,34 +21,34 @@
   <div id="result-tab" class="row">
     <div class="header">
       <ul class="nav nav-pills">
-        <li ng-class="{active: $parent.mode == 'data'}">
-          <a ng-click="$parent.mode = 'data'">Data</a>
+        <li ng-class="{active: mode == 'data'}">
+          <a ng-click="mode = 'data'">Data</a>
         </li>
-        <li ng-class="{active: $parent.mode == 'metadata'}">
-          <a ng-click="$parent.mode = 'metadata'">Metadata</a>
+        <li ng-class="{active: mode == 'metadata'}">
+          <a ng-click="mode = 'metadata'">Metadata</a>
         </li>
-        <li ng-class="{active: $parent.mode == 'logical'}">
-          <a ng-click="$parent.mode = 'logical'">Optimizer</a>
+        <li ng-class="{active: mode == 'logical'}">
+          <a ng-click="mode = 'logical'">Optimizer</a>
         </li>
-        <li ng-class="{active: $parent.mode == 'physical'}">
-          <a ng-click="$parent.mode = 'physical'">Query plan</a>
+        <li ng-class="{active: mode == 'physical'}">
+          <a ng-click="mode = 'physical'">Query plan</a>
         </li>
       </ul>
       <form name="formats" class="formats-form">
         <label class="radio inline">
-          <input type="radio" ng-model="$parent.format" value="text/plain">
+          <input type="radio" ng-model="format" value="text/plain">
           .txt
         </label>
         <label class="radio inline">
-          <input type="radio" ng-model="$parent.format" value="application/json">
+          <input type="radio" ng-model="format" value="application/json">
           .json
         </label>
         <label class="radio inline">
-          <input type="radio" ng-model="$parent.format" value="text/yaml">
+          <input type="radio" ng-model="format" value="text/yaml">
           .yaml
         </label>
         <label class="radio inline">
-          <input type="radio" ng-model="$parent.format" value="text/csv">
+          <input type="radio" ng-model="format" value="text/csv">
           .csv
         </label>
       </form>
