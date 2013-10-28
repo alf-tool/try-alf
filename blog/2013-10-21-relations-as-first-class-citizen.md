@@ -607,3 +607,8 @@ page; I'm easily found on the Internet too). I'm currently looking for
 contributors both from the academics and industrial world for discussing,
 enhancing, testing and evaluating the approach, don't hesitate to contact me
 by email.
+
+## Acknowledgements
+
+I'd like to thank Erwin Smout, Enrico Sartorello, David Livingstone and Sergio
+Castro for feedback and comments on earlier versions of this blog post.
