@@ -32,12 +32,15 @@ on your own datasets and databases. I'll come with advanced material on this
 blog as soon as possible, I promise.
 
 The rest of this post explains the context of this work and why it exists in
-the first place. The [section immediately following](#intro) provides a short
-overview of the proposed approach, explaining the title of this blog post. We
-then detail Alf's proposal, first from [a theoretical perspective](#theory)
-then with an [short example](#practice) illustrating the advantages. You can
-read those two sections in the order you want. [Alf's limitations and features
-to come](#ongoing-work) are then discussed, before [conclusion](#conclusion).
+the first place, in the form of a (very accessible) scientific paper (this
+writing style is also a test, let me know what you think). The [section
+immediately following](#intro) provides a short overview of the proposed
+approach, explaining the title of this blog post. We then detail Alf's
+proposal, first from [a theoretical perspective](#theory) then with an [short
+example](#practice) illustrating the advantages. You can read those two
+sections in the order you want. [Alf's limitations and features to
+come](#ongoing-work) are then briefly discussed, before
+[concluding](#conclusion) with a more general perspective.
 
 <h2 id="intro">Yet another database connectivity library?</h2>
 
