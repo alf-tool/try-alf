@@ -49,21 +49,19 @@ makes Alf very different from the projects mentioned above. The difference
 lies in the kind of abstraction that the library exposes to the software
 developer: SQL queries with these libraries, <em>Relations</em> for Alf.</p>
 
-<p>In almost all <a href="http://www.datomic.com/">but</a>
-<a href="https://github.com/dkubb/axiom">a</a>
-<a href="http://dbappbuilder.sourceforge.net/Rel.php">few</a> database connectivity
-layers, the developer is indeed exposed to SQL queries. The SQL query is often
-abstracted behind a higher-level API for manipulating its abstract syntax tree
-(AST). But even in this case, the exposed abstraction is an SQL query. The
-fact is that a SQL query, even when abstracted behind an AST, tends to be a
-very poor abstraction for developing software. Before substantiating this
-claim, let us illustrate the difference between our approach and a few others
-with a simple example.</p>
+<p>In almost all database connectivity layers, the developer is indeed exposed to
+SQL queries. The SQL query is often abstracted behind a higher-level API for
+manipulating its abstract syntax tree (AST). But even in this case, the
+exposed abstraction is an SQL query. The fact is that a SQL query, even when
+abstracted behind an AST, tends to be a very poor abstraction for developing
+software. Before substantiating this claim, let us illustrate the difference
+between our approach and a few others with a simple example.</p>
 
 <h3>Example</h3>
 
 <p>In Java/JDBC for instance, queries are simple SQL strings. No abstraction at
-all; we all know the cost in terms of maintenance, security, etc.</p>
+all; we all know the cost in terms of maintenance, security (quotes in
+<code>location</code> should be escaped below, for instance), etc.</p>
 <div class="highlight"><pre><span class="n">String</span> <span class="n">location</span> <span class="o">=</span> <span class="o">...</span> <span class="c1">// from user input;</span>
 <span class="n">String</span> <span class="n">qry</span>  <span class="o">=</span> <span class="s">&quot;SELECT name, city FROM suppliers WHERE&quot;</span><span class="o">;</span>
        <span class="n">qry</span> <span class="o">+=</span> <span class="s">&quot;city=&#39;&quot;</span> <span class="o">+</span> <span class="n">location</span> <span class="o">+</span> <span class="s">&quot;&#39;&quot;</span><span class="o">;</span>
@@ -72,51 +70,67 @@ all; we all know the cost in terms of maintenance, security, etc.</p>
 
 <p>Common high-level approaches are slightly more abstract. While more secure and
 flexible, they still expose a SQL query abstraction. In the following example,
-using <a href="https://github.com/rails/arel">ARel</a>:</p>
+using <a href="https://github.com/rails/arel">Ruby/Arel</a>:</p>
 <div class="highlight"><pre><span class="n">location</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
-<span class="n">qry</span>  <span class="o">=</span> <span class="no">Arel</span><span class="o">::</span><span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:suppliers</span><span class="p">)</span>
-<span class="n">qry</span>  <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">qry</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span><span class="p">,</span> <span class="n">qry</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
-<span class="n">qry</span>  <span class="o">=</span> <span class="n">qry</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">qry</span><span class="o">[</span><span class="ss">:city</span><span class="o">].</span><span class="n">eq</span><span class="p">(</span><span class="n">location</span><span class="p">))</span>
+<span class="n">suppliers</span> <span class="o">=</span> <span class="no">Arel</span><span class="o">::</span><span class="no">Table</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:suppliers</span><span class="p">)</span>
+<span class="n">qry</span> <span class="o">=</span> <span class="n">suppliers</span>
+    <span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span><span class="p">,</span> <span class="n">suppliers</span><span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">suppliers</span><span class="o">[</span><span class="ss">:city</span><span class="o">].</span><span class="n">eq</span><span class="p">(</span><span class="n">location</span><span class="p">))</span>
+<span class="n">qry</span><span class="o">.</span><span class="n">to_sql</span>
+<span class="c1"># =&gt; SELECT suppliers.name, suppliers.city FROM suppliers  WHERE suppliers.city = ...</span>
 </pre>
 </div>
 
 <p>The <strong>Relations as First-Class Citizen</strong> paradigm changes this by abstracting
 from SQL and exposing true relations instead. In the example below,
 <code>suppliers</code> is a relation, <code>restrict</code> is a relational operator and its
-invocation returns another relation:</p>
+invocation returns another relation; <code>project</code> is another operator taking the
+former relation as first argument; it returns another relation, and so on:</p>
 <div class="highlight"><pre><span class="n">location</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from user input</span>
-<span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">:city</span> <span class="o">=&gt;</span> <span class="n">location</span><span class="p">)</span>
+<span class="n">project</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">:city</span> <span class="o">=&gt;</span> <span class="n">location</span><span class="p">),</span> <span class="o">[</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
 </pre>
 </div>
 
 <p>Alf does just that: it exposes relations as first class citizen to the
 software developer. It currently supports two main modes, with and without
-lazy evaluation, the details of which are out of scope for this blog
-post (see <a href="/doc/alf-in-ruby">Alf in Ruby</a>).</p>
+lazy evaluation, and two styles, a functional one (shown here) and an
+Object-Oriented one. The details are out of scope for this blog post, but can
+be found them in <a href="/doc/alf-in-ruby">Alf in Ruby</a>.</p>
 
 <h3>What does really change?</h3>
 
-<p>This paradigm shift may not seem very significant at first glance, but
-abstracting from SQL is an important change in practice:</p>
+<p>This paradigm shift may not seem very significant at first glance, that is, it
+may look like a simple syntactic issue. However, abstracting from SQL is an
+important change in practice for at least two reasons:</p>
 
 <ul>
 <li><p>First, when exposing SQL as a software abstraction, you also expose its
 type system. SQL&#39;s type system is poor and old. Developers need rich type
 systems. In our new paradigm, the type system is the one of the host
 language (Ruby in our case), with all its power:</p>
-<div class="highlight"><pre><span class="c1"># Get suppliers whose name matches a Ruby regular expression.</span>
+<div class="highlight"><pre><span class="c1"># Get suppliers whose name matches a Ruby regular expression</span>
 <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span> <span class="o">=~</span> <span class="sr">/J|B/</span> <span class="p">})</span>
 </pre>
 </div>
 
 <div class="try-this"><a href="/?src=IyBHZXQgc3VwcGxpZXJzIHdob3NlIG5hbWUgbWF0Y2hlcyBhIFJ1YnkgcmVn
-dWxhciBleHByZXNzaW9uLgpyZXN0cmljdChzdXBwbGllcnMsIC0+KHQpeyB0
-Lm5hbWUgPX4gL0p8Qi8gfSk=
+dWxhciBleHByZXNzaW9uCnJlc3RyaWN0KHN1cHBsaWVycywgLT4odCl7IHQu
+bmFtZSA9fiAvSnxCLyB9KQ==
+" target="_blank">Try it!</a></div>
+<div class="highlight"><pre><span class="c1"># Get each supplier together with the parts located in same city</span>
+<span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">parts</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">restrict</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="n">t</span><span class="o">.</span><span class="n">city</span><span class="p">)</span> <span class="p">})</span>
+</pre>
+</div>
+
+<div class="try-this"><a href="/?src=IyBHZXQgZWFjaCBzdXBwbGllciB0b2dldGhlciB3aXRoIHRoZSBwYXJ0cyBs
+b2NhdGVkIGluIHNhbWUgY2l0eQpleHRlbmQoc3VwcGxpZXJzLCBwYXJ0czog
+LT4odCl7IHJlc3RyaWN0KHBhcnRzLCBjaXR5OiB0LmNpdHkpIH0p
 " target="_blank">Try it!</a></div>
 
-<p>While powerful, this is very challenging in practice and comes at a cost.
-There are drawbacks and limitations that you must be aware of. We&#39;ll come
-back to this point at the end of this blog post.</p></li>
+<p>While powerful, this is very challenging in practice for the implementer
+(i.e. for me) and comes at a cost (for you). There are drawbacks and
+limitations that you must be aware of. We&#39;ll come back to this point at the
+end of this blog post.</p></li>
 <li><p>SQL is a calculus. In contrast, the <strong>Relations as First-Class Citizen</strong>
 paradigm relies on the availibility of an algebra. We claim that an algebra
 exposes better abstractions for software engineering, as the rest of this
@@ -135,12 +149,12 @@ calculus and an algebra:</p>
 <li><p>In a calculus, what you describe is the problem to solve, not how to solve
 it. Hence the <code>from ... select ... such that ...</code> declarative kind of
 question you actually ask to a SQL DBMS:</p>
-<div class="highlight"><pre>  <span class="c1"># Get the cities where at least one supplier is located, provided</span>
-  <span class="c1"># at least one part is located there too.</span>
-  <span class="no">SELECT</span> <span class="no">DISTINCT</span> <span class="n">city</span> <span class="no">FROM</span> <span class="n">suppliers</span> <span class="no">AS</span> <span class="n">s</span>
-  <span class="no">WHERE</span> <span class="no">EXISTS</span> <span class="p">(</span>
-    <span class="no">SELECT</span> <span class="n">city</span> <span class="no">FROM</span> <span class="n">parts</span> <span class="no">AS</span> <span class="nb">p</span>
-    <span class="no">WHERE</span> <span class="n">s</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="nb">p</span><span class="o">.</span><span class="n">city</span>
+<div class="highlight"><pre>  <span class="c1">-- Get the cities where at least one supplier is located, provided</span>
+  <span class="c1">-- at least one part is located there too.</span>
+  <span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="n">city</span> <span class="k">FROM</span> <span class="n">suppliers</span> <span class="k">AS</span> <span class="n">s</span>
+  <span class="k">WHERE</span> <span class="k">EXISTS</span> <span class="p">(</span>
+    <span class="k">SELECT</span> <span class="n">city</span> <span class="k">FROM</span> <span class="n">parts</span> <span class="k">AS</span> <span class="n">p</span>
+    <span class="k">WHERE</span> <span class="n">s</span><span class="p">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">city</span>
   <span class="p">)</span>
 </pre>
 </div></li>
@@ -170,7 +184,7 @@ something similar to the former one and to send it to an underlying SQL DBMS
 (a feature obviously limited by the ability to reconcile the respective type
 systems, see later). However, as shown by the example above, a calculus is
 more declarative than an algebra. In other words, the latter looks more like
-an algorithm. Despite this, we do claim that relational algebra exposes better
+an algorithm. Despite this, I do claim that relational algebra exposes better
 abstractions for developing software when it comes to querying databases or,
 more generally, to manipulating data. Why is that so?</p>
 
@@ -181,12 +195,12 @@ you generally know the problem at hand. Therefore, you welcome a declarative
 language since it allows you to express that problem while leaving to the
 underlying engine the job of finding the solution instead of having to
 describe the algorithm to compute it. This is what SQL offers to you. This is
-what <a href="https://bernardopires.com/2013/10/try-logic-programming-a-gentle-introduction-to-prolog/">logic
-programming</a>
-and <a href="http://en.wikipedia.org/wiki/Constraint_programming">constraint
-programming</a> offer too.</p>
+what
+<a href="https://bernardopires.com/2013/10/try-logic-programming-a-gentle-introduction-to-prolog/">logic programming</a>
+and
+<a href="http://en.wikipedia.org/wiki/Constraint_programming">constraint programming</a> offer too.</p>
 
-<p>Developping software is of a very different nature. As a software developer,
+<p>Developping software is of a very different nature. As a software engineer,
 you generally don&#39;t have one single problem at hand. Instead, you have a set
 of problems called <em>requirements</em> and you find a design that allows meeting
 them all. One of the most effective strategies for this is <em>divide and conquer</em>.
@@ -195,145 +209,300 @@ with respect to those requirements while ensuring that the software behaves as
 expected when all modules are put together.</p>
 
 <p>The declarative styles of programming such as SQL&#39;s are very nice for solving
-very specific and well isolated sub-problems of your requirements space (logic
-and constraint programming too, as they also allow searching through an entire
-solution space, for optimization problems for instance). In contrast, they are
-of almost no aid for putting the architectural pieces together. Yet, putting
-the pieces together is something software engineers do every single day.</p>
+very specific and well isolated sub-problems in your requirements &amp; design
+space (logic and constraint programming are even more useful; unlike SQL or
+relational algebra, they also allow searching through an entire solution
+space, for optimization problems for instance). In contrast, they are of
+almost no aid for putting the architectural pieces together. Yet, putting the
+pieces together is something software engineers do every single day.</p>
 
 <p>When it comes to manipulating data, putting <em>relations</em> together is much
 easier than putting <em>SQL queries</em> together, because the semantics of &quot;putting
 together&quot; is more straightfoward in the former case. This leads us back to the
 calculus vs. algebra distinction. An algebra <em>is</em> about providing operators
-for putting operands togethers, a calculus simply is not. The next section
-illustrates this on our running example.</p>
+for putting operands together, a calculus simply is not. To be fair, as they
+are equivalent in terms of expressiveness, it is not SQL itself that must be
+blamed. Instead, it is <em>our use</em> of SQL, more specifically the <em>idiomatic</em> way
+of using SQL, as exposed by the API of connectivity libraries. Alf proposes a
+new approach that is easier and more interoperable. The next two sections
+illustrate this on a concrete example.</p>
 
-<h2>The struggle of SQL with abstraction and reuse</h2>
+<h2>Struggling with reuse and separation of concerns &mdash; An Example</h2>
 
-<p>In the SQL query below observe the coupling induced by <code>s.city = p.city</code>
-between the <code>FROM</code> clause and the <code>EXISTS</code> subquery:</p>
-<div class="highlight"><pre><span class="no">SELECT</span> <span class="no">DISTINCT</span> <span class="n">city</span>
-<span class="no">FROM</span> <span class="n">suppliers</span> <span class="no">AS</span> <span class="n">s</span>
-<span class="no">WHERE</span> <span class="no">EXISTS</span> <span class="p">(</span>
-  <span class="no">SELECT</span> <span class="n">city</span> <span class="no">FROM</span> <span class="n">parts</span> <span class="no">AS</span> <span class="nb">p</span>
-  <span class="no">WHERE</span> <span class="n">s</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="nb">p</span><span class="o">.</span><span class="n">city</span>
-<span class="p">)</span>
+<p>Let us take a concrete software engineering example on the <a href="http://en.wikipedia.org/wiki/Suppliers_and_Parts_database">suppliers and
+parts examplar</a>, to
+which we add the following <code>cities</code> relation:</p>
+<div class="highlight"><pre><span class="c1"># Cities, each with a `name` and corresponding `country` name</span>
+<span class="n">cities</span>
 </pre>
 </div>
 
-<p>This kind of coupling explains why SQL-driven database connectivity librairies
-stop shining as soon a join is involved, not even talking about more complex
-queries. Indeed, even if possible, it is not idiomatic to build SQL queries
-from various parts constructed in a really independent way. Common
-connectivity libraries try very hard job to maintain the illusion that it is
-possible, but they generally fail at doing so. To convince yourself, suppose
-the following additional requirement:</p>
-<div class="highlight"><pre><span class="c1"># Join the set of cities obtained previously with `cities` so as to also display their country.</span>
+<div class="try-this"><a href="/?src=IyBDaXRpZXMsIGVhY2ggd2l0aCBhIGBuYW1lYCBhbmQgY29ycmVzcG9uZGlu
+ZyBgY291bnRyeWAgbmFtZQpjaXRpZXM=
+" target="_blank">Try it!</a></div>
+
+<p>Suppose the suppliers themselves are the software users. Suppose also that the
+following requirements must be met by the particular inferface showing the
+list of suppliers to the current user:</p>
+
+<ol>
+<li>A supplier may only see information about the suppliers located in the same
+city than himself.</li>
+<li>The supplier&#39;s <code>status</code> is sensitive and should not be displayed.</li>
+<li>The country name must be displayed together with the supplier&#39;s city.</li>
+</ol>
+
+<p>In terms of the query to be built, those requirements involve a restriction
+(<code>same city as</code>), a selection (<code>no status</code>) and a join (<code>with country name</code>).
+Writting a monolithic query is rather straightforward, here using
+<a href="http://sequel.rubyforge.org/">Sequel</a>:</p>
+<div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from context (authenticated user)</span>
+
+<span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers</span><span class="o">]</span>
+  <span class="o">.</span><span class="n">natural_join</span><span class="p">(</span><span class="ss">:cities</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">,</span> <span class="ss">:country</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:city</span> <span class="o">=&gt;</span> <span class="n">requester_city</span><span class="p">)</span>
+
+<span class="c1"># =&gt; SELECT sid, name, city, country</span>
+<span class="c1">#    FROM suppliers NATURAL JOIN cities</span>
+<span class="c1">#    WHERE (city = ...)</span>
 </pre>
 </div>
 
-<p>The most straightforward way of writing such query seriously breaks separation
-of concerns because you&#39;ll need to know a lot about how the previous building
-block has been written. In particular, observe how the <code>SELECT</code> and <code>FROM</code>
-clauses have to change:</p>
-<div class="highlight"><pre><span class="no">SELECT</span> <span class="no">DISTINCT</span> <span class="n">s</span><span class="o">.</span><span class="n">city</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">country</span> 
-<span class="no">FROM</span> <span class="n">suppliers</span> <span class="no">AS</span> <span class="n">s</span> <span class="no">JOIN</span> <span class="n">cities</span> <span class="no">AS</span> <span class="n">c</span> <span class="no">ON</span> <span class="n">s</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">city</span>
-<span class="no">WHERE</span> <span class="no">EXISTS</span> <span class="p">(</span>
-  <span class="no">SELECT</span> <span class="n">city</span> <span class="no">FROM</span> <span class="n">parts</span> <span class="no">AS</span> <span class="nb">p</span>
-  <span class="no">WHERE</span> <span class="n">s</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="nb">p</span><span class="o">.</span><span class="n">city</span>
-<span class="p">)</span>
+<p>In software involving complex requirements, relying on monolithic queries is
+unfortunately not always possible and/or desirable (otherwise, creating
+database views would simply be enough). Two main reasons explain this:</p>
+
+<ul>
+<li>The same requirements tend to apply to various and independent software
+features. For instance, the first two requirements above might apply
+<em>everytime</em> a list of suppliers is shown, while the third one might not.
+Complex requirements generally call for a design that achieves both
+separation of concerns and reuse.</li>
+<li>Complex software also involves context-dependent requirements. For instance,
+the first requirement above might be relaxed for administrators (say,
+suppliers with status greater than 30).</li>
+</ul>
+
+<p>This explains why connectivity libraries and their SQL utilities exist in the
+first place: because of the need to <em>build</em> queries, often at runtime and
+according to some context. There is a desperate need for more support for this
+in DBMSs themselves. In the mean time, developers rely on the ability of host
+programming languages and third-party libraries.</p>
+
+<p>Back to our example, what about the following &quot;design&quot;?</p>
+<div class="highlight"><pre><span class="c1"># Meet 1) and 2) together as a utility method: separation of concerns</span>
+<span class="k">def</span> <span class="nf">suppliers_in</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
+  <span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers</span><span class="o">]</span>
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:city</span> <span class="o">=&gt;</span> <span class="n">city</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># Meet 3) as a utility method: separation of concerns</span>
+<span class="k">def</span> <span class="nf">with_country</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+  <span class="n">operand</span><span class="o">.</span><span class="n">natural_join</span><span class="p">(</span><span class="ss">:cities</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># Meet them all: composition and reuse</span>
+<span class="n">requester_city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from context</span>
+<span class="n">with_country</span><span class="p">(</span><span class="n">suppliers_in</span><span class="p">(</span><span class="n">requester_city</span><span class="p">))</span>
 </pre>
 </div>
 
-<p>There are actually a few ways to write such query without breaking abstraction
-levels. For example, obverse how our original query is preserved as <code>q1</code> in
-the query below:</p>
-<div class="highlight"><pre><span class="no">WITH</span> <span class="n">q1</span> <span class="no">AS</span> <span class="p">(</span>
-       <span class="no">SELECT</span> <span class="no">DISTINCT</span> <span class="n">city</span>
-       <span class="no">FROM</span> <span class="n">suppliers</span> <span class="no">AS</span> <span class="n">s</span>
-       <span class="no">WHERE</span> <span class="no">EXISTS</span> <span class="p">(</span>
-         <span class="no">SELECT</span> <span class="n">city</span> <span class="no">FROM</span> <span class="n">parts</span> <span class="no">AS</span> <span class="nb">p</span>
-         <span class="no">WHERE</span> <span class="n">s</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="nb">p</span><span class="o">.</span><span class="n">city</span>
-       <span class="p">)</span>
-     <span class="p">),</span>
-     <span class="n">q2</span> <span class="no">AS</span> <span class="p">(</span><span class="no">SELECT</span> <span class="n">city</span><span class="p">,</span> <span class="n">country</span> <span class="no">FROM</span> <span class="n">cities</span><span class="p">)</span>
-<span class="no">SELECT</span> <span class="o">*</span> <span class="no">FROM</span> <span class="n">q1</span> <span class="no">NATURAL</span> <span class="no">JOIN</span> <span class="n">q2</span>
+<p>Wrong. The original, and correct, SQL query was:</p>
+<div class="highlight"><pre><span class="c1">-- Give the id, name, city and country of every supplier located in city ...</span>
+<span class="k">SELECT</span> <span class="n">sid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">city</span><span class="p">,</span> <span class="n">country</span>
+<span class="k">FROM</span> <span class="n">suppliers</span> <span class="k">NATURAL</span> <span class="k">JOIN</span> <span class="n">cities</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="n">city</span> <span class="o">=</span> <span class="p">...)</span>
 </pre>
 </div>
 
-<p>Ironically, building such a query with common connectivity libraries is not
-idiomatic, when even possible. Worse, it is so hard to maintain this kind of
-beasts that simply breaking your software design tends to be a better choice.
-Last, but not least, if <code>cities</code> comes from another database, a .csv file or
-whatever data source, the game simply ends.</p>
+<p>The new one seems smiliar, but is wrong. As shown below, we lost the country
+in the process:</p>
+<div class="highlight"><pre><span class="c1">-- Give the id, name and city of every supplier located in city ..., provided</span>
+<span class="c1">-- the city is known in `cities`</span>
+<span class="k">SELECT</span> <span class="n">sid</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">city</span>
+<span class="k">FROM</span> <span class="n">suppliers</span> <span class="k">NATURAL</span> <span class="k">JOIN</span> <span class="n">cities</span>
+<span class="k">WHERE</span> <span class="p">(</span><span class="n">city</span> <span class="o">=</span> <span class="p">...)</span>
+</pre>
+</div>
+
+<p>What happened? In short, <code>Sequel</code>&#39;s join does not correspond to a <em>algebraic</em>
+join of its operands. Instead, its specification looks like &quot;adds a term to
+the <code>SQL</code> query&#39;s <code>FROM</code> clause&quot;, whose algebraic semantics is far from
+obvious (here you can blame <code>SQL</code> itself). Observe in particular that the
+following algebraic equivalence does not hold, preventing us from designing as
+above:</p>
+<div class="highlight"><pre><span class="n">suppliers</span>
+  <span class="o">.</span><span class="n">natural_join</span><span class="p">(</span><span class="n">cities</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">,</span> <span class="ss">:country</span><span class="p">)</span>
+<span class="o">&lt;=!=&gt;</span>
+<span class="n">suppliers</span>
+  <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">natural_join</span><span class="p">(</span><span class="n">cities</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:city</span><span class="p">,</span> <span class="ss">:country</span><span class="p">))</span>
+</pre>
+</div>
+
+<p>Join is a striking example of the problem at hand, but others exist that
+involve different operators. Let me insist on something: the same is true with
+<a href="https://github.com/rails/arel">ARel</a>, <a href="http://sequel.rubyforge.org/">Sequel</a>,
+<a href="http://www.sqlalchemy.org/">SQLAlchemy</a>, <a href="http://www.sqlkorma.com/">Korma</a>,
+<a href="http://www.jooq.org/">jOOQ</a> to cite a few. The fact is:</p>
+
+<ul>
+<li>SQL has not been thought with composition and separation of concerns in mind,</li>
+<li>Using it naively leads to a lot of coupling between various parts of the queries,</li>
+<li>Coupling hurts software design.</li>
+</ul>
+
+<p>To be fair... There <em>is</em> a way to use <code>SQL</code> (and, sometimes, those libraries)
+so as to avoid the problem described here. It amounts at using <code>SQL</code> in a
+purely algebraic way. Unfortunately, that way is not idiomatic and leads to
+complex SQL queries, that may have bad execution plans (at least in major
+open-source DBMSs). In the example at hand, using Sequel&#39;s <code>from_self</code> in a
+systematic way (e.g. on every reusable piece) is safe from the point of view
+of algebraic composition:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">suppliers_in</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
+  <span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers</span><span class="o">]</span>
+    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">:city</span> <span class="o">=&gt;</span> <span class="n">city</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">from_self</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">with_country</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
+  <span class="n">operand</span>
+    <span class="o">.</span><span class="n">natural_join</span><span class="p">(</span><span class="ss">:cities</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">from_self</span>
+<span class="k">end</span>
+
+<span class="n">requester_city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from context</span>
+<span class="n">with_country</span><span class="p">(</span><span class="n">suppliers_in</span><span class="p">(</span><span class="n">requester_city</span><span class="p">))</span>
+
+<span class="c1"># SELECT * FROM (</span>
+<span class="c1">#   SELECT * FROM (</span>
+<span class="c1">#     SELECT sid, name, city FROM suppliers</span>
+<span class="c1">#     WHERE (city = ...)</span>
+<span class="c1">#   ) AS &#39;t1&#39;</span>
+<span class="c1">#   NATURAL JOIN cities</span>
+<span class="c1"># ) AS &#39;t1&#39;</span>
+</pre>
+</div>
+
+<p>The complete recipe for using SQL in an purely algebraic way is more complex,
+of course. I won&#39;t provide the full details here, let me know if a dedicated
+post is welcome. Instead, let see how our new paradigm helps.</p>
 
 <h2>Relations provide a true abstraction mechanism</h2>
 
-<p>The same is not true with relational algebra, more specifically with the
-<strong>Relations as First-Class Citizen</strong> paradigm (RFCC). For instance, the
-building block of our original solution above may be kept unchanged yet
-further joined:</p>
-<div class="highlight"><pre><span class="c1"># Get the cities where at least one supplier is located, provided</span>
-<span class="c1"># at least one part is located there too.</span>
-<span class="n">cities_from_suppliers</span> <span class="o">=</span> <span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
-<span class="n">cities_from_parts</span>     <span class="o">=</span> <span class="n">project</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
-<span class="n">building_block</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span><span class="n">cities_from_suppliers</span><span class="p">,</span> <span class="n">cities_from_parts</span><span class="p">)</span>
+<p>The <strong>Relations as First-Class Citizen</strong> paradigm aims at providing an
+interface that is <em>designed for</em> composition and reuse. We invite you to use
+Alf&#39;s try console to check that the example below works as expected. As shown,
+the three requirements can be incorporated incrementally thanks to the true
+composition mechanism offered by an algebra. Commenting a line amounts at
+ignoring the corresponding requirement:</p>
+<div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="s1">&#39;London&#39;</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">suppliers</span>
 
-<span class="c1"># Join the set of cities obtained previously with `cities` so as to also</span>
-<span class="c1"># display their country.</span>
-<span class="n">join</span><span class="p">(</span><span class="n">building_block</span><span class="p">,</span> <span class="n">cities</span><span class="p">)</span>
+<span class="c1"># 1). A supplier may only see information about the suppliers located</span>
+<span class="c1"># in the same city than himself.</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">restrict</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="n">requester_city</span><span class="p">)</span>
+
+<span class="c1"># 2) The supplier&#39;s `status` is sensitive and should not be displayed.</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">allbut</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="o">[</span><span class="ss">:status</span><span class="o">]</span><span class="p">)</span>
+
+<span class="c1"># 3). The country name must be displayed together with the supplier&#39;s city.</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">cities</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this"><a href="/?src=IyBHZXQgdGhlIGNpdGllcyB3aGVyZSBhdCBsZWFzdCBvbmUgc3VwcGxpZXIg
-aXMgbG9jYXRlZCwgcHJvdmlkZWQKIyBhdCBsZWFzdCBvbmUgcGFydCBpcyBs
-b2NhdGVkIHRoZXJlIHRvby4KY2l0aWVzX2Zyb21fc3VwcGxpZXJzID0gcHJv
-amVjdChzdXBwbGllcnMsIFs6Y2l0eV0pCmNpdGllc19mcm9tX3BhcnRzICAg
-ICA9IHByb2plY3QocGFydHMsIFs6Y2l0eV0pCmJ1aWxkaW5nX2Jsb2NrID0g
-aW50ZXJzZWN0KGNpdGllc19mcm9tX3N1cHBsaWVycywgY2l0aWVzX2Zyb21f
-cGFydHMpCgojIEpvaW4gdGhlIHNldCBvZiBjaXRpZXMgb2J0YWluZWQgcHJl
-dmlvdXNseSB3aXRoIGBjaXRpZXNgIHNvIGFzIHRvIGFsc28KIyBkaXNwbGF5
-IHRoZWlyIGNvdW50cnkuCmpvaW4oYnVpbGRpbmdfYmxvY2ssIGNpdGllcyk=
+<div class="try-this"><a href="/?src=cmVxdWVzdGVyX2NpdHkgPSAnTG9uZG9uJwpzb2x1dGlvbiA9IHN1cHBsaWVy
+cwoKIyAxKS4gQSBzdXBwbGllciBtYXkgb25seSBzZWUgaW5mb3JtYXRpb24g
+YWJvdXQgdGhlIHN1cHBsaWVycyBsb2NhdGVkCiMgaW4gdGhlIHNhbWUgY2l0
+eSB0aGFuIGhpbXNlbGYuCnNvbHV0aW9uID0gcmVzdHJpY3Qoc29sdXRpb24s
+IGNpdHk6IHJlcXVlc3Rlcl9jaXR5KQoKIyAyKSBUaGUgc3VwcGxpZXIncyBg
+c3RhdHVzYCBpcyBzZW5zaXRpdmUgYW5kIHNob3VsZCBub3QgYmUgZGlzcGxh
+eWVkLgpzb2x1dGlvbiA9IGFsbGJ1dChzb2x1dGlvbiwgWzpzdGF0dXNdKQoK
+IyAzKS4gVGhlIGNvdW50cnkgbmFtZSBtdXN0IGJlIGRpc3BsYXllZCB0b2dl
+dGhlciB3aXRoIHRoZSBzdXBwbGllcidzIGNpdHkuCnNvbHV0aW9uID0gam9p
+bihzb2x1dGlvbiwgY2l0aWVzKQ==
 " target="_blank">Try it!</a></div>
+
+<p>To better understand why it works, observe that in Alf, the equivalence
+mentionned in the previous section holds. That is, the two following queries
+are equivalent, something that you can check by yourself using the console:</p>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span>
+  <span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">cities</span><span class="p">),</span>
+  <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="p">,</span> <span class="ss">:country</span><span class="o">]</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this"><a href="/?src=cHJvamVjdCgKICBqb2luKHN1cHBsaWVycywgY2l0aWVzKSwKICBbOnNpZCwg
+Om5hbWUsIDpjaXR5LCA6Y291bnRyeV0p
+" target="_blank">Try it!</a></div>
+
+<p>and</p>
+<div class="highlight"><pre><span class="n">join</span><span class="p">(</span>
+  <span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:city</span><span class="o">]</span><span class="p">),</span>
+  <span class="n">project</span><span class="p">(</span><span class="n">cities</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="p">,</span> <span class="ss">:country</span><span class="o">]</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this"><a href="/?src=am9pbigKICBwcm9qZWN0KHN1cHBsaWVycywgWzpzaWQsIDpuYW1lLCA6Y2l0
+eV0pLAogIHByb2plY3QoY2l0aWVzLCBbOmNpdHksIDpjb3VudHJ5XSkp
+" target="_blank">Try it!</a></div>
+
+<p>Interestingly enough, this kind of equivalences may be used for query
+optimization and smart SQL compilation. We invite the reader to check the
+<code>Optimizer</code> and <code>Query plan</code> tabs of the console on both queries. The
+generated SQL queries are the same in both cases; they are kept as simple as
+possible, in to hope to avoid ugly physical plans in the SQL DBMS itself.</p>
+
+<h2>... plus extra</h2>
 
 <p>What if cities come from somewhere else? A .csv file, another database or
 whatever datasource?</p>
-<div class="highlight"><pre><span class="c1"># Get the cities... (unchanged, just inlined)</span>
-<span class="n">building_block</span> <span class="o">=</span> <span class="n">intersect</span><span class="p">(</span><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">),</span> <span class="n">project</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">))</span>
+<div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="s1">&#39;London&#39;</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">suppliers</span>
 
-<span class="c1"># Join them...</span>
+<span class="c1"># 1) and 2) above, but inline</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">allbut</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">),</span> <span class="o">[</span><span class="ss">:status</span><span class="o">]</span><span class="p">)</span>
+
 <span class="c1"># Might be Relation.load(&#39;cities.csv&#39;); we use a literal for execution on try-alf.org</span>
-<span class="n">cities</span> <span class="o">=</span> <span class="no">Relation</span><span class="p">(</span><span class="o">[</span>
+<span class="n">third_party_cities</span> <span class="o">=</span> <span class="no">Relation</span><span class="p">(</span><span class="o">[</span>
   <span class="p">{</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="s1">&#39;England&#39;</span><span class="p">},</span>
   <span class="p">{</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span>  <span class="n">country</span><span class="p">:</span> <span class="s1">&#39;France&#39;</span><span class="p">}</span>
 <span class="o">]</span><span class="p">)</span>
-<span class="n">join</span><span class="p">(</span><span class="n">building_block</span><span class="p">,</span> <span class="n">cities</span><span class="p">)</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">third_party_cities</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this"><a href="/?src=IyBHZXQgdGhlIGNpdGllcy4uLiAodW5jaGFuZ2VkLCBqdXN0IGlubGluZWQp
-CmJ1aWxkaW5nX2Jsb2NrID0gaW50ZXJzZWN0KHByb2plY3Qoc3VwcGxpZXJz
-LCBbOmNpdHldKSwgcHJvamVjdChwYXJ0cywgWzpjaXR5XSkpCgojIEpvaW4g
-dGhlbS4uLgojIE1pZ2h0IGJlIFJlbGF0aW9uLmxvYWQoJ2NpdGllcy5jc3Yn
-KTsgd2UgdXNlIGEgbGl0ZXJhbCBmb3IgZXhlY3V0aW9uIG9uIHRyeS1hbGYu
-b3JnCmNpdGllcyA9IFJlbGF0aW9uKFsKICB7Y2l0eTogJ0xvbmRvbicsIGNv
-dW50cnk6ICdFbmdsYW5kJ30sCiAge2NpdHk6ICdQYXJpcycsICBjb3VudHJ5
-OiAnRnJhbmNlJ30KXSkKam9pbihidWlsZGluZ19ibG9jaywgY2l0aWVzKQ==
+<div class="try-this"><a href="/?src=cmVxdWVzdGVyX2NpdHkgPSAnTG9uZG9uJwpzb2x1dGlvbiA9IHN1cHBsaWVy
+cwoKIyAxKSBhbmQgMikgYWJvdmUsIGJ1dCBpbmxpbmUKc29sdXRpb24gPSBh
+bGxidXQocmVzdHJpY3Qoc29sdXRpb24sIGNpdHk6ICdMb25kb24nKSwgWzpz
+dGF0dXNdKQoKIyBNaWdodCBiZSBSZWxhdGlvbi5sb2FkKCdjaXRpZXMuY3N2
+Jyk7IHdlIHVzZSBhIGxpdGVyYWwgZm9yIGV4ZWN1dGlvbiBvbiB0cnktYWxm
+Lm9yZwp0aGlyZF9wYXJ0eV9jaXRpZXMgPSBSZWxhdGlvbihbCiAge2NpdHk6
+ICdMb25kb24nLCBjb3VudHJ5OiAnRW5nbGFuZCd9LAogIHtjaXR5OiAnUGFy
+aXMnLCAgY291bnRyeTogJ0ZyYW5jZSd9Cl0pCnNvbHV0aW9uID0gam9pbihz
+b2x1dGlvbiwgdGhpcmRfcGFydHlfY2l0aWVzKQ==
 " target="_blank">Try it!</a></div>
 
-<p>Relational algebra and RFCC can be seen as a purely functional kind of
-programming where immutable values are relations and functions are relational
-operators. This kind of comparison is not new. It was already suggested
-several years ago in Ben Moseley&#39;s famous <a
-href="http://shaffner.us/cs/papers/tarpit.pdf">Out of the Tar Pit</a> essay.
-Alf contributes an example of the general framework outlined there.</p>
+<p>The example above shows that, in addition to the advantages previously cited,
+the composition mechanism of relational algebra makes few assumptions about
+where the operands come from, by nature. <strong>Relations as First-class citizen</strong>
+can be seen as a purely functional kind of programming where immutable values
+are relations and functions are relational operators. This kind of comparison
+is not new. It was already suggested several years ago in Ben Moseley&#39;s famous
+<a href="http://shaffner.us/cs/papers/tarpit.pdf">Out of the Tar Pit</a>
+essay. Alf contributes an example of the general framework outlined there.</p>
 
-<h2>Limitations and future work</h2>
+<h2>Limitations and ongoing work</h2>
 
-<p>The approach outlined here opens an avenue for further optimization,
-experimentation and research. We close this blog post with an overview of our
-own future work in this area. We also draw the reader&#39;s attention on Alf&#39;s
-current limitations.</p>
+<p>The approach proposed here opens an avenue for further optimization,
+experimentation and research. I close this blog post with an overview of my
+own ongoing work in this area (which are all subjects I will be talking about
+here in the near future). I also draw the reader&#39;s attention on Alf&#39;s current
+limitations.</p>
 
 <h3>Towards high-level, domain-specific relational operators</h3>
 
@@ -379,8 +548,9 @@ relying on an <code>if/then/else</code> statement in the host language.</p>
 
 <p>Similarly, even when involving complex data types and collections, most query
 plans involve a <em>constant</em> number of SQL queries, avoiding the &#39;N+1 queries&#39;
-trap <a href="http://www.revision-zero.org/orm-haters-do-get-it">infamously known with Object-Relational
-Mappers</a>:</p>
+trap <a href="http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue">infamously
+known</a>
+with Object-Relational Mappers:</p>
 <div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">group</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">:supplied_parts</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span>
 </pre>
 </div>
@@ -436,12 +606,12 @@ c2lkOiAnUzEnKQ==
 
 <h3>Reconciling heterogeneous type systems</h3>
 
-<p>As already suggested, abstracting from SQL is challenging. More specifically,
-abstracting from SQL <em>and</em> guaranteeing soundness and efficiency at the same
-time are conflicting requirements. Alf has a smart compiler that delegates to
-underlying engines what can be delegated, but the explicit use of the host
-type system is a showstopper during compilation. To better understand this,
-consider the following query:</p>
+<p>As already suggested, abstracting from SQL is challenging for the implementer.
+More specifically, abstracting from SQL <em>and</em> guaranteeing soundness and
+efficiency at the same time are conflicting requirements. Alf has a smart
+compiler that delegates to underlying engines what can be delegated, but the
+explicit use of the host type system is a showstopper during compilation. To
+better understand this, consider the following query:</p>
 <div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span>
   <span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">uppercased</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}),</span>
   <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span> <span class="n">uppercased</span><span class="p">:</span> <span class="s1">&#39;JONES&#39;</span><span class="p">)</span>
@@ -459,20 +629,56 @@ computed by Alf in Ruby and cannot be translated back to the SQL engine. This
 has serious performance implications, of course. As of current Alf version,
 this is the case as soon as you use a ruby block (e.g. <code>->(t){ ... }</code>).</p>
 
-<p>All other approaches we are aware of either have a similar problem or forbid
+<p>All other approaches I&#39;m aware of either have a similar problem or forbid
 such queries in the first place (and are hence less expressive). This calls
 for further symbiosis and interoperability between heterogeneous type systems
 (SQL and Ruby in the present case).</p>
 
 <h3>What about updates?</h3>
 
-<p>We intentionnally left the question of database updates aside in this blog
+<p>I intentionnally left the question of database updates aside in this blog
 post. Alf comes only with a very experimental interface for updates but a lot
-of work is still needed in this area. Our general aim is to come with a well
+of work is still needed in this area. My general aim is to come with a well
 chosen subset of relational operators supporting updates.</p>
 
 <h2>Conclusion</h2>
 
-<p>Arrived here? Kudos. Stay tuned, we&#39;ll provide more material soon. In the mean
-time, enjoy Alf. Any question or contribution (of any kind) can be adressed by
-sending an email to Bernard Lambeau (see the <a href="/about/">About</a> page).</p>
+<p>Arrived here? Kudos. To summarize, I&#39;m convinced that <strong>Relations as
+First-class citizen</strong> provides better abstractions for software-database
+collaboration, more generally for handling the data manipulation subset of our
+software engineering requirements. In particular, I hope to have shown how
+current database connectivity approaches hurt separation of concerns and reuse
+(more generally, software design) and why favoring pure relational algebra
+over (idiomatic) SQL helps avoiding the trap.</p>
+
+<p>I can&#39;t close this blog post without putting some fairness back to the
+picture. Indeed, I must confess that comparing Alf to libraries such as
+<a href="http://sequel.rubyforge.org/">Sequel</a>, or <a href="http://www.jooq.org/">jOOQ</a> is a
+little unfair. This is especially true when you know that Alf itself currently
+relies on <code>Sequel</code> to generate cross-DBMS SQL code in an easy way. The reason
+is that there is a risk here to compare apples and oranges. Shouldn&#39;t Alf be
+compared to <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">Object-Relational
+Mappers</a>
+instead, because it puts a layer of abstraction <em>above</em> SQL?</p>
+
+<p>The short answer is yes. <strong>Relations as First-Class Citizen</strong> (RFCC) is better
+compared to <strong>Object-Relational Mapping</strong> (ORM). Both are paradigms that
+present data to the software in a particular way: Relations for the former,
+Classes/Objects for the latter. As you may already know from <a href="http://www.revision-zero.org/orm-haters-do-get-it">some previous
+writings of mine</a> I&#39;m not a
+huge fan of ORM. Without re-opening the war here, they hurt software design in
+far too many ways in my opinion. I&#39;m looking for other solutions for a while
+and ended-up with this one so far. That said, <code>Alf</code> is in a sense to <strong>RFCC</strong>
+what <code>Sequel</code>, <code>Arel</code> and the others are to <strong>ORM</strong>, so the comparison
+actually applies. Software abstraction boundaries are not clear enough to
+always avoid potentially harmful comparisons, I&#39;m affraid.</p>
+
+<p>That also means that our new paradigm goes (and need to go) further that
+simply providing an algebraic query language. Stay tuned, I&#39;ll provide more
+material soon to use Alf in more complex software (such as the famous
+viewpoints). In the mean time, any question or contribution (of any kind) can
+be adressed by sending an email to Bernard Lambeau (see the <a href="/about/">About</a>
+page; I&#39;m easily found on the Internet too). I&#39;m currently looking for
+contributors both from the academics and industrial world for discussing,
+enhancing, testing and evaluating the approach, don&#39;t hesitate to contact me
+by email.</p>
