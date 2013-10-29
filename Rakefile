@@ -5,11 +5,13 @@ require 'alf/doc/to_html'
 
 namespace :doc do
 
+  desc "Generates doc.json"
   task :json do
     # generate doc.json
     (Path.dir/"public/doc.json").write(Alf::Doc.all.tuple_extract.to_json)
   end
 
+  desc "Generates API pages"
   task :api do
     # generate API pages for every object
     [:operators, :predicates, :aggregators].each do |kind|
@@ -21,6 +23,7 @@ namespace :doc do
     end
   end
 
+  desc "Generates other pages"
   task :pages do
     Alf::Doc.pages.each do |page|
       target = page.relocate(page.parent, Path.dir/'public/api', ".html")
@@ -29,6 +32,7 @@ namespace :doc do
     end
   end
 
+  desc "Generates blog pages"
   task :blog do
     (Path.dir/"blog").glob("*.md") do |page|
       target = page.relocate(page.parent, Path.dir/'public/blogging/', ".html")
