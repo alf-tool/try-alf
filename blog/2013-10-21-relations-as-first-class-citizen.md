@@ -10,8 +10,8 @@ project](https://github.com/alf-tool) on github.
 
 Alf is a modern, powerful implementation of relational algebra. It brings
 relational algebra where you don't necessarily expect it: in shell, in
-scripting and for building complex software (in ruby so far). Alf has an
-impressive list of features. Among them, it allows you to:
+scripting and for building complex software. Alf has an rich set of features.
+Among them, it allows you to:
 
 * Query .json, .csv, .yaml files and convert from one format to the other with
   ease,
@@ -20,14 +20,15 @@ impressive list of features. Among them, it allows you to:
 * Export structured and so-called "semi-structured" query results in various
   exchange formats,
 * Query multiple data sources as if they were one and only one database,
-* Create database *viewpoints*, to provide your users with a true database
-  interface while keeping them away from data they may not have access to,
+* Create database *viewpoints* (mostly read-only viewpoints for now), to
+  provide your users with a true database interface while keeping them away
+  from data they may not have access to,
 * Define your own high-level, domain-specific, relational operators.
 
 Alf is very young and not all of the advanced features are stable and/or
 documented. I plan to spend some time in the next weeks and months to work on
 them, so stay tuned. In the mean time, you can play with Alf on this website,
-install [alf 0.15.0](https://rubygems.org/gems/alf) and start playing with it
+install [Alf 0.15.0](https://rubygems.org/gems/alf) and start playing with it
 on your own datasets and databases. I'll come with advanced material on this
 blog as soon as possible, I promise.
 
@@ -36,11 +37,12 @@ the first place, in the form of a (very accessible) scientific paper (this
 writing style is also a test, let me know what you think). The [section
 immediately following](#intro) provides a short overview of the proposed
 approach, explaining the title of this blog post. We then detail Alf's
-proposal, first from [a theoretical perspective](#theory) then with an [short
-example](#practice) illustrating the advantages. You can read those two
-sections in the order you want. [Alf's limitations and features to
-come](#ongoing-work) are then briefly discussed, before
-[concluding](#conclusion) with a slightly broader perspective.
+proposal, first with an [short example](#practice) illustrating the advantages
+compared to existing solutions, then with [a more theoretical
+presentation](#theory). You can read those two sections in the order you want.
+[Alf's limitations and features to come](#ongoing-work) are then briefly
+discussed, before [concluding](#conclusion) with a slightly broader
+perspective.
 
 <h2 id="intro">Yet another database connectivity library?</h2>
 
@@ -50,208 +52,95 @@ We already have [ARel](https://github.com/rails/arel),
 [jOOQ](http://www.jooq.org/) and probably hundreds of similar projects for
 connecting to databases from code. Do we really need one more?
 
-Well, Alf is a database connectivity library but it is first and foremost a
-proposal for a new _kind_ of database connectivity, or a paradigm shift if you
-want. This new paradigm is called **Relations as First-Class Citizen** and it
-makes Alf very different from the projects mentioned above. The difference
-lies in the kind of abstraction that the library exposes to the software
-developer: SQL queries with these libraries, _Relations_ with Alf.
+Well, Alf is a database connectivity library but it is first and foremost
+about a proposal for a new _kind_ of software/database interoperability, or a
+paradigm shift if you want. This paradigm is called **Relations as First-Class
+Citizen** and it makes Alf different from existing approaches. The difference
+lies in the kind of data abstraction exposed to the software developer:
 
-In almost all database connectivity layers, the developer is indeed exposed to
-SQL queries. The SQL query is often abstracted behind a higher-level API for
-manipulating its abstract syntax tree (AST). But even in this case, the
-exposed abstraction is an SQL query. The fact is that a SQL query, even when
-abstracted behind an AST, tends to be a very poor abstraction for developing
-software. Before substantiating this claim, let us illustrate the difference
-between our approach and a few others with a simple example.
+* Call-level interfaces (e.g. JDBC) expose SQL query strings and database
+  cursors (e.g. `java.sql.ResultSet`),
+* Higher-level SQL libraries, such as [ARel](https://github.com/rails/arel),
+  [Sequel](http://sequel.rubyforge.org/), and [jOOQ](http://www.jooq.org/)
+  expose SQL queries as well. However, they abstract them behind abstract
+  syntax trees (AST), and algebra-inspired manipulation operators.
+* Object-Relational Mappers (ORMs) expose classes and objects together with
+  the SQL/AST interface they generally rely on (e.g. the symbiosis between
+  [ARel](https://github.com/rails/arel) and
+  [ActiveRecord](http://guides.rubyonrails.org/active_record_querying.html)),
+* [Alf](https://github.com/alf-tool/alf) and
+  [Axiom](https://github.com/dkubb/axiom) expose _Relations_ (i.e. [sets of
+  tuples](/doc/relational-basics)) and relational algebra. For those
+  interested, I'll discuss the differences between Alf and Axiom later in this
+  blog post. In the mean time and unless stated otherwise, what is said about
+  Alf applies to Axiom too.
 
-### Example
+In this blog post, I'm going to compare Alf with the second category above,
+i.e. high-level SQL-driven libraries. Not because the **Relations as
+First-Class Citizen** paradigm cannot be compared to, say, Object-Relational
+Mapping but because, at first glance, Alf shares a lot more with those
+libraries than with ORMs. First things first thus, let start looking at those
+similitudes and (sometimes subtle) differences. We start with a motivating
+example in the next section before moving to more theoretical arguments in the one immediately following.
 
-In Java/JDBC for instance, queries are simple SQL strings. No abstraction at
-all; we all know the cost in terms of maintenance, security (quotes in
-`location` should be escaped below, for instance), etc.
+<h2 id="practice">Motivating example</h2>
 
+<i>This might appear rude or offensive, but I need to start by complaining
+about existing approaches and libraries (why would I work on Alf in the first
+place otherwise?). [Sequel](http://sequel.rubyforge.org/) is used in this blog
+post but the situation is similar with all the libraries I mentioned
+previously. I've chosen Sequel because I commonly use and actually</i> love
+<i>it. No offense to be taken therefore even if I claim, in essence, that
+things could be improved.</i>
 
-```java
-String location = ... // from user input;
-String qry  = "SELECT name, city FROM suppliers WHERE";
-       qry += "city='" + location + "'";
+My main complaint is that, despite providing [closure under
+operations](http://en.wikipedia.org/wiki/Closure_(mathematics)), existing
+libraries fail at providing a truly composable way of tackling data
+requirements. To understand why, let me take a concrete software engineering
+example on (a slighly modified version of) the [suppliers and parts
+examplar](http://en.wikipedia.org/wiki/Suppliers_and_Parts_database). We'll
+use the following [`suppliers`](/?src=c3VwcGxpZXJz) and
+[`cities`](/?src=Y2l0aWVz) relations:
+
+```
+suppliers:                                     cities:
++------+-------+---------+--------+            +----------+----------+
+| :sid | :name | :status | :city  |            | :city    | :country |
++------+-------+---------+--------+            +----------+----------+
+| S1   | Smith |      20 | London |            | London   | England  |
+| S2   | Jones |      10 | Paris  |            | Paris    | France   |
+| S3   | Blake |      30 | Paris  |            | Athens   | Greece   |
+| S4   | Clark |      20 | London |            | Brussels | Belgium  |
+| S5   | Adams |      30 | Athens |            +----------+----------+
++------+-------+---------+--------+
 ```
 
-Common high-level approaches are slightly more abstract. While more secure and
-flexible, they still expose a SQL query abstraction. In the following example,
-using [Ruby/Arel](https://github.com/rails/arel):
-
-```
-location  = ... # from user input
-suppliers = Arel::Table.new(:suppliers)
-qry = suppliers
-    .project(suppliers[:name], suppliers[:city])
-    .where(suppliers[:city].eq(location))
-qry.to_sql
-# => SELECT suppliers.name, suppliers.city FROM suppliers  WHERE suppliers.city = ...
-```
-
-The **Relations as First-Class Citizen** paradigm changes this by abstracting
-from SQL and exposing true relations instead. In the example below,
-`suppliers` is a relation, `restrict` is a relational operator and its
-invocation returns another relation; `project` is another operator taking the
-former relation as first argument; it returns another relation, and so on:
-
-```
-location = ... # from user input
-project(restrict(suppliers, :city => location), [:name, :city])
-```
-
-Alf does just that: it exposes relations as first class citizen to the
-software developer. It currently supports two main modes, with and without
-lazy evaluation, and two styles, a functional one (shown here) and an
-Object-Oriented one. The details are out of scope for this blog post, but can
-be found in the '[Alf in Ruby](/doc/alf-in-ruby)' documentation page.
-
-<h2 id="theory">What does really change, and why? &mdash; A theoretical aside</h2>
-
-This paradigm shift may not seem very significant at first glance, that is, it
-may look like a simple syntactic issue. However, abstracting from SQL is an
-important change in practice for at least two reasons:
-
-* First, when exposing SQL as a software abstraction, you also expose its
-  type system. SQL's type system is poor and old. Developers need rich type
-  systems. In our new paradigm, the type system is the one of the host
-  language (Ruby in our case), with all its power:
-
-    ```try
-    # Get suppliers whose name matches a Ruby regular expression
-    restrict(suppliers, ->(t){ t.name =~ /J|B/ })
-    ```
-
-    ```try
-    # Get each supplier together with the parts located in same city
-    extend(suppliers, parts: ->(t){ restrict(parts, city: t.city) })
-    ```
-
-  While powerful, this is very challenging in practice for the implementer
-  (i.e. for me) and comes at a cost (for you). There are drawbacks and
-  limitations that you must be aware of. We'll come back to this point at the
-  end of this blog post.
-
-* SQL is a calculus. In contrast, the **Relations as First-Class Citizen**
-  paradigm relies on the availibility of an algebra. We claim that an algebra
-  exposes better abstractions for software engineering. The next subsections
-  substantiate this claim from a theoretical point of view; an detailed
-  example immediately follows.
-
-### What: from Relational Calculus to Relational Algebra
-
-SQL has been invented to allow _human beings_ to query relational databases.
-In fact, SQL is nearer to (tuple) relational calculus than to relational
-algebra (for the sake of accuracy, it is a strange mix of both). To understand
-our proposal, it is important to understand the difference in nature between a
-calculus and an algebra:
-
-* In a calculus, what you describe is the problem to solve, not how to solve
-  it. Hence the `from ... select ... such that ...` declarative kind of
-  question you actually ask to a SQL DBMS:
-
-      ```sql
-      -- Get the cities where at least one supplier is located, provided
-      -- at least one part is located there too.
-      SELECT DISTINCT city FROM suppliers AS s
-      WHERE EXISTS (
-        SELECT city FROM parts AS p
-        WHERE s.city = p.city
-      )
-      ```
-
-* In contrast, with an algebra you manipulate symbols, that denote _values_,
-  through a predefined set of operators. You use those operators to _build_
-  or _reach_ the solution to your problem:
-
-      ```try
-      # Get the cities where at least one supplier is located, provided
-      # at least one part is located there too.
-      cities_from_suppliers = project(suppliers, [:city])
-      cities_from_parts     = project(parts, [:city])
-      intersect(cities_from_suppliers, cities_from_parts)
-      ```
-
-Relational calculus and relation algebra are known to be equivalent in
-expressiveness. This is what allows Alf to compile the second form above to
-something similar to the former one and to send it to an underlying SQL DBMS
-(a feature obviously limited by the ability to reconcile the respective type
-systems, see later). However, as shown by the example above, a calculus is
-more declarative than an algebra. In other words, the latter looks more like
-an algorithm. Despite this, we do claim that relational algebra exposes better
-abstractions for developing software when it comes to querying databases or,
-more generally, to manipulating data. Why is that so?
-
-### Why? Querying Databases vs. Developing Software
-
-When you (manually) query a database (either a SQL, a NoSQL one or whatever)
-you generally know the problem at hand. Therefore, you welcome a declarative
-language since it allows you to express that problem while leaving to the
-underlying engine the job of finding the solution instead of having to
-describe the algorithm to compute it. This is what SQL offers to you. This is
-what
-[logic programming](https://bernardopires.com/2013/10/try-logic-programming-a-gentle-introduction-to-prolog/)
-and
-[constraint programming](http://en.wikipedia.org/wiki/Constraint_programming) offer too.
-
-Developping software is of a very different nature. As a software engineer,
-you generally don't have one single problem at hand. Instead, you have a set
-of problems called _requirements_ and you find a design that allows meeting
-them all. One of the most effective strategies for this is _divide and conquer_.
-A modular design, for example, helps achieving a good separation of concerns
-with respect to those requirements while ensuring that the software behaves as
-expected when all modules are put together.
-
-The declarative styles of programming such as SQL's are very nice for solving
-very specific and well isolated sub-problems in your requirements & design
-space (logic and constraint programming are even more useful; unlike SQL or
-relational algebra, they also allow searching through an entire solution
-space, for optimization problems for instance). In contrast, they are of
-almost no aid for putting the architectural pieces together. Yet, putting the
-pieces together is something software engineers do every single day.
-
-When it comes to manipulating data, putting _relations_ together is much
-easier than putting _SQL queries_ together, because the semantics of "putting
-together" is more straightfoward in the former case. This leads us back to the
-calculus vs. algebra distinction. An algebra *is* about providing operators
-for putting operands together, a calculus simply is not. To be fair, as they
-are equivalent in terms of expressiveness, it is not SQL itself that must be
-blamed. Instead, it is _our use_ of SQL, more specifically the _idiomatic_ way
-of using SQL, as exposed by the API of connectivity libraries. Alf proposes a
-new approach that is easier and more interoperable. The next two sections
-illustrate this on a concrete example.
-
-<h2 id="practice">The Paradigm Change in Action &mdash; An example</h2>
-
-Let us take a concrete software engineering example on the [suppliers and
-parts examplar](http://en.wikipedia.org/wiki/Suppliers_and_Parts_database), to
-which we add the following `cities` relation:
-
-```try
-# Cities, each with a `name` and corresponding `country` name
-cities
-```
-
-Let suppose that the suppliers themselves are software users and that the
+Let suppose that the suppliers themselves are the software users and that the
 following requirements must be met by the particular inferface showing the
 list of suppliers to the current user:
 
 1. A supplier may only see information about the suppliers located in the same
    city than himself.
 2. The supplier's `status` is sensitive and should not be displayed.
-3. The country name must be displayed together with the supplier's city.
+3. The country name must be displayed together with the supplier's city
 
 In terms of the query to be built, those requirements involve a restriction
 (`same city as`), a selection (`no status`) and a join (`with country name`).
-Let compare the two approaches.
+Suppose you are supplier `S3`, the list of suppliers you see [looks like
+this](/?src=cmVxdWVzdGVyID0gIlMzIgpqb2luKGFsbGJ1dChtYXRjaGluZyhzdXBwbGllcnMsIHByb2plY3QocmVzdHJpY3Qoc3VwcGxpZXJzLCBzaWQ6IHJlcXVlc3RlciksIFs6Y2l0eV0pKSwgWzpzdGF0dXNdKSwgY2l0aWVzKQ):
 
-### Struggling with separation of concerns and reuse
+```
++------+-------+-------+----------+
+| :sid | :name | :city | :country |
++------+-------+-------+----------+
+| S2   | Jones | Paris | France   |
+| S3   | Blake | Paris | France   |
++------+-------+-------+----------+
+```
 
-Writting a monolithic query is rather straightforward, here using
-[Sequel](http://sequel.rubyforge.org/):
+<h3 id="struggling">Struggling with reuse and separation of concerns</h3>
+
+Writting a monolithic query is rather straightforward. Using [Sequel](http://sequel.rubyforge.org/) for instance:
 
 ```
 requester_city = ... # from context (authenticated user)
@@ -329,7 +218,8 @@ What happened? In short, `Sequel`'s join does not correspond to a _algebraic_
 join of its operands. Instead, its specification looks like "adds a term to
 the `SQL` query's `FROM` clause", whose data semantics is far from obvious
 (here you can blame `SQL` itself). Observe in particular that the following
-algebraic equivalence does not hold, preventing us from designing as above:
+algebraic equivalence does not hold in `Sequel`, preventing us from using the
+design above:
 
 ```
 suppliers
@@ -347,9 +237,11 @@ involve different operators. Let me insist on something: the same is true with
 [SQLAlchemy](http://www.sqlalchemy.org/), [Korma](http://www.sqlkorma.com/),
 [jOOQ](http://www.jooq.org/) to cite a few. The fact is:
 
-* SQL has not been thought with composition and separation of concerns in mind,
-* Using it naively leads to a lot of coupling between various parts of the queries,
-* Coupling hurts software design.
+* SQL has not been designed with composition and separation of concerns in
+  mind,
+* Avoiding strong coupling between subqueries tends to be very difficult in
+  practice,
+* Coupling hurts separation of concerns and software design.
 
 To be fair... There _is_ a way to use `SQL` (and, sometimes, those libraries)
 so as to avoid the problem described here. It amounts at using `SQL` in a
@@ -386,20 +278,32 @@ with_country(suppliers_in(requester_city))
 ```
 
 The complete recipe for using SQL in such a "safe" way is more complex, of
-course. I won't provide the details in this blog post, let me know if a
-dedicated one is welcome. For now, let see how our new paradigm helps.
+course, but possible. I won't provide the details in this blog post, let me
+know if a dedicated one is welcome. For now, let see how our new paradigm
+helps.
 
-### Relation Algebra at the rescue
+### Relation Algebra at the rescue...
 
-The **Relations as First-Class Citizen** paradigm aims at providing an
-interface that is _designed for_ composition and reuse. We invite you to use
-Alf's try console to check that the example below works as expected. As shown,
-the three requirements can be incorporated incrementally thanks to the true
+Libraries like Sequel and Arel offer closure under operations, meaning that
+you can chain operator invocations (e.g. `operand.select(...).where(...).where(...)`).
+Subtly enough, that does not make them exposing an algebra, because SQL is not
+itself a pure relational algebra (see later) and these libraries do espouse
+SQL in a rather faithful way.
+
+In contrast, the **Relations as First-Class Citizen** paradigm aims at
+providing an interface that is _designed for_ composition and reuse. To
+achieve this, Alf takes some distance from SQL and exposes a true relational
+algebra instead, inspired from <a
+href="http://en.wikipedia.org/wiki/D_(data_language_specification)"
+target="_blank"><b>Tutorial D</b></a>. This makes a real difference, even if
+subtle. To convince yourself, I invite you to use Alf's try console to check
+that the example below works as expected. As shown, the three requirements of
+our case study can be incorporated incrementally thanks to the true
 composition mechanism offered by an algebra. Commenting a line amounts at
 ignoring the corresponding requirement:
 
 ```try
-requester_city = 'London'
+requester_city = 'Paris'
 solution = suppliers
 
 # 1). A supplier may only see information about the suppliers located
@@ -432,22 +336,29 @@ join(
 ```
 
 Interestingly enough, this kind of equivalences may be used for query
-optimization and smart SQL compilation. We invite the reader to check the
-`Optimizer` and `Query plan` tabs of the console on both queries. The
-generated SQL queries are the same in both cases; they are kept as simple as
-possible, in to hope to avoid ugly physical plans in the SQL DBMS itself.
+optimization and smart SQL compilation. I invite you to check the `Optimizer`
+and `Query plan` tabs of the console on both queries. The generated SQL query
+is the same in both cases. Alf tries very hard to keep generated SQL as simple
+as possible, in the hope to avoid ugly query plans in the SQL DBMS itself:
 
-## ... plus extra
+```sql
+SELECT t1.sid AS sid, t1.name AS name, t1.city AS city, t2.country AS country
+FROM suppliers AS t1
+INNER JOIN cities AS t2 ON (t1.city = t2.city)
+```
 
-What if cities come from somewhere else? A .csv file, another database or
+### ... plus extra
+
+What if `cities` (that does not actually exists in the original suppliers and
+parts examplar), come from somewhere else? A .csv file, another database or
 whatever datasource?
 
 ```try
-requester_city = 'London'
+requester_city = 'Paris'
 solution = suppliers
 
 # 1) and 2) above, but inline
-solution = allbut(restrict(solution, city: 'London'), [:status])
+solution = allbut(restrict(solution, city: requester_city), [:status])
 
 # Might be Relation.load('cities.csv'); we use a literal for execution on try-alf.org
 third_party_cities = Relation([
@@ -458,13 +369,196 @@ solution = join(solution, third_party_cities)
 ```
 
 The example above shows that, in addition to the advantages previously cited,
-the composition mechanism of relational algebra makes few assumptions about
-where the operands come from, by nature. **Relations as First-class citizen**
-can be seen as a purely functional kind of programming where immutable values
-are relations and functions are relational operators. This kind of comparison
-is not new. It was already suggested several years ago in Ben Moseley's famous
-<a href="http://shaffner.us/cs/papers/tarpit.pdf">Out of the Tar Pit</a>
-essay. Alf contributes an example of the general framework outlined there.
+the composition mechanism of relational algebra, unlike SQL queries, makes few
+assumptions about where the operands come from, by very nature. In a sense,
+the **Relations as First-class citizen** can be seen as a purely functional
+kind of programming where immutable values are relations and functions are
+relational operators. This kind of comparison is not new. It was already
+suggested several years ago in Ben Moseley's famous <a
+href="http://shaffner.us/cs/papers/tarpit.pdf">Out of the Tar Pit</a> essay.
+Alf contributes an example of the general framework outlined there.
+
+<h2 id="theory">More about the paradigm and its motivation</h2>
+
+Moving from SQL to a relational algebra is one of the changes underlying the
+**Relations as First-Class Citizen** paradigm, but it is not the only one and
+maybe not the most important (?). The following subsections detail the
+paradigm further and provides motivations and theoretical arguments.
+
+### From Relational Calculus (SQL) to Relational Algebra
+
+In my opinion, the fact that SQL is used daily by software developers is the
+result of an historical mistake, or a misfortune at least. Indeed, SQL has
+been invented in the database community at a time where it was envisioned that
+_end users_ would query relational databases. This is more than 40 years ago.
+At that time, the nature of software, software engineering, requirements
+engineering and human-software interactions were not understood as they are
+today.
+
+With this envisioned reality in mind, SQL has been chosen nearer to (tuple)
+relational calculus than to relational algebra (for the sake of accuracy, it
+is a strange mix of both; yet another obscure historical reasons explain
+this). For a good understanding of the discussion here, it is important to
+understand the difference in nature between a calculus and an algebra:
+
+* In a calculus, what you describe is the problem to solve, not how to solve
+  it. Hence the `from ... select ... such that ...` declarative kind of
+  question you actually ask to an SQL DBMS:
+
+      ```sql
+      -- Get the cities where at least one supplier is located, provided
+      -- at least one part is located there too.
+      SELECT DISTINCT city FROM suppliers AS s
+      WHERE EXISTS (
+        SELECT city FROM parts AS p
+        WHERE s.city = p.city
+      )
+      ```
+
+* In contrast, with an algebra you manipulate symbols, that denote _values_,
+  through a predefined set of operators. You use those operators to _build_
+  or _reach_ the solution to your problem:
+
+      ```try
+      # Get the cities where at least one supplier is located, provided
+      # at least one part is located there too.
+      cities_from_suppliers = project(suppliers, [:city])
+      cities_from_parts     = project(parts, [:city])
+      intersect(cities_from_suppliers, cities_from_parts)
+      ```
+
+As shown by the example above, a calculus is more declarative than an algebra.
+In other words, the latter looks more like an algorithm. This explains why
+SQL, probably the most idiomatic _end-user_ query language ever, has been
+designed as a calculus. As an end-user, when you (manually) query a database
+you generally know the problem at hand. Therefore, you welcome a declarative
+language since it allows you to express that problem while leaving to the
+underlying engine the job of finding the solution instead of having to
+describe the algorithm to compute it. _This_ is what SQL offers to its users.
+
+Now, I suppose it is not too risky to claim that, today, a large majority of
+interactions with databases is done by software components, possibly on behalf
+of their end users, and generally in accordance to specific requirements. The
+_actual_ users of (relational) databases are not end-users after all, but
+software components and, indirectly, their developers.
+
+Yet, developping software is of a very different nature than querying
+databases. As a software engineer, you generally don't have one single problem
+at hand. Instead, you have a set of problems called _requirements_ and you
+find a design that allows meeting them all (cfr. [the previous
+section](#practice) for an example). One of the most effective strategies
+available in the software engineer toolset is _divide and conquer_. A modular
+design, for example, helps achieving a good separation of concerns with
+respect to those requirements while ensuring that the software behaves as
+expected when all modules are put together.
+
+While the declarative style of programming of SQL is very nice for solving
+very specific and well isolated sub-problems in your requirements & design
+space, it is of almost no aid for putting the architectural pieces together.
+Yet, putting the pieces together is something software engineers do every
+single day. And so is writing algorithms. Exposing a relational algebra
+therefore appears more natural when it comes to software development, and when
+it comes to _manipulating_ data vs. _querying_ database. To be fair, libraries
+such as [ARel](https://github.com/rails/arel),
+[Sequel](http://sequel.rubyforge.org/), and [jOOQ](http://www.jooq.org/)
+already show the way: they provide an API that is closer to relational
+algebra than relational calculus. [Alf](https://github.com/alf-tool/alf) and
+[Axiom](https://github.com/dkubb/axiom) simply go further this path by
+abstracting from SQL and choosing a sound algebra known as <a
+href="http://en.wikipedia.org/wiki/D_(data_language_specification)"
+target="_blank"><b>Tutorial D</b></a> as a better inspiration than SQL towards
+the same objective.
+
+The **Relations as First-Class Citizen** paradigm makes all of this more sound
+in my opinion, because putting _relations_ together is much easier than
+putting _SQL queries_ together (cfr. [the _join_ example](#struggling) in the
+previous section). The semantics of "putting together" is more straightforward
+in the former case, that's all. An algebra *is* about providing operators for
+putting operands together, a calculus simply is not. Approaches such as Alf's
+is no less expressive, quite the contrary. For instance, expressing a SQL
+`WHERE NOT EXISTS` is kind of [a
+nightmare](http://stackoverflow.com/questions/7152424/rails-3-arel-for-not-exists)
+with existing approaches, and almost impossible to do in a modular way due to
+the coupling between the main query and the sub-query:
+
+```
+# Show suppliers that supply no part at all (Sequel)
+DB[:suppliers___s].where(~DB[:supplies___sp].where(Sequel.qualify(:sp, :sid) => (Sequel.qualify(:s, :sid))).exists)
+```
+
+It is dead simple in Alf:
+
+```try
+# Show suppliers that supply no part at all (Alf)
+not_matching(suppliers, supplies)
+```
+
+Now, relational calculus and relation algebra are known to be equivalent in
+expressive power. This is what allows Alf to compile queries in the second
+form above to something similar to the former one and to send it to an
+underlying SQL DBMS. The feature is limited by the ability to reconcile the
+Ruby and SQL type systems though, something I will discuss in the next
+section.
+
+### From SQL's to Host's Type System
+
+There is another very important change I have not discussed so far regarding
+the proposed **Relations as First-Class Citizen** paradigm. In essence, it is
+a challenging proposal (from an implementation point of view at least): _why
+not abstracting from SQL completely?_
+
+_Aside: this section applies to Alf but, as far as I know, not to Axiom._
+
+Indeed, almost all approaches (even ORMs) do actually espouse SQL in a very
+rigid way. An obvious example is that the developer is almost never allowed to
+express filtering conditions or to perform computations that are not supported
+by SQL in the first place. It is unfortunate, because SQL's type system is
+poor (no user-defined types, for instance) and old. How about providing a
+query interface that actually espouse the host type system, i.e. the one of
+the host programming language (here, Ruby)?
+
+Want to express a filtering condition involving a ruby regular expression? No
+problem:
+
+```try
+# Get suppliers whose name contains a 'J' or a 'B'
+restrict(suppliers, ->(t){ t.name =~ /J|B/ })
+```
+
+Want to compute an array-valued attribute (or even use you own user-defined
+data type/class)? No problem:
+
+```try
+# Get suppliers and the letters of their name in uppercase
+extend(suppliers, letters: ->(t){ t.name.upcase.chars.to_a })
+```
+
+Want to group tuples as sub-relations? There is even an operator for that:
+
+```try
+# Get suppliers grouped by city
+group(suppliers, [:sid, :name, :status], :suppliers)
+```
+
+This might look at simply providing a consistent interface for working with
+relations. Absolutely, that's the point. You can mix everything in a natural
+way, that is by composing queries in the idiomatic way. In the example below,
+Alf still compiles the 'Paris' restriction to SQL while it computes the
+'letters' extension itself (see the optimizer and query plans), even if the
+extension comes _before_ the restriction:
+
+```try
+rel = extend(suppliers, letters: ->(t){ t.name.upcase.chars.to_a })
+rel = restrict(rel, city: 'Paris')
+```
+
+Now think about it. This amounts at _abstracting_ from SQL and letting
+developers think in terms of their _usual_ type system. While powerful, this
+is very challenging (but fun) in practice for the implementer (i.e. for me)
+and comes at a cost (for you). There are drawbacks and limitations that you
+must be aware of (I'll come back to this point in the next section). That
+means that you can't abstract from reality entirely after all, as often with
+abstractions, but yet more than with existing approaches in my opinion.
 
 <h2 id="ongoing-work">Limitations and ongoing work</h2>
 
@@ -548,6 +642,11 @@ end
 restrict(supplies, sid: 'S1')
 ```
 
+Database viewpoints are currently read-only in Alf. I intentionnally left the
+question of database updates aside in this blog post. Alf comes only with a
+very experimental interface for updates (cfr. [Alf in Ruby](#/doc/alf-in-ruby))
+but a lot of work is still needed in this area.
+
 ### Reconciling heterogeneous type systems
 
 As already suggested, abstracting from SQL is challenging for the implementer.
@@ -573,13 +672,6 @@ All other approaches I'm aware of either have a similar problem or forbid
 such queries in the first place (and are hence less expressive). This calls
 for further symbiosis and interoperability between heterogeneous type systems
 (SQL and Ruby in the present case).
-
-### What about updates?
-
-I intentionnally left the question of database updates aside in this blog
-post. Alf comes only with a very experimental interface for updates but a lot
-of work is still needed in this area. My general aim is to come with a well
-chosen subset of relational operators supporting updates.
 
 <h2 id="conclusion">Conclusion</h2>
 
@@ -626,5 +718,6 @@ by email.
 
 ## Acknowledgements
 
-I'd like to thank Erwin Smout, Enrico Sartorello, David Livingstone and Sergio
-Castro for feedback and comments on earlier versions of this blog post.
+I'd like to thank Sergio Castro, Erwin Smout, Enrico Sartorello, David
+Livingstone, Magnus Holm and Louis Lambeau for their feedback and comments on
+earlier versions of this blog post.
