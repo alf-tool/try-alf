@@ -3,48 +3,48 @@
     <div class="doc-menu">
       <p>Basics</p>
       <ul>
-        <li ng-class="{active: current == 'intro'}">
-          <a href="/doc/intro">Intro</a>
+        <li ng-class="{active: current == 'pages/intro'}">
+          <a href="/doc/pages/intro">Intro</a>
         </li>
-        <li ng-class="{active: current == 'ruby-basics'}">
-          <a href="/doc/ruby-basics">Ruby</a>
+        <li ng-class="{active: current == 'pages/ruby-basics'}">
+          <a href="/doc/pages/ruby-basics">Ruby</a>
         </li>
-        <li ng-class="{active: current == 'relational-basics'}">
-          <a href="/doc/relational-basics">Relational</a>
+        <li ng-class="{active: current == 'pages/relational-basics'}">
+          <a href="/doc/pages/relational-basics">Relational</a>
         </li>
-        <li ng-class="{active: current == 'alf-in-ruby'}">
-          <a href="/doc/alf-in-ruby">Alf in Ruby</a>
+        <li ng-class="{active: current == 'pages/alf-in-ruby'}">
+          <a href="/doc/pages/alf-in-ruby">Alf in Ruby</a>
         </li>
-        <li ng-class="{active: current == 'alf-in-shell'}">
-          <a href="/doc/alf-in-shell">Alf in Shell</a>
+        <li ng-class="{active: current == 'pages/alf-in-shell'}">
+          <a href="/doc/pages/alf-in-shell">Alf in Shell</a>
         </li>
       </ul>
       <p>Operators</p>
       <ul>
         <li ng-repeat="obj in doc.operators"
-            ng-class="{active: current == obj.name}">
-          <a href="/doc/{{obj.name}}">{{obj.name}}</a>
+            ng-class="{active: current == 'api' + obj.name}">
+          <a href="/doc/api/{{obj.name}}">{{obj.name}}</a>
         </li>
       </ul>
       <p>Predicates</p>
       <ul>
         <li ng-repeat="obj in doc.predicates"
-            ng-class="{active: current == obj.name}">
-          <a href="/doc/{{obj.name}}">{{obj.name}}</a>
+            ng-class="{active: current == 'api' + obj.name}">
+          <a href="/doc/api/{{obj.name}}">{{obj.name}}</a>
         </li>
       </ul>
       <p>Aggregators</p>
       <ul>
         <li ng-repeat="obj in doc.aggregators"
-            ng-class="{active: current == obj.name}">
-          <a href="/doc/{{obj.name}}">{{obj.name}}</a>
+            ng-class="{active: current == 'api' + obj.name}">
+          <a href="/doc/api/{{obj.name}}">{{obj.name}}</a>
         </li>
       </ul>
     </div>
   </div>
   <div class="span10">
     <article id="api" class="doc">
-      <div ng-include="'/api/' + current + '.html'">
+      <div ng-include="'/' + current + '.html'">
     </article>
   </div>
 </div>
