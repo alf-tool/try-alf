@@ -13,7 +13,7 @@ namespace :doc do
 
   desc "Copy all HTML pages"
   task :html do
-    `rm -rf public/blog public/api public/pages && cp -R ../alf/alf-doc/html/* public && mv public/blog/ public/blogging`
+    `rm -rf public/blogging public/api public/pages && cp -R ../alf/alf-doc/compiled/html/* public && mv public/blog public/blogging`
   end
 
 end
