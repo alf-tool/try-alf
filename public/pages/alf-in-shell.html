@@ -76,16 +76,16 @@ in .json can be done as follows:</p>
 
 <h2>Piping and data conversion</h2>
 
-<p>Alf also supports receiving data from its standard input. Suppose for example
-that you want to restrict some json tuples outputted by some process, here a
-simple <code>cat</code>:</p>
-<div class="highlight"><pre><span class="n">cat</span> <span class="n">suppliers</span><span class="o">.</span><span class="n">json</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">json</span> <span class="n">show</span> <span class="s2">&quot;restrict(stdin, city: &#39;London&#39;)&quot;</span>
+<p>Alf also supports receiving data from its standard input through a special
+<code>stdin</code> operand. Suppose for example that you want to restrict some csv
+tuples outputted by a process, here a simple <code>cat</code>:</p>
+<div class="highlight"><pre><span class="n">cat</span> <span class="n">suppliers</span><span class="o">.</span><span class="n">csv</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">csv</span> <span class="n">show</span> <span class="s2">&quot;restrict(stdin, city: &#39;London&#39;)&quot;</span>
 </pre>
 </div>
 
 <p>That means that you can very easily use alf to convert from one data format
 to another one. Converting a .csv file to .json?</p>
-<div class="highlight"><pre><span class="n">cat</span> <span class="n">suppliers</span><span class="o">.</span><span class="n">csv</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">csv</span> <span class="o">--</span><span class="n">json</span> <span class="n">show</span> 
+<div class="highlight"><pre><span class="n">cat</span> <span class="n">suppliers</span><span class="o">.</span><span class="n">csv</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">csv</span> <span class="o">--</span><span class="n">json</span> <span class="n">show</span> <span class="n">stdin</span>
 </pre>
 </div>
 

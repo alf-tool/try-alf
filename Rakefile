@@ -17,4 +17,5 @@ namespace :doc do
   end
 
 end
-task :default => [:"doc:json", :"doc:html"]
+desc "Import documentation from alf-doc"
+task :doc => [:"doc:json", :"doc:html"]
