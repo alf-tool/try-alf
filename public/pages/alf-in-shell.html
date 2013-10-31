@@ -89,6 +89,12 @@ to another one. Converting a .csv file to .json?</p>
 </pre>
 </div>
 
+<p>And some extra. Want to search over content served by a RESTful web service?
+What countries use euros, for instance?</p>
+<div class="highlight"><pre><span class="n">curl</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">restcountries</span><span class="o">.</span><span class="n">eu</span><span class="o">/</span><span class="n">rest</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">json</span> <span class="n">show</span> <span class="s2">&quot;restrict(stdin, currency: &#39;EUR&#39;)&quot;</span>
+</pre>
+</div>
+
 <h2>Using an .alfrc file</h2>
 
 <p>When invoked from the command line, Alf looks after a <code>.alfrc</code> in the current
