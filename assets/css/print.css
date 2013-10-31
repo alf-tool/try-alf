@@ -1,0 +1,5 @@
+@media print {
+  header, #fork-on-github, .try-this {
+    display: none;
+  }
+}
