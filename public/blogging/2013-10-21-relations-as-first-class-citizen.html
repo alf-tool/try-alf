@@ -2,11 +2,16 @@
 
 <h1>Relations as First-Class Citizen - A Paradigm Shift for Software/Database Interoperability</h1>
 
-<p>I&#39;m happy to announce that Alf v0.15.0 has just been released and with it,
-this web site! I&#39;ve been hacking on Alf during my free time for about two
-years now; I think it was time to share it in a slightly more official way
-than as an (almost invisible) <a href="https://github.com/alf-tool">open-source
-project</a> on github.</p>
+<p>I&#39;m happy to announce that Alf <a href="https://rubygems.org/gems/alf">Alf 0.15.0</a> has
+just been released and with it, this web site! I&#39;ve been thinking about all of
+this for many years, often as a cross-cutting concern in <a href="http://scholar.google.be/citations?user=JsSMtA0AAAAJ&amp;hl=en">my (other) research
+work</a>. I&#39;ve been
+hacking on Alf in particular during my free time for more than two years now.
+I think it was time to share it in a slightly more official way than as an
+(almost invisible) <a href="https://github.com/alf-tool">open-source research
+prototype</a> on github. Recent personal events gave
+it a serious boost and a few people convinced me to give it more visibility.
+So here we go.</p>
 
 <p>Alf is a modern, powerful implementation of relational algebra. It brings
 relational algebra where you don&#39;t necessarily expect it: in shell, in
@@ -24,27 +29,31 @@ exchange formats,</li>
 <li>Create database <em>viewpoints</em> (mostly read-only viewpoints for now), to
 provide your users with a true database interface while keeping them away
 from data they may not have access to,</li>
-<li>Define your own high-level, domain-specific, relational operators.</li>
+<li>Enjoy a <a href="/doc/">rich set of relational operators</a> and even define your own
+high-level and domain-specific ones.</li>
 </ul>
 
 <p>Alf is very young and not all of the advanced features are stable and/or
 documented. I plan to spend some time in the next weeks and months to work on
 them, so stay tuned. In the mean time, you can play with Alf on this website,
 install <a href="https://rubygems.org/gems/alf">Alf 0.15.0</a> and start playing with it
-on your own datasets and databases. I&#39;ll come with advanced material on this
+on your own datasets and databases, <a href="/doc/pages/alf-in-shell">in shell</a> or
+<a href="/doc/pages/alf-in-ruby">in ruby</a>. I&#39;ll come with advanced material on this
 blog as soon as possible, I promise.</p>
 
 <p>The rest of this post explains the context of this work and why it exists in
 the first place, in the form of a (very accessible) scientific paper (this
-writing style is also a test, let me know what you think). The <a href="#intro">section
-immediately following</a> provides a short overview of the proposed
-approach, explaining the title of this blog post. We then detail Alf&#39;s
-proposal, first with an <a href="#practice">short example</a> illustrating the advantages
-compared to existing solutions, then with <a href="#theory">a more theoretical
-presentation</a>. You can read those two sections in the order you want.
-<a href="#ongoing-work">Alf&#39;s limitations and features to come</a> are then briefly
-discussed, before <a href="#conclusion">concluding</a> with a slightly broader
-perspective.</p>
+writing style is also a test, let me know what you think). The <a href="#intro">following
+section</a> provides a short overview of the proposed approach,
+explaining the title of this blog post. We then detail Alf&#39;s proposal, first
+with a <a href="#practice">short example</a> illustrating the advantages compared to
+existing solutions, then with <a href="#theory">a more theoretical presentation</a>
+covering three main questions:
+<a href="#why-relational-algebra">why true relational algebra?</a>,
+<a href="#what-type-system">what type system to expose?</a>, and
+<a href="#why-not-classes-and-objects">why not classes and objects?</a>.
+ <a href="#ongoing-work">Alf&#39;s limitations and features to come</a> are then
+briefly discussed, before <a href="#conclusion">concluding</a>.</p>
 
 <h2 id="intro">Yet another database connectivity library?</h2>
 
@@ -74,7 +83,7 @@ the SQL/AST interface they generally rely on (e.g. the symbiosis between
 <li><a href="https://github.com/alf-tool/alf">Alf</a> and
 <a href="https://github.com/dkubb/axiom">Axiom</a> expose <em>Relations</em> (i.e. <a href="/doc/pages/relational-basics">sets of
 tuples</a>) and relational algebra. For those
-interested, I&#39;ll discuss the differences between Alf and Axiom later in this
+interested, I&#39;ll discuss some differences between Alf and Axiom later in this
 blog post. In the mean time and unless stated otherwise, what is said about
 Alf applies to Axiom too.</li>
 </ul>
@@ -287,9 +296,10 @@ helps.</p>
 <h3>Relation Algebra at the rescue...</h3>
 
 <p>Libraries like Sequel and Arel offer closure under operations, meaning that
-you can chain operator invocations (e.g. <code>operand.select(...).where(...).where(...)</code>).
-Subtly enough, that does not make them exposing an algebra, because SQL is not
-itself a pure relational algebra (see later) and these libraries do espouse
+you can chain operator invocations (e.g.
+<code>operand.select(...).where(...).where(...)</code>). Subtly enough, that does not
+make them exposing an algebra, because SQL is not itself a pure relational
+algebra (see <a href="#why-relational-algebra">later</a>) and these libraries do espouse
 SQL in a rather faithful way.</p>
 
 <p>In contrast, the <strong>Relations as First-Class Citizen</strong> paradigm aims at
@@ -298,10 +308,11 @@ achieve this, Alf takes some distance from SQL and exposes a true relational
 algebra instead, inspired from <a
 href="http://en.wikipedia.org/wiki/D_(data_language_specification)"
 target="_blank"><b>Tutorial D</b></a>. This makes a real difference, even if
-subtle. To convince yourself, I invite you to use Alf&#39;s try console to check
-that the example below works as expected. As shown, the three requirements of
-our case study can be incorporated incrementally thanks to the true
-composition mechanism offered by an algebra. Commenting a line amounts at
+subtle. To convince yourself, I invite you to use
+<a href="/?src=cmVxdWVzdGVyX2NpdHkgPSAnUGFyaXMnCnNvbHV0aW9uID0gc3VwcGxpZXJzCgojIDEpLiBBIHN1cHBsaWVyIG1heSBvbmx5IHNlZSBpbmZvcm1hdGlvbiBhYm91dCB0aGUgc3VwcGxpZXJzIGxvY2F0ZWQKIyBpbiB0aGUgc2FtZSBjaXR5IHRoYW4gaGltc2VsZi4Kc29sdXRpb24gPSByZXN0cmljdChzb2x1dGlvbiwgY2l0eTogcmVxdWVzdGVyX2NpdHkpCgojIDIpIFRoZSBzdXBwbGllcidzIGBzdGF0dXNgIGlzIHNlbnNpdGl2ZSBhbmQgc2hvdWxkIG5vdCBiZSBkaXNwbGF5ZWQuCnNvbHV0aW9uID0gYWxsYnV0KHNvbHV0aW9uLCBbOnN0YXR1c10pCgojIDMpLiBUaGUgY291bnRyeSBuYW1lIG11c3QgYmUgZGlzcGxheWVkIHRvZ2V0aGVyIHdpdGggdGhlIHN1cHBsaWVyJ3MgY2l0eS4Kc29sdXRpb24gPSBqb2luKHNvbHV0aW9uLCBjaXRpZXMp">Alf&#39;s Try console</a>
+to check that the example below works as expected. As shown, the three
+requirements of our case study can be incorporated incrementally thanks to the
+true composition mechanism offered by an algebra. Commenting a line amounts at
 ignoring the corresponding requirement:</p>
 <div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="s1">&#39;Paris&#39;</span>
 <span class="n">solution</span> <span class="o">=</span> <span class="n">suppliers</span>
@@ -367,9 +378,9 @@ as possible, in the hope to avoid ugly query plans in the SQL DBMS itself:</p>
 
 <h3>... plus extra</h3>
 
-<p>What if <code>cities</code> (that does not actually exists in the original suppliers and
-parts examplar), come from somewhere else? A .csv file, another database or
-whatever datasource?</p>
+<p>What if the <code>cities</code> tuples (that does not actually exists in the original
+suppliers and parts examplar), come from somewhere else? A .csv file, another
+database or whatever datasource?</p>
 <div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="s1">&#39;Paris&#39;</span>
 <span class="n">solution</span> <span class="o">=</span> <span class="n">suppliers</span>
 
@@ -409,11 +420,20 @@ Alf contributes an example of the general framework outlined there.</p>
 <h2 id="theory">More about the paradigm and its motivation</h2>
 
 <p>Moving from SQL to a relational algebra is one of the changes underlying the
-<strong>Relations as First-Class Citizen</strong> paradigm, but it is not the only one and
-maybe not the most important (?). The following subsections detail the
-paradigm further and provides motivations and theoretical arguments.</p>
+<strong>Relations as First-Class Citizen</strong> paradigm for software/database
+interoperability, but it is not the only one and maybe not the most important
+(?). The following subsections detail the paradigm further and provides
+motivations and theoretical arguments. They address the three following
+questions:</p>
 
-<h3>From Relational Calculus (SQL) to Relational Algebra</h3>
+<ul>
+<li><a href="#why-relational-algebra">Why relational algebra</a> is a better choice than
+relational calculus for developing software?</li>
+<li><a href="#what-type-system">What type system</a> do we want to expose to software developers? SQL&#39;s one or the host language&#39;s?</li>
+<li><a href="#why-not-classes-and-objects">Why <em>relations</em></a> instead of traditional <em>classes and objects</em> for structural concepts?</li>
+</ul>
+
+<h3 id="why-relational-algebra">From Relational Calculus (SQL) to Relational Algebra</h3>
 
 <p>In my opinion, the fact that SQL is used daily by software developers is the
 result of an historical mistake, or a misfortune at least. Indeed, SQL has
@@ -432,7 +452,7 @@ understand the difference in nature between a calculus and an algebra:</p>
 <ul>
 <li><p>In a calculus, what you describe is the problem to solve, not how to solve
 it. Hence the <code>from ... select ... such that ...</code> declarative kind of
-question you actually ask to an SQL DBMS:</p>
+question you ask to an SQL DBMS:</p>
 <div class="highlight"><pre>  <span class="c1">-- Get the cities where at least one supplier is located, provided</span>
   <span class="c1">-- at least one part is located there too.</span>
   <span class="k">SELECT</span> <span class="k">DISTINCT</span> <span class="n">city</span> <span class="k">FROM</span> <span class="n">suppliers</span> <span class="k">AS</span> <span class="n">s</span>
@@ -520,7 +540,9 @@ the coupling between the main query and the sub-query:</p>
 </pre>
 </div>
 
-<p>It is dead simple in Alf:</p>
+<p>It is dead simple in Alf (and here, you can thank <a
+href="http://en.wikipedia.org/wiki/D_(data_language_specification)"
+target="_blank"><b>Tutorial D</b></a>, where this operator comes from):</p>
 <div class="highlight"><pre><span class="c1"># Show suppliers that supply no part at all (Alf)</span>
 <span class="n">not_matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">supplies</span><span class="p">)</span>
 </pre>
@@ -537,7 +559,7 @@ underlying SQL DBMS. The feature is limited by the ability to reconcile the
 Ruby and SQL type systems though, something I will discuss in the next
 section.</p>
 
-<h3>From SQL&#39;s to Host&#39;s Type System</h3>
+<h3 id="what-type-system">From SQL's to Host's Type System</h3>
 
 <p>There is another very important change I have not discussed so far regarding
 the proposed <strong>Relations as First-Class Citizen</strong> paradigm. In essence, it is
@@ -550,9 +572,9 @@ not abstracting from SQL completely?</em></p>
 rigid way. An obvious example is that the developer is almost never allowed to
 express filtering conditions or to perform computations that are not supported
 by SQL in the first place. It is unfortunate, because SQL&#39;s type system is
-poor (no user-defined types, for instance) and old. How about providing a
-query interface that actually espouse the host type system, i.e. the one of
-the host programming language (here, Ruby)?</p>
+old, and poor (few support for user-defined types, for instance). How about
+providing a query interface that actually espouse the host type system, i.e.
+the one of the host programming language (here, Ruby)?</p>
 
 <p>Want to express a filtering condition involving a ruby regular expression? No
 problem:</p>
@@ -589,11 +611,11 @@ cnMsIFs6c2lkLCA6bmFtZSwgOnN0YXR1c10sIDpzdXBwbGllcnMp
 " target="_blank">Try it!</a></div>
 
 <p>This might look at simply providing a consistent interface for working with
-relations. Absolutely, that&#39;s the point. You can mix everything in a natural
-way, that is by composing queries in the idiomatic way. In the example below,
-Alf still compiles the &#39;Paris&#39; restriction to SQL while it computes the
-&#39;letters&#39; extension itself (see the optimizer and query plans), even if the
-extension comes <em>before</em> the restriction:</p>
+relations. Absolutely, that&#39;s the point. You can mix everything, composing
+queries in the idiomatic way. In the example below, Alf compiles the &#39;Paris&#39;
+restriction to SQL while it computes the &#39;letters&#39; extension itself (see the
+optimizer and query plans), even if the extension comes <em>before</em> the
+restriction:</p>
 <div class="highlight"><pre><span class="n">rel</span> <span class="o">=</span> <span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">letters</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">to_a</span> <span class="p">})</span>
 <span class="n">rel</span> <span class="o">=</span> <span class="n">restrict</span><span class="p">(</span><span class="n">rel</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span>
 </pre>
@@ -611,6 +633,164 @@ and comes at a cost (for you). There are drawbacks and limitations that you
 must be aware of (I&#39;ll come back to this point in the next section). That
 means that you can&#39;t abstract from reality entirely after all, as often with
 abstractions, but yet more than with existing approaches in my opinion.</p>
+
+<h3 id="why-not-classes-and-objects">From One-At-a-Time to Set-At-a-Time</h3>
+
+<p>This point is very important, since it introduces a significant difference
+with Object-Relational Mapping. I haven&#39;t talked much about ORM so far, but
+it&#39;s true that <strong>Relations as First-Class Citizen</strong> is better compared to
+<strong>Object-Relational Mapping</strong> (ORM) than to libraries such as <code>Sequel</code>. Both
+are paradigms that present data to the software in a particular way, and
+provide an abstraction mechanism <em>above</em> SQL. (I take this opportunity to put
+a bit of fairness back into the picture. This is especially important for me
+since Alf itself currently relies on <code>Sequel</code> to generate cross-DBMS SQL code
+in a very easy way.)</p>
+
+<p>Object-Relational Mapping relies on the availability of an Object Model, that
+aims at capturing the (structual) domain. Doing so is one interpretation of what
+<a href="http://books.google.be/books?id=hHBf4YxMnWMC&amp;printsec=frontcover&amp;source=gbs_ge_summary_r&amp;cad=0#v=onepage&amp;q&amp;f=false">Domain Driven Design</a>
+(DDD) is about, more accurately one implementation strategy of DDD. I&#39;m not
+convinced it&#39;s the good one, but it&#39;s definitely one of them. There are at
+least two reasons why I&#39;m not convinced.</p>
+
+<p>First, modeling the (data) domain is certainly not the same as designing a
+software for meeting requirements in that domain (whatever that means). The
+fact that you&#39;ve drawn O-O diagrams (even if it&#39;s in your head) capturing the
+domain entities, their relationships and interactions is not sufficient for
+stating that the software implementation must be a copy-paste of those
+diagrams. Most of the time, the software <em>supports</em> the domain; it does rarely
+<em>implement</em> or <em>simulate</em> it. Models are there to guide your <em>understanding</em>
+of the domain, not to <em>be</em> the implementation of your requirements. Subtle
+difference (abstract one, I&#39;m affraid), but important.</p>
+
+<p>The second reason is more directly relevant to the proposed paradigm and Alf.
+Suppose a <code>Supplier</code> class in your O-O software. What does that class capture?
+Well, from a modeling point of view it captures the fact that <code>supplier</code> is
+a relevant concept/entity in the domain. From the software point of view,
+it captures an irrelevant set, and lots of individuals of (marginal?) interest:</p>
+
+<ul>
+<li>The <code>Supplier</code> class captures the set of all possible suppliers, that is,
+all possible supplier instances that you can represent in software memory by
+invoking the class constructor. Observe that you can&#39;t do anything relevant
+with this set with respect to your actual requirements, except maybe
+&quot;selecting&quot; a particular individual.</li>
+<li>Those individuals are of course not the <em>real</em> suppliers, but only
+<em>information about</em> them or a <em>representation of</em> them in the software. I
+invite you to read <a href="http://www.revision-zero.org/orm-haters-do-get-it">a previous writing of
+mine</a> to understand why I
+think that manipulating information through individuals is just wrong.</li>
+</ul>
+
+<p>I won&#39;t repeat those arguments here. Let me instead simply state a few
+requirements in our hypothetic suppliers and parts software, while
+highlighting relevant parts for the discussion at hand:</p>
+
+<ul>
+<li>A supplier may only see information about <strong>the suppliers located in the same
+city than himself</strong>,</li>
+<li>The GUI shall display <strong>relevant information about the supplier such as her
+name, city and country</strong>.</li>
+<li>The GUI shall never expose <strong>supplier statuses</strong>, except to
+<strong>administrators</strong>, that is, <strong>suppliers with a status greater than 30</strong>.</li>
+<li>The software should periodically send an email to <strong>all suppliers who supply
+less than 5 parts</strong> to ...</li>
+<li>The administration interface shall display <strong>performance indicators</strong> such as
+the <strong>number of registered suppliers per city</strong>, ...</li>
+<li>and so on.</li>
+</ul>
+
+<p>Hence the following question. Why does our source code provide such a huge
+visibility to completely irrelevant sets, e.g. the <code>Supplier</code> class, instead
+of promoting those relevant sets above as first class citizen? Hence the name
+of the paradigm, <strong>Relations as First-Class Citizen</strong>, because relations
+better capture those sets than O-O classes:</p>
+<div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="no">DEE</span><span class="p">,</span>
+  <span class="c1"># the suppliers located in the same city than himself (say S3)</span>
+  <span class="n">visible</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
+    <span class="n">matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">project</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">sid</span><span class="p">:</span> <span class="s1">&#39;S3&#39;</span><span class="p">),</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">))</span> 
+  <span class="p">},</span>
+  <span class="c1"># administrators, i.e. suppliers with a status greater than 30</span>
+  <span class="n">administrators</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">gte</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
+  <span class="p">},</span>
+  <span class="c1"># registered suppliers</span>
+  <span class="n">registered</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
+    <span class="n">suppliers</span>
+  <span class="p">})</span>
+</pre>
+</div>
+
+<div class="try-this"><a href="/?src=ZXh0ZW5kKERFRSwKICAjIHRoZSBzdXBwbGllcnMgbG9jYXRlZCBpbiB0aGUg
+c2FtZSBjaXR5IHRoYW4gaGltc2VsZiAoc2F5IFMzKQogIHZpc2libGU6IC0+
+KHQpewogICAgbWF0Y2hpbmcoc3VwcGxpZXJzLCBwcm9qZWN0KHJlc3RyaWN0
+KHN1cHBsaWVycywgc2lkOiAnUzMnKSwgWzpjaXR5XSkpIAogIH0sCiAgIyBh
+ZG1pbmlzdHJhdG9ycywgaS5lLiBzdXBwbGllcnMgd2l0aCBhIHN0YXR1cyBn
+cmVhdGVyIHRoYW4gMzAKICBhZG1pbmlzdHJhdG9yczogLT4odCl7CiAgICBy
+ZXN0cmljdChzdXBwbGllcnMsIGd0ZSg6c3RhdHVzLCAzMCkpCiAgfSwKICAj
+IHJlZ2lzdGVyZWQgc3VwcGxpZXJzCiAgcmVnaXN0ZXJlZDogLT4odCl7CiAg
+ICBzdXBwbGllcnMKICB9KQ==
+" target="_blank">Try it!</a></div>
+
+<p>(Note that the example above does not aim at illustrating an actual
+user-friendly syntax or idiomatic way of implementing the kind of features I&#39;m
+discussing here. It shows, in contrast, that all those relations can be
+captured rather easily, even all at once; try it).</p>
+
+<p>ORMs such as Active Record provide so-called
+<a target="_blank" href="http://guides.rubyonrails.org/active_record_querying.html#scopes">scopes</a>
+that may be argued providing what I ask here (possibly with a better syntax,
+by the way):</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Supplier</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+  <span class="n">scope</span> <span class="ss">:administrator</span><span class="p">,</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">where</span><span class="p">(</span><span class="s2">&quot;status &gt; 30&quot;</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<p>Two main important differences exist, though:</p>
+
+<ul>
+<li>First, observe that in Active Record, <code>Supplier</code> and
+<code>Supplier.administrator</code> do not denote similar things. The first one is a
+<code>Class</code>, the second is an <code>ActiveRecord::Relation</code> and you can&#39;t substitute
+one for the other. In addition, scopes are subordinated to classes, making
+them second-class, not first-class citizen.</li>
+<li><p>Second, scopes do not allow deriving new first-class concepts. They mostly
+allow filtering existing ones (loosely speaking). For instance, you&#39;ll have
+a hard time trying to promote the concept below as first-class with scopes.
+Indeed, it would require creating &quot;derived classes&quot;, whatever this is
+supposed to mean in practice:</p>
+<div class="highlight"><pre>  <span class="c1"># performance indicators, e.g. registered suppliers per city</span>
+  <span class="n">indicators</span> <span class="o">=</span> <span class="n">summarize</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="n">nb</span><span class="p">:</span> <span class="n">count</span><span class="p">())</span>
+
+  <span class="c1"># first-class means you can use it as any other concept</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">indicators</span><span class="p">,</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:nb</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre>
+</div>
+
+<div class="try-this"><a href="/?src=IyBwZXJmb3JtYW5jZSBpbmRpY2F0b3JzLCBlLmcuIHJlZ2lzdGVyZWQgc3Vw
+cGxpZXJzIHBlciBjaXR5CmluZGljYXRvcnMgPSBzdW1tYXJpemUoc3VwcGxp
+ZXJzLCBbOmNpdHldLCBuYjogY291bnQoKSkKCiMgZmlyc3QtY2xhc3MgbWVh
+bnMgeW91IGNhbiB1c2UgaXQgYXMgYW55IG90aGVyIGNvbmNlcHQKcmVzdHJp
+Y3QoaW5kaWNhdG9ycywgZ3QoOm5iLCAxKSk=
+" target="_blank">Try it!</a></div></li>
+</ul>
+
+<p>To summarize (sorry if it seems offensive, I&#39;d better like to be
+thought-provoking instead): ORMs promote irrelevant sets as first-class and a
+subset of relevant ones as second-class, subordinated to the former. Isn&#39;t
+that <em>very</em> strange? In addition, ORMs promote a &quot;design around structural
+concepts&quot; kind of programming style, where good object-oriented design focuses
+on behaviors instead.</p>
+
+<p>Now, Alf provides a good foundation for <strong>Relations as First-Class Citizen</strong>,
+but it does not completely reach that point so far. Indeed, it provides a way
+to compute any relation and use it consistently. To implement the paradigm
+completely, however, it would also need to provide a way to &#39;promote&#39; the
+relations that makes more sense in the domain as <em>special</em> citizen in the
+software design. I&#39;ll say a word about domain-specific relational operators
+and database viewpoints in the next section, which are good attempts to reach
+this but require more work.</p>
 
 <h2 id="ongoing-work">Limitations and ongoing work</h2>
 
@@ -660,7 +840,9 @@ relational operator proves very useful in practice when dealing with complex
 data visibility and privacy requirements. Interesting enough, you can check
 that the compilation involves only one SQL query sent to the underlying DBMS,
 resulting in important performance improvements compared to other approaches
-relying on an <code>if/then/else</code> statement in the host language.</p>
+relying on an <code>if/then/else</code> statement in the host language (especially when
+the latter is much slower than the DBMS engine itself, e.g. Ruby vs. a DBMS
+engine implemented in C).</p>
 
 <p>Similarly, even when involving complex data types and collections, most query
 plans involve a <em>constant</em> number of SQL queries, avoiding the &#39;N+1 queries&#39;
@@ -677,7 +859,7 @@ WzpzaWRdLCA6c3VwcGxpZWRfcGFydHMsIGFsbGJ1dDogdHJ1ZSkp
 
 <p>Alf already has a few high-level operators such as <a href="/doc/api/matching">matching</a>
 or <a href="/doc/api/page">page</a>. The next release should include a few others currently
-evaluated on case studies: <code>ite</code>, <code>image</code>, <code>abstract</code>, <code>quota</code>, etc.</p>
+evaluated on case studies: <code>ite</code>, <code>image</code>, <code>abstract</code>, <code>dive</code>, <code>quota</code>, etc.</p>
 
 <h3>Database viewpoints</h3>
 
@@ -766,37 +948,15 @@ hurt separation of concerns and reuse (more generally, software design) and
 why favoring pure relational algebra over (idiomatic) SQL helps avoiding the
 trap.</p>
 
-<p>I can&#39;t close this blog post without putting some fairness back to the
-picture. Indeed, I must confess that comparing Alf to libraries such as
-<a href="http://sequel.rubyforge.org/">Sequel</a>, or <a href="http://www.jooq.org/">jOOQ</a> is a
-little unfair. This is especially true when you know that Alf itself currently
-relies on <code>Sequel</code> to generate cross-DBMS SQL code in an easy way. The reason
-is that there is a risk here to compare apples and oranges. Shouldn&#39;t Alf be
-compared to <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">Object-Relational
-Mappers</a>
-instead, because it puts a layer of abstraction <em>above</em> SQL?</p>
-
-<p>The short answer is yes. <strong>Relations as First-Class Citizen</strong> (RFCC) is better
-compared to <strong>Object-Relational Mapping</strong> (ORM). Both are paradigms that
-present data to the software in a particular way: Relations for the former,
-Classes/Objects for the latter. As you may already know from <a href="http://www.revision-zero.org/orm-haters-do-get-it">some previous
-writings of mine</a> I&#39;m not a
-huge fan of ORM. Without re-opening the war here, they hurt software design in
-far too many ways in my opinion. I&#39;m looking for other solutions for a while
-and ended-up with this one so far. That said, <code>Alf</code> is to <strong>RFCC</strong> what
-<code>Sequel</code>, <code>Arel</code> and the others are to <strong>ORM</strong>, so the comparison actually
-applies. Software abstraction boundaries are not clear enough to always avoid
-potentially harmful comparisons, I&#39;m affraid.</p>
-
-<p>That also means that our new paradigm goes (and need to go) further that
-simply providing an algebraic query language. Stay tuned, I&#39;ll provide more
-material soon to use Alf in more complex software (such as the famous
-viewpoints). In the mean time, any question or contribution (of any kind) can
-be adressed by sending an email to Bernard Lambeau (see the <a href="/about/">About</a>
-page; I&#39;m easily found on the Internet too). I&#39;m currently looking for
-contributors both in the academics and in the industrial world for discussing,
-enhancing, testing and evaluating the approach, don&#39;t hesitate to contact me
-by email.</p>
+<p>As I&#39;ve discussed, Alf itself needs more work to truly embrace the paradigm,
+as that goes further that simply providing an algebraic query language. Stay
+tuned, I&#39;ll provide more material and writings about how to use Alf in more
+complex software (such as the viewpoints stuff). In the mean time, any
+question or contribution (of any kind) can be adressed by sending an email to
+Bernard Lambeau (see the <a href="/about/">About</a> page; I&#39;m easily found on the
+Internet too). I&#39;m currently looking for contributors both in the academics
+and in the industrial world for discussing, enhancing, testing and evaluating
+the approach, don&#39;t hesitate to contact me by email.</p>
 
 <h2>Acknowledgements</h2>
 
