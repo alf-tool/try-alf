@@ -300,3 +300,7 @@ div.try-this {
   text-align: right;
   padding-top: 15px;
 }
+footer {
+  font-size: 90%;
+  text-align: center;
+}
