@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/alf-tool/alf-core.git
-  revision: b7e78660b3ff48d099827b22a40382d8eba48546
+  revision: 2428ccabac6debf2d6fcdef6e28c0ac04a5939d3
   specs:
-    alf-core (0.15.0)
+    alf-core (0.15.1)
       domain (~> 1.0)
       myrrha (~> 3.0)
       path (~> 1.3)
@@ -10,14 +10,14 @@ GIT
 
 GIT
   remote: git://github.com/alf-tool/alf-doc.git
-  revision: 5babcbf82310b26ab5fa2ae610cf2c5f4ba9a674
+  revision: 5fcd59cfb718f4273da2819da10aec23e990b7b6
   specs:
     alf-doc (0.15.0)
       alf-core (~> 0.15.0)
 
 GIT
   remote: git://github.com/alf-tool/alf-rack.git
-  revision: ef7b6f347c8c8f74cac963a22169dc2ea496dd4b
+  revision: 97fdaa8d75536add454bc4749c4af30052eea9e8
   specs:
     alf-rack (0.15.0)
       alf-core (~> 0.15.0)
@@ -27,19 +27,19 @@ GIT
 
 GIT
   remote: git://github.com/alf-tool/alf-sequel.git
-  revision: 147b8ee1b5eba2756a3fa7a88f8cc6d4bfd9126c
+  revision: ff63ee4eea061461df5f919f67cb24d163014245
   specs:
-    alf-sequel (0.15.0)
-      alf-core (~> 0.15.0)
-      alf-sql (~> 0.15.0)
+    alf-sequel (0.15.1)
+      alf-core (~> 0.15.1)
+      alf-sql (~> 0.15.1)
       sequel (~> 4.2)
 
 GIT
   remote: git://github.com/alf-tool/alf-sql.git
-  revision: 605f280d30c6b3f374f49dc3e770d5f986b29e7e
+  revision: 064af101b8bb5181443d7d67485b56f1022de06a
   specs:
-    alf-sql (0.15.0)
-      alf-core (~> 0.15.0)
+    alf-sql (0.15.1)
+      alf-core (~> 0.15.1)
       sexpr (~> 0.6.0)
 
 GEM
@@ -68,7 +68,7 @@ GEM
     rake (10.1.0)
     redcarpet (3.0.0)
     ruby_cop (1.0.5)
-    sequel (4.3.0)
+    sequel (4.4.0)
     sexpr (0.6.0)
     sprockets (2.10.0)
       hike (~> 1.2)
@@ -77,10 +77,10 @@ GEM
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.8)
     temple (0.6.7)
-    thin (1.6.0)
+    thin (1.6.1)
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)
-      rack (>= 1.5.0)
+      rack (>= 1.0.0)
     tilt (1.4.1)
     wlang (2.2.3)
       backports (~> 2.6)
