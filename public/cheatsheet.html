@@ -24,7 +24,7 @@
         <th ng-show="docmode == 'examples'"></th>
       </tr>
       <tr ng-repeat="op in doc.operators | orderBy:'name'">
-        <td>{{op.name}}</td>
+        <td><a href="/doc/api/{{op.name}}">{{op.name}}</a></td>
         <td ng-show="docmode == 'api'">{{op.synopsis}}</td>
         <td ng-show="docmode == 'api'" class="code">{{op.signature}}</td>
         <td ng-show="docmode == 'api'" class="code">{{op.options}}</td>

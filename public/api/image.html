@@ -1,0 +1,54 @@
+<h1>Image</h1>
+
+<p>Extend the left operand with a new relation-valued attribute, image of the
+tuple in the right relation.</p>
+
+<h2>Signature</h2>
+<div class="highlight"><pre><span class="n">image</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">as</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
+</pre>
+</div>
+
+<h2>Examples</h2>
+<div class="highlight"><pre><span class="n">image</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">supplies</span><span class="p">,</span> <span class="ss">:supplying</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this"><a href="/?src=aW1hZ2Uoc3VwcGxpZXJzLCBzdXBwbGllcywgOnN1cHBseWluZyk=
+" target="_blank">Try it!</a></div>
+
+<h2>Description</h2>
+
+<p>This operator extends each tuple (say <code>t</code>) of the left operand with a new
+attribute called <code>as</code>. The latter is a relation-valued attribute, and is the
+image of <code>t</code> with respect to the right relation. The image is defined as a
+restriction-projection: restriction on tuples that match <code>t</code> and projection
+on all but common attributes between left and right.</p>
+
+<p>In other words, this operator is a shortcut for the following longer
+expression:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">as</span><span class="p">)</span>
+  <span class="kp">extend</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">as</span> <span class="o">=&gt;</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
+    <span class="n">allbut</span><span class="p">(</span>
+      <span class="n">matching</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="no">Relation</span><span class="p">(</span><span class="n">t</span><span class="p">)),</span>
+      <span class="n">left</span><span class="o">.</span><span class="n">attr_list</span> <span class="o">&amp;</span> <span class="n">right</span><span class="o">.</span><span class="n">attr_list</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="k">end</span>
+<span class="n">image</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">supplies</span><span class="p">,</span> <span class="ss">:supplying</span><span class="p">)</span>
+</pre>
+</div>
+
+<div class="try-this"><a href="/?src=ZGVmIGltYWdlKGxlZnQsIHJpZ2h0LCBhcykKICBleHRlbmQobGVmdCwgYXMg
+PT4gLT4odCl7CiAgICBhbGxidXQoCiAgICAgIG1hdGNoaW5nKHJpZ2h0LCBS
+ZWxhdGlvbih0KSksCiAgICAgIGxlZnQuYXR0cl9saXN0ICYgcmlnaHQuYXR0
+cl9saXN0KQogIH0pCmVuZAppbWFnZShzdXBwbGllcnMsIHN1cHBsaWVzLCA6
+c3VwcGx5aW5nKQ==
+" target="_blank">Try it!</a></div>
+
+<p>Note that the image operator is such that every tuple of the left operand
+appears in the result, including those whose image is empty on right. As
+expected, an empty relation of correct relation type is used for those.</p>
+
+<h2>Implementation notes</h2>
+
+<p>As of current Alf version, the current SQL compilation is not optimal and
+partly relies on in-memory operations. Please check the compilation plans.</p>
