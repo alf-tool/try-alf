@@ -2,4 +2,7 @@
   header, #fork-on-github, .try-this {
     display: none;
   }
+  article {
+    font-size: 12px;
+  }
 }
