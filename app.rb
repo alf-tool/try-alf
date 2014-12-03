@@ -60,6 +60,7 @@ class App < Sinatra::Base
   get %r{^/blog/?$} do
     articles = (PublicDir/'blogging')
       .glob('*.html')
+      .sort
       .map do |f|
         id = f.basename.rm_ext
         text = f
