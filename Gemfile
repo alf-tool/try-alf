@@ -1,5 +1,7 @@
 source "https://rubygems.org"
 
+ruby '1.9.3'
+
 gem 'thin'
 gem "sequel",  "~> 4.2"
 gem "rack-robustness", "~> 1.1"
