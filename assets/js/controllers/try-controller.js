@@ -1,4 +1,4 @@
-function TryController($scope, $stateParams, $http, $filter, $window, $timeout) {
+function TryController($scope, $http, $filter, $window, $timeout) {
 
   $scope.mode     = "data";
   $scope.error    = "";
@@ -12,8 +12,10 @@ function TryController($scope, $stateParams, $http, $filter, $window, $timeout) 
     $http.get('/doc.json').success(function(data) {
       $scope.examples = data['examples'];
     });
-    if ($stateParams.src) {
-      $scope.src = atob($stateParams.src);
+    var search = queryString();
+    console.log(search);
+    if (search.src) {
+      $scope.src = atob(search.src);
     }
     $scope.editor.focus();
   }

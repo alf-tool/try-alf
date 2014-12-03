@@ -21,7 +21,7 @@ current folder. Then:</p>
 <span class="nb">require</span> <span class="s1">&#39;sqlite3&#39;</span>
 
 <span class="n">rel</span> <span class="o">=</span> <span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sap.sqlite3&quot;</span><span class="p">)</span> <span class="k">do</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="nb">puts</span> <span class="n">rel</span>
 </pre>
@@ -43,14 +43,14 @@ as in the example above.</li>
 instance to a folder containing recognized files</p>
 <div class="highlight"><pre><span class="c1"># Let query .csv/.json/.yaml files in the current folder</span>
 <span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="no">Path</span><span class="o">.</span><span class="n">pwd</span><span class="p">)</span> <span class="k">do</span>
-  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="o">...</span>
 <span class="k">end</span>
 </pre>
 </div></li>
 <li><p>A database URL recognized by
 <a href="http://sequel.rubyforge.org/rdoc/files/doc/opening_databases_rdoc.html">Sequel</a>:</p>
 <div class="highlight"><pre><span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;postgres://user:password@host/dbname&#39;</span><span class="p">)</span> <span class="k">do</span>
-  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="o">...</span>
 <span class="k">end</span>
 </pre>
 </div></li>
@@ -58,7 +58,7 @@ instance to a folder containing recognized files</p>
 <code>Database</code> instance.</p>
 <div class="highlight"><pre><span class="n">db</span> <span class="o">=</span> <span class="o">::</span><span class="no">Sequel</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;postgres://user:password@host/dbname&#39;</span><span class="p">)</span>
 <span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">db</span><span class="p">)</span> <span class="k">do</span>
-  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+  <span class="o">...</span>
 <span class="k">end</span>
 </pre>
 </div></li>
@@ -76,7 +76,7 @@ following example:</p>
 <span class="nb">require</span> <span class="s1">&#39;sqlite3&#39;</span>
 
 <span class="n">rel</span> <span class="o">=</span> <span class="no">Alf</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s2">&quot;sap.sqlite3&quot;</span><span class="p">)</span> <span class="k">do</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
 <span class="k">end</span>
 
 <span class="c1"># info and metadata</span>
@@ -94,8 +94,8 @@ following example:</p>
 
 <span class="c1"># the entire algebra, in postfix, OO syntax</span>
 <span class="n">rel</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">)</span>
-<span class="n">rel</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
-<span class="n">rel</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="n">rel</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 
 <span class="c1"># tuple iteration</span>
 <span class="n">rel</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">supplier</span><span class="o">|</span>
@@ -146,7 +146,7 @@ the one of <code>Relation</code>. A few differences and additional methods thoug
   <span class="c1"># Remember that you can no longer use the relvar when the connection</span>
   <span class="c1"># has been closed!</span>
   <span class="n">relv</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">relvar</span> <span class="k">do</span>
-    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="c1"># Returns the set of tuples as a Relation</span>
@@ -154,8 +154,8 @@ the one of <code>Relation</code>. A few differences and additional methods thoug
 
   <span class="c1"># the entire algebra, in postfix, OO syntax</span>
   <span class="n">relv</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">)</span>  <span class="c1"># returns another relvar, no actual computation</span>
-  <span class="n">rel</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
-  <span class="n">rel</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
+  <span class="n">rel</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+  <span class="n">rel</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 
   <span class="c1"># update (VERY experimental, use with care, especially on virtual relvars)</span>
   <span class="n">relv</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">predicate</span><span class="p">)</span>
@@ -190,7 +190,7 @@ too limited. The following example shows more about hacking with lower-level
 <span class="c1"># NOT thread-safe. </span>
 <span class="no">DB</span><span class="o">.</span><span class="n">connect</span> <span class="k">do</span> <span class="o">|</span><span class="n">conn</span><span class="o">|</span>
   <span class="n">rel</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">query</span> <span class="k">do</span>
-    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="nb">puts</span> <span class="n">rel</span>
 <span class="k">end</span>
@@ -200,7 +200,7 @@ too limited. The following example shows more about hacking with lower-level
 <span class="k">begin</span>
   <span class="n">conn</span> <span class="o">=</span> <span class="no">DB</span><span class="o">.</span><span class="n">connection</span>
   <span class="n">conn</span><span class="o">.</span><span class="n">query</span> <span class="k">do</span>
-    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="nb">puts</span> <span class="n">rel</span>
 <span class="k">ensure</span>

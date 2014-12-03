@@ -3,7 +3,7 @@
 <p>Projects a subset of attributes away.</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
+<div class="highlight"><pre><span class="n">allbut</span><span class="p">(</span><span class="ss">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="ss">attributes</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -25,7 +25,7 @@ attributes, this one <em>removes</em> them. <code>project</code> actually suppor
 variant, which is equivalent to this operator. In other words, this
 operator can be understood as follows:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">allbut</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span>
-  <span class="n">project</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+  <span class="n">project</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">attributes</span><span class="p">,</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="n">allbut</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="p">,</span> <span class="ss">:status</span><span class="o">]</span><span class="p">)</span>
 </pre>

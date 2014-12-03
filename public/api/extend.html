@@ -3,14 +3,14 @@
 <p>Extends input tuples with derived/computed attributes</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="no">TupleComputation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
+<div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="ss">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="ss">ext</span><span class="p">:</span> <span class="no">TupleComputation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
 <h2>Examples</h2>
 <div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span>
-  <span class="n">big</span><span class="p">:</span>   <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">},</span>
-  <span class="n">small</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">downcase</span> <span class="p">})</span>
+  <span class="ss">big</span><span class="p">:</span>   <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">},</span>
+  <span class="ss">small</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">downcase</span> <span class="p">})</span>
 </pre>
 </div>
 

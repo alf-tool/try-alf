@@ -91,7 +91,7 @@ to another one. Converting a .csv file to .json?</p>
 
 <p>And some extra. Want to search over content served by a RESTful web service?
 What countries use euros, for instance?</p>
-<div class="highlight"><pre><span class="n">curl</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">restcountries</span><span class="o">.</span><span class="n">eu</span><span class="o">/</span><span class="n">rest</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">json</span> <span class="n">show</span> <span class="s2">&quot;restrict(stdin, currency: &#39;EUR&#39;)&quot;</span>
+<div class="highlight"><pre><span class="n">curl</span> <span class="ss">http</span><span class="p">:</span><span class="sr">//</span><span class="n">restcountries</span><span class="o">.</span><span class="n">eu</span><span class="o">/</span><span class="n">rest</span> <span class="o">|</span> <span class="n">alf</span> <span class="o">--</span><span class="n">stdin</span><span class="o">=</span><span class="n">json</span> <span class="n">show</span> <span class="s2">&quot;restrict(stdin, currency: &#39;EUR&#39;)&quot;</span>
 </pre>
 </div>
 
@@ -122,9 +122,9 @@ Hopefully, <code>Alf</code> recognizes files with an <code>.alf</code> extension
 in a special way. Suppose you have a complex query in a <code>complex-query.alf</code>
 file.</p>
 <div class="highlight"><pre><span class="n">suppliers_by_city</span> <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:status</span><span class="o">]</span><span class="p">,</span> <span class="ss">:suppliers</span><span class="p">)</span>
-<span class="n">parts_by_city</span>     <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="ss">:parts</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+<span class="n">parts_by_city</span>     <span class="o">=</span> <span class="n">group</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="ss">:parts</span><span class="p">,</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
 <span class="n">joined</span>            <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">suppliers_by_city</span><span class="p">,</span> <span class="n">parts_by_city</span><span class="p">)</span>
-<span class="n">restrict</span><span class="p">(</span><span class="n">joined</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">joined</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
 </pre>
 </div>
 

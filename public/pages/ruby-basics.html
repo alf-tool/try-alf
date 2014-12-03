@@ -32,12 +32,12 @@ encounter when learning Alf are:</p>
 <span class="mi">12</span>           <span class="c1"># type: Integer</span>
 <span class="mi">12</span><span class="o">.</span><span class="mi">0</span>         <span class="c1"># type: Float</span>
 <span class="kp">true</span>         <span class="c1"># type: TrueClass, ... ruby has no Boolean, Alf fakes one sometimes</span>
-<span class="kp">false</span>        <span class="c1"># type: FalseClass</span><span class="sr"></span>
+<span class="kp">false</span>        <span class="c1"># type: FalseClass</span>
 <span class="sr">/[a-b]+/</span>     <span class="c1"># type: Regexp</span>
 <span class="ss">:hello</span>       <span class="c1"># type: Symbol (used by Alf for attribute names, aka AttrName)</span>
 <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">]</span>    <span class="c1"># type: Array (ruby supports heteroegenous arrays, we dont&#39;t use them here)</span>
-<span class="p">{</span><span class="n">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span> <span class="c1"># type: Hash (aka dictionnary, or map, Alf uses them a lot. see later)</span>
-<span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="p">}</span> <span class="c1"># type: Proc (aka block or function, see later too)</span>
+<span class="p">{</span><span class="ss">a</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">b</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span> <span class="c1"># type: Hash (aka dictionnary, or map, Alf uses them a lot. see later)</span>
+<span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="o">...</span> <span class="p">}</span> <span class="c1"># type: Proc (aka block or function, see later too)</span>
 </pre>
 </div>
 
@@ -106,7 +106,7 @@ types explicit. For instance, for a scalar operator:</p>
 longer expression (something we frequently use in this documentation and is
 also idiomatic for building domain-specific relational abstractions):</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">in_london</span><span class="p">(</span><span class="n">operand</span><span class="p">)</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">operand</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
 <span class="k">end</span>
 </pre>
 </div>
@@ -128,19 +128,19 @@ keys: </p>
 
 <p>A special syntax can be used in this case that is more compact. The following
 Hash denotes the same value as the one above:</p>
-<div class="highlight"><pre><span class="p">{</span> <span class="n">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="mi">17</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="n">suppliers</span><span class="p">:</span> <span class="o">[</span><span class="s2">&quot;Jones&quot;</span><span class="p">,</span> <span class="s2">&quot;Smith&quot;</span><span class="o">]</span> <span class="p">}</span>
+<div class="highlight"><pre><span class="p">{</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">,</span> <span class="ss">price</span><span class="p">:</span> <span class="mi">17</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">suppliers</span><span class="p">:</span> <span class="o">[</span><span class="s2">&quot;Jones&quot;</span><span class="p">,</span> <span class="s2">&quot;Smith&quot;</span><span class="o">]</span> <span class="p">}</span>
 </pre>
 </div>
 
 <p>Hashes can of course be passed as arguments when invoking operators. A good
 example is when invoking Alf&#39;s <code>restrict</code> operator:</p>
-<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="p">{</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="p">{</span><span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="ss">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">})</span>
 </pre>
 </div>
 
 <p>When a Hash is passed as last argument of an operator, the brackets can be
 safely ommited in ruby, leading to a nicer syntax:</p>
-<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="ss">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -157,6 +157,6 @@ operator shown previously, using the anonymous syntax this time:</p>
 Observe how, in the second case, the Proc is actually mapped to a key in a
 Hash:</p>
 <div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">status</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="p">})</span>
-<span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">big_name</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">})</span>
+<span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">big_name</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">})</span>
 </pre>
 </div>

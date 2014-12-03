@@ -9,14 +9,18 @@
         <img src="/img/ajax-loader.gif" ng-show="inProgress"/>
         <i class="icon-bookmark"
            title="Bookmark this query"
-           ng-click="bookmark()"/>
+           ng-click="bookmark()"></i>
       </p>
       <div class="clearfix"></div>
     </div>
-    <div id="ace" ui-ace="{theme: 'textmate', mode: 'ruby', onLoad: aceLoaded}" ng-model="src"></div>
+    <div id="ace" ui-ace="{theme: 'textmate', mode: 'ruby', onLoad: aceLoaded}"
+         ng-model="src">
+    </div>
   </div>
   <div class="row">
-    <div id="error" class="alert alert-error" ng-show="error">{{error}}</div>
+    <div id="error" class="alert alert-error" ng-show="error">
+      <span ng-bind="error"></span>
+    </div>
   </div>
   <div id="result-tab" class="row">
     <div class="header">
@@ -54,7 +58,7 @@
       </form>
     </div>
     <div>
-      <pre id="result">{{result}}</pre>
+      <pre id="result" ng-bind="result"></pre>
     </div>
   </div>
 </div>

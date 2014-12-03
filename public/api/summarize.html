@@ -3,25 +3,25 @@
 <p>Aggregate and compute</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">,</span> <span class="n">aggs</span><span class="p">:</span> <span class="no">Summarization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="ss">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="ss">by</span><span class="p">:</span> <span class="no">AttrList</span><span class="p">,</span> <span class="ss">aggs</span><span class="p">:</span> <span class="no">Summarization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
 <h2>Examples</h2>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">(</span><span class="ss">:qty</span><span class="p">))</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">(</span><span class="ss">:qty</span><span class="p">))</span>
 </pre>
 </div>
 
 <div class="try-this"><a href="/?src=c3VtbWFyaXplKHN1cHBsaWVzLCBbOnNpZF0sIHRvdGFsOiBzdW0oOnF0eSkp
 " target="_blank">Try it!</a></div>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="n">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">})</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">})</span>
 </pre>
 </div>
 
 <div class="try-this"><a href="/?src=c3VtbWFyaXplKHN1cHBsaWVzLCBbOnNpZF0sIHRvdGFsOiBzdW17fHR8IHQu
 cXR5ICogMiB9KQ==
 " target="_blank">Try it!</a></div>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="n">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">}},</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">}},</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
 </pre>
 </div>
 

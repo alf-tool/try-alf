@@ -1,0 +1,8 @@
+<div class="row">
+  *{articles}{
+    <article>
+      +{text}
+      <p class="readmore"><a href="/blog/${id}">Read more</a></p>
+    </article>
+  }
+</div>

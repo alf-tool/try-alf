@@ -1,13 +1,13 @@
 source "https://rubygems.org"
 
-ruby '1.9.3'
-
 gem 'thin'
 gem "sequel",  "~> 4.2"
 gem "rack-robustness", "~> 1.1"
 gem "rack-timeout"
 gem "rake"
 gem 'sprockets', '~> 2.0'
+gem 'sinatra', '~> 1.4'
+gem 'wlang', '~> 2.3'
 
 gem "alf-core",   :git => "git://github.com/alf-tool/alf-core.git"
 gem "alf-doc",    :git => "git://github.com/alf-tool/alf-doc.git"
@@ -29,5 +29,7 @@ group :development do
   gem "sqlite3", "~> 1.3"
   gem "redcarpet"
   gem "albino", "~> 1.3.3"
-  gem "wlang", "~> 2.0"
+  gem "rspec", "~> 3.0"
+  gem "rack-test", "~> 0.6"
+  gem 'sinatra-reloader', '~> 1.0'
 end

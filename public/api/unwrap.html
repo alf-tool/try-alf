@@ -3,7 +3,7 @@
 <p>Inverse of wrap</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">unwrap</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">tva</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
+<div class="highlight"><pre><span class="n">unwrap</span><span class="p">(</span><span class="ss">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="ss">tva</span><span class="p">:</span> <span class="no">AttrName</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -21,7 +21,7 @@ cmEpLCA6ZXh0cmEp
 <p>Computes the relation obtained by unwrapping a tuple-valued attribute <code>tva</code>.
 Unwrapping of <code>tva</code> on an input tuple <code>t</code> consists in removing <code>tva</code> from
 <code>t</code> and extending the result with <code>tva</code>&#39;s own attributes:</p>
-<div class="highlight"><pre><span class="no">Tuple</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">tva</span><span class="p">:</span> <span class="no">Tuple</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="mi">3</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="no">Tuple</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
+<div class="highlight"><pre><span class="no">Tuple</span><span class="p">(</span><span class="ss">x</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">tva</span><span class="p">:</span> <span class="no">Tuple</span><span class="p">(</span><span class="ss">y</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">z</span><span class="p">:</span> <span class="mi">3</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="no">Tuple</span><span class="p">(</span><span class="ss">x</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">y</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">z</span><span class="p">:</span> <span class="mi">3</span><span class="p">)</span>
 </pre>
 </div>
 

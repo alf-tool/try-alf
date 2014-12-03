@@ -12,4 +12,3 @@
 //= require try-alf.js
 //= require controllers/try-controller
 //= require controllers/doc-controller
-//= require controllers/blog-controller

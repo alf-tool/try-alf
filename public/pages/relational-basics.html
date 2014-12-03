@@ -95,14 +95,14 @@ pairs have the same name.</li>
 <span class="c1">#  * is named &#39;Nut&#39;, </span>
 <span class="c1">#  * has a color denoted by &#39;red&#39;, and </span>
 <span class="c1">#  * is known to be heavy.</span>
-<span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P1&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Nut&#39;</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="n">heavy</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+<span class="no">Tuple</span><span class="p">(</span><span class="ss">pid</span><span class="p">:</span> <span class="s1">&#39;P1&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Nut&#39;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="ss">heavy</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
 </pre>
 </div>
 
 <p>The type of a tuple is simply defined in terms of its heading. A <em>heading</em> is
 defined as a set of attribute (name, type name) pairs. For example, the
 heading of the tuple show above is:</p>
-<div class="highlight"><pre><span class="no">Heading</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">,</span> <span class="n">heavy</span><span class="p">:</span> <span class="no">Boolean</span><span class="p">)</span>
+<div class="highlight"><pre><span class="no">Heading</span><span class="p">(</span><span class="ss">pid</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">,</span> <span class="ss">heavy</span><span class="p">:</span> <span class="no">Boolean</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -117,16 +117,16 @@ duplicates.</li>
 
 <p>We will denote relation literals as follows:</p>
 <div class="highlight"><pre><span class="no">Relation</span><span class="p">(</span><span class="o">[</span>
-  <span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P1&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Nut&#39;</span><span class="p">,</span>   <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span>   <span class="n">heavy</span><span class="p">:</span> <span class="kp">true</span><span class="p">),</span>
-  <span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P2&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Bolt&#39;</span><span class="p">,</span>  <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">),</span> <span class="n">heavy</span><span class="p">:</span> <span class="kp">false</span><span class="p">),</span>
-  <span class="no">Tuple</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="s1">&#39;P3&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Screw&#39;</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>  <span class="n">heavy</span><span class="p">:</span> <span class="kp">false</span><span class="p">)</span>
+  <span class="no">Tuple</span><span class="p">(</span><span class="ss">pid</span><span class="p">:</span> <span class="s1">&#39;P1&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Nut&#39;</span><span class="p">,</span>   <span class="ss">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span>   <span class="ss">heavy</span><span class="p">:</span> <span class="kp">true</span><span class="p">),</span>
+  <span class="no">Tuple</span><span class="p">(</span><span class="ss">pid</span><span class="p">:</span> <span class="s1">&#39;P2&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Bolt&#39;</span><span class="p">,</span>  <span class="ss">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;green&#39;</span><span class="p">),</span> <span class="ss">heavy</span><span class="p">:</span> <span class="kp">false</span><span class="p">),</span>
+  <span class="no">Tuple</span><span class="p">(</span><span class="ss">pid</span><span class="p">:</span> <span class="s1">&#39;P3&#39;</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="s1">&#39;Screw&#39;</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">),</span>  <span class="ss">heavy</span><span class="p">:</span> <span class="kp">false</span><span class="p">)</span>
 <span class="o">]</span><span class="p">)</span>
 </pre>
 </div>
 
 <p>The type of a relation is simply defined in terms of its heading. For example,
 the heading of the relation show above is:</p>
-<div class="highlight"><pre><span class="no">Heading</span><span class="p">(</span><span class="n">pid</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">,</span> <span class="n">heavy</span><span class="p">:</span> <span class="no">Boolean</span><span class="p">)</span>
+<div class="highlight"><pre><span class="no">Heading</span><span class="p">(</span><span class="ss">pid</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="nb">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="no">Color</span><span class="p">,</span> <span class="ss">heavy</span><span class="p">:</span> <span class="no">Boolean</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -184,8 +184,8 @@ be rewritten into the following equivalent form:</p>
 <p>Relational algebra is similar, but applies to relations. For example:</p>
 <div class="highlight"><pre><span class="c1">#  Who are supppliers located in London or in Paris?</span>
 <span class="n">union</span><span class="p">(</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">),</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
 </pre>
 </div>
 

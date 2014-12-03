@@ -19,3 +19,9 @@ namespace :doc do
 end
 desc "Import documentation from alf-doc"
 task :doc => [:"doc:json", :"doc:html"]
+
+desc %q{Run all RSpec tests}
+task :test do
+  require 'rspec'
+  RSpec::Core::Runner.run(%w[-I. -Ispec --pattern=spec/**/test_*.rb --color .])
+end

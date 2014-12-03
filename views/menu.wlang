@@ -1,0 +1,17 @@
+<ul>
+  <li ?{is_try}{class="active"}>
+    <p><a href="/try/">Try</a></p>
+  </li>
+  <li ?{is_doc}{class="active"}>
+    <p><a href="/doc/">Doc</a></p>
+  </li>
+  <li ?{is_cheatsheet}{class="active"}>
+    <p><a href="/cheatsheet/">Cheatsheet</a></p>
+  </li>
+  <li ?{is_blog}{class="active"}>
+    <p><a href="/blog/">Blog</a></p>
+  </li>
+  <li ?{is_about}{class="active"}>
+    <p><a href="/about/">About</a></p>
+  </li>
+</ul>

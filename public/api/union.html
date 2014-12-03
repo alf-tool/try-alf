@@ -3,7 +3,7 @@
 <p>Logical OR</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">union</span><span class="p">(</span><span class="n">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
+<div class="highlight"><pre><span class="n">union</span><span class="p">(</span><span class="ss">left</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="ss">right</span><span class="p">:</span> <span class="no">Relation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
@@ -40,8 +40,8 @@ translate the former in the latter (which is likely to have a better query
 plan, especially when using faithful SQL compilation and usual SQL DBMSs).
 Any patch is welcome here too!</p>
 <div class="highlight"><pre><span class="n">union</span><span class="p">(</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">),</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">))</span>
 </pre>
 </div>
 

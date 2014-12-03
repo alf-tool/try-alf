@@ -3,19 +3,19 @@
 <p>Predicate-based filtering</p>
 
 <h2>Signature</h2>
-<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="n">predicate</span><span class="p">:</span> <span class="no">Predicate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="ss">operand</span><span class="p">:</span> <span class="no">Relation</span><span class="p">,</span> <span class="ss">predicate</span><span class="p">:</span> <span class="no">Predicate</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="no">Relation</span>
 </pre>
 </div>
 
 <h2>Examples</h2>
-<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span> <span class="ss">status</span><span class="p">:</span> <span class="mi">20</span><span class="p">)</span>
 </pre>
 </div>
 
 <div class="try-this"><a href="/?src=cmVzdHJpY3Qoc3VwcGxpZXJzLCBjaXR5OiAnUGFyaXMnLCBzdGF0dXM6IDIw
 KQ==
 " target="_blank">Try it!</a></div>
-<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">eq</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
 </pre>
 </div>
 

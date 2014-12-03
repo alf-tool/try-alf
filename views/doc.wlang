@@ -21,30 +21,33 @@
       </ul>
       <p>Operators</p>
       <ul>
-        <li ng-repeat="obj in doc.operators"
-            ng-class="{active: current == 'api' + obj.name}">
-          <a href="/doc/api/{{obj.name}}">{{obj.name}}</a>
-        </li>
+        *{doc.operators}{
+          <li ng-class="{active: current == 'api/' + '${name}'}">
+            <a href="/doc/api/${name}">${name}</a>
+          </li>
+        }
       </ul>
       <p>Predicates</p>
       <ul>
-        <li ng-repeat="obj in doc.predicates"
-            ng-class="{active: current == 'api' + obj.name}">
-          <a href="/doc/api/{{obj.name}}">{{obj.name}}</a>
-        </li>
+        *{doc.predicates}{
+          <li ng-class="{active: current == 'api/' + '${name}'}">
+            <a href="/doc/api/${name}">${name}</a>
+          </li>
+        }
       </ul>
       <p>Aggregators</p>
       <ul>
-        <li ng-repeat="obj in doc.aggregators"
-            ng-class="{active: current == 'api' + obj.name}">
-          <a href="/doc/api/{{obj.name}}">{{obj.name}}</a>
-        </li>
+        *{doc.aggregators}{
+          <li ng-class="{active: current == 'api/' + '${name}'}">
+            <a href="/doc/api/${name}">${name}</a>
+          </li>
+        }
       </ul>
     </div>
   </div>
   <div class="span10">
     <article id="api" class="doc">
-      <div ng-include="'/' + current + '.html'">
+      +{article}
     </article>
   </div>
 </div>

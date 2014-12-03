@@ -1,8 +1,7 @@
-function DocController($scope, $http, $stateParams) {
-  $scope.doc = [];
-  $scope.current = $stateParams['obj'] || 'pages/intro';
+function DocController($scope, $http) {
+  var rx = /doc\/(.*)$/g;
+  var path = window.location.pathname;
+  $scope.current = rx.exec(path)[1] || 'pages/intro';
+  console.log($scope.current);
   $scope.docmode = "examples";
-  $http.get('/doc.json').success(function(data) {
-    $scope.doc = data;
-  });
 }

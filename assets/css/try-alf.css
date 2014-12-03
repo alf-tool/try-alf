@@ -185,14 +185,13 @@ article.cheatsheet table .code {
 
 article {
   font-family:Helvetica !important;
+  margin-bottom: 1em;
 }
 article h1, h2, h3, h4, h5, h6 {
   border: 0 !important;
 }
 article h1 {
   font-size: 170% !important;
-  border-top: 4px solid #aaa !important;
-  padding-top: .5em !important;
   margin-top: 1em !important;
 }
 article h2 {
@@ -284,7 +283,13 @@ article code {
 }
 article {
   padding: 0px 25px;
-  padding-bottom: 25px;
+  padding-bottom: 10px;
+}
+article .readmore,
+article .readmore a {
+  text-align: right;
+  color: #222222;
+  text-decoration: underline;
 }
 div.try-this {
   text-align: right;

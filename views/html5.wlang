@@ -7,7 +7,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" ng-app="tryalf"> <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Alf Relational Algebra &mdash; {{ Page.title() }}</title>
+  <title>Alf Relational Algebra - ${title}</title>
   <meta name="viewport" content="width=device-width">
   <link rel="author" href="humans.txt" />
   <!--[if lt IE 9]><script src="/assets/libs/html5.min.js"></script><![endif]-->
@@ -29,23 +29,7 @@
     <div class="row">
       <a id="fork-on-github" href="https://github.com/alf-tool/alf" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
       <header>
-        <ul>
-          <li ng-class="{active: $state.includes('try')}">
-            <p><a href="/try/">Try</a></p>
-          </li>
-          <li ng-class="{active: $state.includes('doc')}">
-            <p><a href="/doc/pages/intro">Doc</a></p>
-          </li>
-          <li ng-class="{active: $state.includes('cheatsheet')}">
-            <p><a href="/cheatsheet/">Cheatsheet</a></p>
-          </li>
-          <li ng-class="{active: $state.includes('blog')}">
-            <p><a href="/blog/2013-10-21-relations-as-first-class-citizen">Blog</a></p>
-          </li>
-          <li ng-class="{active: $state.includes('about')}">
-            <p><a href="/about/">About</a></p>
-          </li>
-        </ul>
+        >{menu}
         <div style="float: right; padding-top: 10px;">
           <!-- github -->
           <iframe src="http://ghbtns.com/github-btn.html?user=alf-tool&repo=alf&type=watch&count=true&size=medium"
@@ -57,7 +41,9 @@
         <div class="clear"></div>
       </header>
     </div>
-    <div ui-view></div>
+    <div>
+      >{yield}
+    </div>
     <div class="row">
       <footer>&copy; 2013 &mdash; <a target="_blank" href="http://www.uclouvain.be/">The University of Louvain</a> &mdash; Alf is <a target="_blank" href="http://www.github.com/alf-tool/alf">distributed</a> under MIT license.</footer>
     </div>

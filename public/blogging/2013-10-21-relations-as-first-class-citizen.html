@@ -114,7 +114,7 @@ example on (a slighly modified version of) the <a href="http://en.wikipedia.org/
 examplar</a>. We&#39;ll
 use the following <a href="/?src=c3VwcGxpZXJz"><code>suppliers</code></a> and
 <a href="/?src=Y2l0aWVz"><code>cities</code></a> relations:</p>
-<div class="highlight"><pre><span class="n">suppliers</span><span class="p">:</span>                                     <span class="n">cities</span><span class="p">:</span>
+<div class="highlight"><pre><span class="ss">suppliers</span><span class="p">:</span>                                     <span class="ss">cities</span><span class="p">:</span>
 <span class="o">+------+-------+---------+--------+</span>            <span class="o">+----------+----------+</span>
 <span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:status</span> <span class="o">|</span> <span class="ss">:city</span>  <span class="o">|</span>            <span class="o">|</span> <span class="ss">:city</span>    <span class="o">|</span> <span class="ss">:country</span> <span class="o">|</span>
 <span class="o">+------+-------+---------+--------+</span>            <span class="o">+----------+----------+</span>
@@ -154,7 +154,7 @@ this</a>:</p>
 <h3 id="struggling">Struggling with reuse and separation of concerns</h3>
 
 <p>Writting a monolithic query is rather straightforward. Using <a href="http://sequel.rubyforge.org/">Sequel</a> for instance:</p>
-<div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from context (authenticated user)</span>
+<div class="highlight"><pre><span class="n">requester_city</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># from context (authenticated user)</span>
 
 <span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers</span><span class="o">]</span>
   <span class="o">.</span><span class="n">natural_join</span><span class="p">(</span><span class="ss">:cities</span><span class="p">)</span>
@@ -202,7 +202,7 @@ programming languages and third-party libraries.</p>
 <span class="k">end</span>
 
 <span class="c1"># Meet them all: composition and reuse</span>
-<span class="n">requester_city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from context</span>
+<span class="n">requester_city</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># from context</span>
 <span class="n">with_country</span><span class="p">(</span><span class="n">suppliers_in</span><span class="p">(</span><span class="n">requester_city</span><span class="p">))</span>
 </pre>
 </div>
@@ -275,7 +275,7 @@ of composition and reuse:</p>
     <span class="o">.</span><span class="n">from_self</span>
 <span class="k">end</span>
 
-<span class="n">requester_city</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span> <span class="c1"># from context</span>
+<span class="n">requester_city</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># from context</span>
 <span class="n">with_country</span><span class="p">(</span><span class="n">suppliers_in</span><span class="p">(</span><span class="n">requester_city</span><span class="p">))</span>
 
 <span class="c1"># SELECT * FROM (</span>
@@ -319,7 +319,7 @@ ignoring the corresponding requirement:</p>
 
 <span class="c1"># 1). A supplier may only see information about the suppliers located</span>
 <span class="c1"># in the same city than himself.</span>
-<span class="n">solution</span> <span class="o">=</span> <span class="n">restrict</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="n">requester_city</span><span class="p">)</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">restrict</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">requester_city</span><span class="p">)</span>
 
 <span class="c1"># 2) The supplier&#39;s `status` is sensitive and should not be displayed.</span>
 <span class="n">solution</span> <span class="o">=</span> <span class="n">allbut</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="o">[</span><span class="ss">:status</span><span class="o">]</span><span class="p">)</span>
@@ -385,12 +385,12 @@ database or whatever datasource?</p>
 <span class="n">solution</span> <span class="o">=</span> <span class="n">suppliers</span>
 
 <span class="c1"># 1) and 2) above, but inline</span>
-<span class="n">solution</span> <span class="o">=</span> <span class="n">allbut</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="n">requester_city</span><span class="p">),</span> <span class="o">[</span><span class="ss">:status</span><span class="o">]</span><span class="p">)</span>
+<span class="n">solution</span> <span class="o">=</span> <span class="n">allbut</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">requester_city</span><span class="p">),</span> <span class="o">[</span><span class="ss">:status</span><span class="o">]</span><span class="p">)</span>
 
 <span class="c1"># Might be Relation.load(&#39;cities.csv&#39;); we use a literal for execution on try-alf.org</span>
 <span class="n">third_party_cities</span> <span class="o">=</span> <span class="no">Relation</span><span class="p">(</span><span class="o">[</span>
-  <span class="p">{</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="n">country</span><span class="p">:</span> <span class="s1">&#39;England&#39;</span><span class="p">},</span>
-  <span class="p">{</span><span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span>  <span class="n">country</span><span class="p">:</span> <span class="s1">&#39;France&#39;</span><span class="p">}</span>
+  <span class="p">{</span><span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">,</span> <span class="ss">country</span><span class="p">:</span> <span class="s1">&#39;England&#39;</span><span class="p">},</span>
+  <span class="p">{</span><span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span>  <span class="ss">country</span><span class="p">:</span> <span class="s1">&#39;France&#39;</span><span class="p">}</span>
 <span class="o">]</span><span class="p">)</span>
 <span class="n">solution</span> <span class="o">=</span> <span class="n">join</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">third_party_cities</span><span class="p">)</span>
 </pre>
@@ -591,7 +591,7 @@ fEIvIH0p
 <p>Want to compute an array-valued attribute (or even use you own user-defined
 data type/class)? No problem:</p>
 <div class="highlight"><pre><span class="c1"># Get suppliers and the letters of their name in uppercase</span>
-<span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">letters</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">to_a</span> <span class="p">})</span>
+<span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">letters</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">to_a</span> <span class="p">})</span>
 </pre>
 </div>
 
@@ -616,8 +616,8 @@ queries in the idiomatic way. In the example below, Alf compiles the &#39;Paris&
 restriction to SQL while it computes the &#39;letters&#39; extension itself (see the
 optimizer and query plans), even if the extension comes <em>before</em> the
 restriction:</p>
-<div class="highlight"><pre><span class="n">rel</span> <span class="o">=</span> <span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">letters</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">to_a</span> <span class="p">})</span>
-<span class="n">rel</span> <span class="o">=</span> <span class="n">restrict</span><span class="p">(</span><span class="n">rel</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">rel</span> <span class="o">=</span> <span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">letters</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span><span class="o">.</span><span class="n">chars</span><span class="o">.</span><span class="n">to_a</span> <span class="p">})</span>
+<span class="n">rel</span> <span class="o">=</span> <span class="n">restrict</span><span class="p">(</span><span class="n">rel</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -707,15 +707,15 @@ of the paradigm, <strong>Relations as First-Class Citizen</strong>, because rela
 better capture those sets than O-O classes:</p>
 <div class="highlight"><pre><span class="kp">extend</span><span class="p">(</span><span class="no">DEE</span><span class="p">,</span>
   <span class="c1"># the suppliers located in the same city than himself (say S3)</span>
-  <span class="n">visible</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
-    <span class="n">matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">project</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">sid</span><span class="p">:</span> <span class="s1">&#39;S3&#39;</span><span class="p">),</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">))</span> 
+  <span class="ss">visible</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
+    <span class="n">matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">project</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s1">&#39;S3&#39;</span><span class="p">),</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">))</span> 
   <span class="p">},</span>
   <span class="c1"># administrators, i.e. suppliers with a status greater than 30</span>
-  <span class="n">administrators</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
+  <span class="ss">administrators</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
     <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">gte</span><span class="p">(</span><span class="ss">:status</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span>
   <span class="p">},</span>
   <span class="c1"># registered suppliers</span>
-  <span class="n">registered</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
+  <span class="ss">registered</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span>
     <span class="n">suppliers</span>
   <span class="p">})</span>
 </pre>
@@ -761,7 +761,7 @@ a hard time trying to promote the concept below as first-class with scopes.
 Indeed, it would require creating &quot;derived classes&quot;, whatever this is
 supposed to mean in practice:</p>
 <div class="highlight"><pre>  <span class="c1"># performance indicators, e.g. registered suppliers per city</span>
-  <span class="n">indicators</span> <span class="o">=</span> <span class="n">summarize</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="n">nb</span><span class="p">:</span> <span class="n">count</span><span class="p">())</span>
+  <span class="n">indicators</span> <span class="o">=</span> <span class="n">summarize</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">,</span> <span class="ss">nb</span><span class="p">:</span> <span class="n">count</span><span class="p">())</span>
 
   <span class="c1"># first-class means you can use it as any other concept</span>
   <span class="n">restrict</span><span class="p">(</span><span class="n">indicators</span><span class="p">,</span> <span class="n">gt</span><span class="p">(</span><span class="ss">:nb</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
@@ -816,9 +816,9 @@ longer expressions. Alf comes with such a facility, as illustrated below:</p>
 <span class="c1"># It there are at least one Red part, show suppliers in London, otherwise</span>
 <span class="c1"># show suppliers in Paris</span>
 <span class="n">ite</span><span class="p">(</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="s1">&#39;Red&#39;</span><span class="p">),</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">),</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">))</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">parts</span><span class="p">,</span> <span class="ss">color</span><span class="p">:</span> <span class="s1">&#39;Red&#39;</span><span class="p">),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">),</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">))</span>
 </pre>
 </div>
 
@@ -849,7 +849,7 @@ plans involve a <em>constant</em> number of SQL queries, avoiding the &#39;N+1 q
 trap <a href="http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue">infamously
 known</a>
 with Object-Relational Mappers:</p>
-<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">group</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">:supplied_parts</span><span class="p">,</span> <span class="n">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span>
+<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">group</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">:supplied_parts</span><span class="p">,</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span>
 </pre>
 </div>
 
@@ -873,10 +873,10 @@ approach by hacking on Ruby&#39;s <code>super</code> mechanism. Suppose we want 
 database viewpoint on suppliers and parts located in London:</p>
 <div class="highlight"><pre><span class="c1"># Start of the viewpoint</span>
 <span class="k">def</span> <span class="nf">suppliers</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="k">def</span> <span class="nf">parts</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
+  <span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
 <span class="k">end</span>
 <span class="k">def</span> <span class="nf">supplies</span>
   <span class="c1"># restore foreign keys given the previous restrictions</span>
@@ -886,7 +886,7 @@ database viewpoint on suppliers and parts located in London:</p>
 
 <span class="c1"># Query as usual. This is entirely transparent.</span>
 <span class="c1"># Check it yourself, supplier S2 no longer exists in this viewpoint.</span>
-<span class="n">restrict</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">sid</span><span class="p">:</span> <span class="s1">&#39;S1&#39;</span><span class="p">)</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s1">&#39;S1&#39;</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -916,8 +916,8 @@ compiler that delegates to underlying engines what can be delegated, but the
 explicit use of the host type system is a showstopper during compilation. To
 better understand this, consider the following query:</p>
 <div class="highlight"><pre><span class="n">restrict</span><span class="p">(</span>
-  <span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">uppercased</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}),</span>
-  <span class="n">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span> <span class="n">uppercased</span><span class="p">:</span> <span class="s1">&#39;JONES&#39;</span><span class="p">)</span>
+  <span class="kp">extend</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">uppercased</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">t</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}),</span>
+  <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;Paris&#39;</span><span class="p">,</span> <span class="ss">uppercased</span><span class="p">:</span> <span class="s1">&#39;JONES&#39;</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -930,7 +930,7 @@ YXNlZDogJ0pPTkVTJyk=
 invocation is only partially compiled to SQL. The <code>uppercased</code> attribute is
 computed by Alf in Ruby and cannot be translated back to the SQL engine. This
 has serious performance implications, of course. As of current Alf version,
-this is the case as soon as you use a ruby block (e.g. <code>->(t){ ... }</code>).</p>
+this is the case as soon as you use a ruby block (e.g. <code>-&gt;(t){ ... }</code>).</p>
 
 <p>All other approaches I&#39;m aware of either have a similar problem or forbid
 such queries in the first place (and are hence less expressive). This calls

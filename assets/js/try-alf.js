@@ -1,34 +1,31 @@
 'use strict';
 
-var tryalf = angular.module('tryalf', ['ui.state', 'ui.ace']);
+var tryIt = function(elm) {
+  window.location = "/try?src=" + btoa($(elm).find("code").text());
+}
+
+var queryString = function (){
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = pair[1];
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]], pair[1] ];
+      query_string[pair[0]] = arr;
+    } else {
+      query_string[pair[0]].push(pair[1]);
+    }
+  } 
+  return query_string;
+};
+
+var tryalf = angular.module('tryalf', ['ui.ace']);
 
 tryalf.config(function($locationProvider){
-  $locationProvider.html5Mode(true);
-});
-
-tryalf.config(function($stateProvider, $urlRouterProvider){
-  $urlRouterProvider.otherwise("/");
-  $stateProvider
-    .state('try', {
-        url: "/?src",
-        templateUrl: "/try.html",
-    })
-    .state('cheatsheet', {
-        url: "/cheatsheet/",
-        templateUrl: "/cheatsheet.html",
-    })
-    .state('doc', {
-        url: "/doc/{obj:.*}",
-        templateUrl: "/doc.html",
-    })
-    .state('blog', {
-        url: "/blog/{page:.*}",
-        templateUrl: "/blog.html",
-    })
-    .state('about', {
-        url: "/about/",
-        templateUrl: "/about.html",
-    });
+  $locationProvider.html5Mode(false);
 });
 
 tryalf.filter('atob', function() {
@@ -37,17 +34,6 @@ tryalf.filter('atob', function() {
   };
 });
 
-tryalf.factory('Page', function(){
-  var title = 'default';
-  return {
-    title: function() { return $("h1").first().text(); },
-  };
+tryalf.run(function($rootScope) {
 });
 
-tryalf.run(
-  [ '$rootScope', '$state', '$stateParams', 'Page',
-  function ($rootScope, $state, $stateParams, Page) {
-    $rootScope.$state = $state;
-    $rootScope.$stateParams = $stateParams;
-    $rootScope.Page = Page;
-  }]);

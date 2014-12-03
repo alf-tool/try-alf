@@ -23,16 +23,21 @@
         <th ng-show="docmode == 'examples'">example</th>
         <th ng-show="docmode == 'examples'"></th>
       </tr>
-      <tr ng-repeat="op in doc.operators | orderBy:'name'">
-        <td><a href="/doc/api/{{op.name}}">{{op.name}}</a></td>
-        <td ng-show="docmode == 'api'">{{op.synopsis}}</td>
-        <td ng-show="docmode == 'api'" class="code">{{op.signature}}</td>
-        <td ng-show="docmode == 'api'" class="code">{{op.options}}</td>
-        <td ng-show="docmode == 'examples'" class="code">{{op.examples[0]}}</td>
-        <td ng-show="docmode == 'examples'" class="code">
-          <a href="/?src={{ op.examples[0] | atob }}" target="_blank">Try it!</a>
-        </td>
-      </tr>
+      *{doc.operators}{
+        <tr>
+          <td><a href="/doc/api/${name}">${name}</a></td>
+          <td ng-show="docmode == 'api'">${synopsis}</td>
+          <td ng-show="docmode == 'api'" class="code">${signature}</td>
+          <td ng-show="docmode == 'api'" class="code">${options}</td>
+          <td ng-show="docmode == 'examples'" class="code">${examples.first}</td>
+          <td ng-show="docmode == 'examples'" class="code">
+            <a onclick="javascript:tryIt(this)" target="_blank">
+              Try it!
+              <code style="display: none;">+{examples.first}</code>
+            </a>
+          </td>
+        </tr>
+      }
     </table>
 
     <div>
@@ -45,12 +50,14 @@
         <th>signature</th>
         <th>example</th>
       </tr>
-      <tr ng-repeat="op in doc.predicates">
-        <td>{{op.name}}</td>
-        <td>{{op.synopsis}}</td>
-        <td class="code">{{op.signature}}</td>
-        <td class="code">{{op.examples[0]}}</td>
-      </tr>
+      *{doc.predicates}{
+        <tr>
+          <td>${name}</td>
+          <td>${synopsis}</td>
+          <td class="code">${signature}</td>
+          <td class="code">${examples.first}</td>
+        </tr>
+      }
     </table>
 
     <div>
@@ -62,11 +69,13 @@
         <th>synopsis</th>
         <th>example</th>
       </tr>
-      <tr ng-repeat="op in doc.aggregators | orderBy: 'name'">
-        <td>{{op.name}}</td>
-        <td>{{op.synopsis}}</td>
-        <td class="code">{{op.examples[0]}}</td>
-      </tr>
+      *{doc.aggregators}{
+        <tr>
+          <td>${name}</td>
+          <td>${synopsis}</td>
+          <td class="code">${examples.first}</td>
+        </tr>
+      }
     </table>
   </article>
 </div>
