@@ -27,16 +27,12 @@
   </script>
   <div class="container">
     <div class="row">
-      <a id="fork-on-github" href="https://github.com/alf-tool/alf" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
       <header>
         >{menu}
         <div style="float: right; padding-top: 10px;">
-          <!-- github -->
-          <iframe src="http://ghbtns.com/github-btn.html?user=alf-tool&repo=alf&type=watch&count=true&size=medium"
-            allowtransparency="true" frameborder="0" scrolling="0" width="110" height="20"></iframe>
-          <a href="https://twitter.com/share" class="twitter-share-button" data-via="alf" data-related="alf" data-size="medium">Tweet</a>
+          <a href="https://twitter.com/blambeau" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @blambeau</a>
+          <a href="https://twitter.com/share" class="twitter-share-button" data-via="alf" data-related="alf" data-size="large">Tweet</a>
           <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-          <a href="https://twitter.com/blambeau" class="twitter-follow-button" data-show-count="false" data-size="medium">Follow @blambeau</a>
         </div>
         <div class="clear"></div>
       </header>
