@@ -79,7 +79,7 @@ on tuples (which is a special case of the former):</p>
 syntax has been chosen for its functional nature, that nicely fits with the
 closure property of relational algebra (the fact that you invoke an operator
 on the result of a previous one):</p>
-<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">shipments</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">)</span>
 </pre>
 </div>
 

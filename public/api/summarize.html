@@ -8,25 +8,26 @@
 </div>
 
 <h2>Examples</h2>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">(</span><span class="ss">:qty</span><span class="p">))</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">shipments</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">(</span><span class="ss">:qty</span><span class="p">))</span>
 </pre>
 </div>
 
-<div class="try-this"><a href="/?src=c3VtbWFyaXplKHN1cHBsaWVzLCBbOnNpZF0sIHRvdGFsOiBzdW0oOnF0eSkp
+<div class="try-this"><a href="/?src=c3VtbWFyaXplKHNoaXBtZW50cywgWzpzaWRdLCB0b3RhbDogc3VtKDpxdHkp
+KQ==
 " target="_blank">Try it!</a></div>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">})</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">shipments</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">})</span>
 </pre>
 </div>
 
-<div class="try-this"><a href="/?src=c3VtbWFyaXplKHN1cHBsaWVzLCBbOnNpZF0sIHRvdGFsOiBzdW17fHR8IHQu
-cXR5ICogMiB9KQ==
+<div class="try-this"><a href="/?src=c3VtbWFyaXplKHNoaXBtZW50cywgWzpzaWRdLCB0b3RhbDogc3Vte3x0fCB0
+LnF0eSAqIDIgfSk=
 " target="_blank">Try it!</a></div>
-<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">}},</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+<div class="highlight"><pre><span class="n">summarize</span><span class="p">(</span><span class="n">shipments</span><span class="p">,</span> <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="p">{</span><span class="ss">total</span><span class="p">:</span> <span class="n">sum</span><span class="p">{</span><span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">t</span><span class="o">.</span><span class="n">qty</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">}},</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this"><a href="/?src=c3VtbWFyaXplKHN1cHBsaWVzLCBbOnBpZCwgOnF0eV0sIHt0b3RhbDogc3Vt
-e3x0fCB0LnF0eSAqIDIgfX0sIGFsbGJ1dDogdHJ1ZSk=
+<div class="try-this"><a href="/?src=c3VtbWFyaXplKHNoaXBtZW50cywgWzpwaWQsIDpxdHldLCB7dG90YWw6IHN1
+bXt8dHwgdC5xdHkgKiAyIH19LCBhbGxidXQ6IHRydWUp
 " target="_blank">Try it!</a></div>
 
 <h2>Description</h2>

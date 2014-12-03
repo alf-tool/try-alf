@@ -536,7 +536,7 @@ nightmare</a>
 with existing approaches, and almost impossible to do in a modular way due to
 the coupling between the main query and the sub-query:</p>
 <div class="highlight"><pre><span class="c1"># Show suppliers that supply no part at all (Sequel)</span>
-<span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers___s</span><span class="o">].</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="no">DB</span><span class="o">[</span><span class="ss">:supplies___sp</span><span class="o">].</span><span class="n">where</span><span class="p">(</span><span class="no">Sequel</span><span class="o">.</span><span class="n">qualify</span><span class="p">(</span><span class="ss">:sp</span><span class="p">,</span> <span class="ss">:sid</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="no">Sequel</span><span class="o">.</span><span class="n">qualify</span><span class="p">(</span><span class="ss">:s</span><span class="p">,</span> <span class="ss">:sid</span><span class="p">)))</span><span class="o">.</span><span class="n">exists</span><span class="p">)</span>
+<span class="no">DB</span><span class="o">[</span><span class="ss">:suppliers___s</span><span class="o">].</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="no">DB</span><span class="o">[</span><span class="ss">:shipments___sp</span><span class="o">].</span><span class="n">where</span><span class="p">(</span><span class="no">Sequel</span><span class="o">.</span><span class="n">qualify</span><span class="p">(</span><span class="ss">:sp</span><span class="p">,</span> <span class="ss">:sid</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span><span class="no">Sequel</span><span class="o">.</span><span class="n">qualify</span><span class="p">(</span><span class="ss">:s</span><span class="p">,</span> <span class="ss">:sid</span><span class="p">)))</span><span class="o">.</span><span class="n">exists</span><span class="p">)</span>
 </pre>
 </div>
 
@@ -544,12 +544,12 @@ the coupling between the main query and the sub-query:</p>
 href="http://en.wikipedia.org/wiki/D_(data_language_specification)"
 target="_blank"><b>Tutorial D</b></a>, where this operator comes from):</p>
 <div class="highlight"><pre><span class="c1"># Show suppliers that supply no part at all (Alf)</span>
-<span class="n">not_matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">supplies</span><span class="p">)</span>
+<span class="n">not_matching</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">shipments</span><span class="p">)</span>
 </pre>
 </div>
 
 <div class="try-this"><a href="/?src=IyBTaG93IHN1cHBsaWVycyB0aGF0IHN1cHBseSBubyBwYXJ0IGF0IGFsbCAo
-QWxmKQpub3RfbWF0Y2hpbmcoc3VwcGxpZXJzLCBzdXBwbGllcyk=
+QWxmKQpub3RfbWF0Y2hpbmcoc3VwcGxpZXJzLCBzaGlwbWVudHMp
 " target="_blank">Try it!</a></div>
 
 <p>Now, relational calculus and relation algebra are known to be equivalent in
@@ -849,12 +849,12 @@ plans involve a <em>constant</em> number of SQL queries, avoiding the &#39;N+1 q
 trap <a href="http://stackoverflow.com/questions/97197/what-is-the-n1-selects-issue">infamously
 known</a>
 with Object-Relational Mappers:</p>
-<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">group</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">:supplied_parts</span><span class="p">,</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span>
+<div class="highlight"><pre><span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">group</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">shipments</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="o">[</span><span class="ss">:sid</span><span class="o">]</span><span class="p">,</span> <span class="ss">:supplied_parts</span><span class="p">,</span> <span class="ss">allbut</span><span class="p">:</span> <span class="kp">true</span><span class="p">))</span>
 </pre>
 </div>
 
-<div class="try-this"><a href="/?src=am9pbihzdXBwbGllcnMsIGdyb3VwKGpvaW4oc3VwcGxpZXMsIHBhcnRzKSwg
-WzpzaWRdLCA6c3VwcGxpZWRfcGFydHMsIGFsbGJ1dDogdHJ1ZSkp
+<div class="try-this"><a href="/?src=am9pbihzdXBwbGllcnMsIGdyb3VwKGpvaW4oc2hpcG1lbnRzLCBwYXJ0cyks
+IFs6c2lkXSwgOnN1cHBsaWVkX3BhcnRzLCBhbGxidXQ6IHRydWUpKQ==
 " target="_blank">Try it!</a></div>
 
 <p>Alf already has a few high-level operators such as <a href="/doc/api/matching">matching</a>
@@ -878,7 +878,7 @@ database viewpoint on suppliers and parts located in London:</p>
 <span class="k">def</span> <span class="nf">parts</span>
   <span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s1">&#39;London&#39;</span><span class="p">)</span>
 <span class="k">end</span>
-<span class="k">def</span> <span class="nf">supplies</span>
+<span class="k">def</span> <span class="nf">shipments</span>
   <span class="c1"># restore foreign keys given the previous restrictions</span>
   <span class="n">matching</span><span class="p">(</span><span class="n">matching</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="n">parts</span><span class="p">),</span> <span class="n">suppliers</span><span class="p">)</span>
 <span class="k">end</span>
@@ -886,20 +886,20 @@ database viewpoint on suppliers and parts located in London:</p>
 
 <span class="c1"># Query as usual. This is entirely transparent.</span>
 <span class="c1"># Check it yourself, supplier S2 no longer exists in this viewpoint.</span>
-<span class="n">restrict</span><span class="p">(</span><span class="n">supplies</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s1">&#39;S1&#39;</span><span class="p">)</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">shipments</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s1">&#39;S1&#39;</span><span class="p">)</span>
 </pre>
 </div>
 
 <div class="try-this"><a href="/?src=IyBTdGFydCBvZiB0aGUgdmlld3BvaW50CmRlZiBzdXBwbGllcnMKICByZXN0
 cmljdChzdXBlciwgY2l0eTogJ0xvbmRvbicpCmVuZApkZWYgcGFydHMKICBy
-ZXN0cmljdChzdXBlciwgY2l0eTogJ0xvbmRvbicpCmVuZApkZWYgc3VwcGxp
-ZXMKICAjIHJlc3RvcmUgZm9yZWlnbiBrZXlzIGdpdmVuIHRoZSBwcmV2aW91
-cyByZXN0cmljdGlvbnMKICBtYXRjaGluZyhtYXRjaGluZyhzdXBlciwgcGFy
-dHMpLCBzdXBwbGllcnMpCmVuZAojIEVuZCBvZiB0aGUgdmlld3BvaW50Cgoj
-IFF1ZXJ5IGFzIHVzdWFsLiBUaGlzIGlzIGVudGlyZWx5IHRyYW5zcGFyZW50
-LgojIENoZWNrIGl0IHlvdXJzZWxmLCBzdXBwbGllciBTMiBubyBsb25nZXIg
-ZXhpc3RzIGluIHRoaXMgdmlld3BvaW50LgpyZXN0cmljdChzdXBwbGllcywg
-c2lkOiAnUzEnKQ==
+ZXN0cmljdChzdXBlciwgY2l0eTogJ0xvbmRvbicpCmVuZApkZWYgc2hpcG1l
+bnRzCiAgIyByZXN0b3JlIGZvcmVpZ24ga2V5cyBnaXZlbiB0aGUgcHJldmlv
+dXMgcmVzdHJpY3Rpb25zCiAgbWF0Y2hpbmcobWF0Y2hpbmcoc3VwZXIsIHBh
+cnRzKSwgc3VwcGxpZXJzKQplbmQKIyBFbmQgb2YgdGhlIHZpZXdwb2ludAoK
+IyBRdWVyeSBhcyB1c3VhbC4gVGhpcyBpcyBlbnRpcmVseSB0cmFuc3BhcmVu
+dC4KIyBDaGVjayBpdCB5b3Vyc2VsZiwgc3VwcGxpZXIgUzIgbm8gbG9uZ2Vy
+IGV4aXN0cyBpbiB0aGlzIHZpZXdwb2ludC4KcmVzdHJpY3Qoc2hpcG1lbnRz
+LCBzaWQ6ICdTMScp
 " target="_blank">Try it!</a></div>
 
 <p>Database viewpoints are currently read-only in Alf. I intentionnally left the
