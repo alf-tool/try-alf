@@ -41,7 +41,7 @@
       >{yield}
     </div>
     <div class="row">
-      <footer>&copy; 2013 &mdash; <a target="_blank" href="http://www.uclouvain.be/">The University of Louvain</a> &mdash; Alf is <a target="_blank" href="http://www.github.com/alf-tool/alf">distributed</a> under MIT license.</footer>
+      <footer>&copy; 2013-2014 &mdash; <a target="_blank" href="http://www.uclouvain.be/">The University of Louvain</a> &mdash; Alf is <a target="_blank" href="http://www.github.com/alf-tool/alf">distributed</a> under MIT license.</footer>
     </div>
   </div>
 </body>
