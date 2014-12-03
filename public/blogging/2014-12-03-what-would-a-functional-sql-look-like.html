@@ -16,7 +16,7 @@
 
 <h2>Motivation</h2>
 
-<p>The actual trigger for working on the query syntax above is Chris Granger &amp; Al&#39;s <a href="http://incidentalcomplexity.com/">Eve</a>. Eve embeds a datalog/relational-like manipulation language. When playing with Eve examples a few weeks ago, I was slightly hindered of using the nice syntax without completely understanding its underlying semantics. I&#39;ve therefore tried to make a precise sense of it by myself. I ended up with a slightly different proposal, a mix between Eve and <a href="http://elixir-lang.org/docs/stable/elixir/Kernel.html#%7C%3E/2">Elixir&#39;s pipe operator</a>, à la sauce <a href="http://www.try-alf.org/blog/2013-10-21-relations-as-first-class-citizen">Alf</a>. I&#39;m not sure it is even similar to Eve, but is it important? The credits are, because the good parts of the syntax above are then borrowed from Eve and Elixir. The semantics here is mine (see below), yet the relational algebra itself is from C.J. Date and Hugh Darwen <a href="http://www.thethirdmanifesto.com/"><strong>Tutorial D</strong></a>.</p>
+<p>I started working on the syntax above after having played with <a href="http://incidentalcomplexity.com/">Eve</a>, by Chris Granger &amp; al. Eve embeds a datalog/relational-like manipulation language. When playing with Eve examples a few weeks ago, I was slightly hindered of using Eve syntax without completely understanding its intended semantics. I&#39;ve therefore tried to make a precise sense of it by myself. Doing so, I ended up with a slightly different proposal, a mix between Eve and <a href="http://elixir-lang.org/docs/stable/elixir/Kernel.html#%7C%3E/2">Elixir&#39;s pipe operator</a>, à la sauce <a href="http://www.try-alf.org/blog/2013-10-21-relations-as-first-class-citizen">Alf</a>. I&#39;m not sure it is even similar to Eve, but is that important? The credits are, because the good parts of the syntax above are thus borrowed from Eve and Elixir. The semantics here is mine (see below), yet the relational algebra itself is from C.J. Date and Hugh Darwen <a href="http://www.thethirdmanifesto.com/"><strong>Tutorial D</strong></a>.</p>
 
 <p>More generally, it&#39;s been more than one year since the <a href="http://www.try-alf.org/blog/2013-10-21-relations-as-first-class-citizen">introductory post on Alf and relations as first-class citizen</a>. In the past year, I&#39;ve collected an impressive amount of experience using Alf on different database and software engineering projects, with many successes and only few difficulties. To quickly summarize the approach.</p>
 
@@ -37,7 +37,7 @@ cnksIFs6c2lkLCA6cGlkLCA6bmFtZSwgOnF0eV0pICAjICAgc2VsZWN0IHRo
 ZSBpZHMsIHN1cHBsaWVyIG5hbWUgYW5kIHNoaXBwZWQgcXR5
 " target="_blank">Try it!</a></div>
 
-<p>in other words, and without relying on variable assignment (which is not that functional-minded after all), you end up with something like this (referred to as Alf&#39;s purely functional syntax hereafter):</p>
+<p>Without relying on variable assignment (which is not that functional-minded after all), you end up with something like this (referred to as Alf&#39;s purely functional syntax hereafter):</p>
 <div class="highlight"><pre><span class="n">project</span><span class="p">(</span>
   <span class="n">restrict</span><span class="p">(</span>
     <span class="n">join</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span><span class="n">shipments</span><span class="p">),</span>
@@ -53,17 +53,16 @@ YW1lLCA6cXR5XSk=
 
 <h3>Powerful</h3>
 
-<p>Moreover, by modeling relational algebra with the application of functions to argument <em>values</em> (in contrast to dedicated syntactic terms), Alf provides a dynamic way of writing queries. So, selecting suppliers in a particular city, based on some context is easy:</p>
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">suppliers_in</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-  <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">c</span><span class="p">)</span>
-<span class="k">end</span>
-<span class="n">join</span><span class="p">(</span><span class="n">suppliers_in</span><span class="p">(</span><span class="n">ask_which_city_to_user</span><span class="p">),</span> <span class="n">shipments</span><span class="p">)</span>
+<p>By exposing relational algebra as strict application of functions to argument <em>values</em> (in contrast to dedicated syntactic terms), Alf provides a dynamic way of writing queries. Possibly, it should be thought of as a data manipulation language more than a query language.</p>
+
+<p>To give a trivial example of what I&#39;m talking about, consider the query below. The attribute
+list on which the projection applies can easily be computed. That is, the projection operator takes an attribute list <em>value</em> as argument, and that value can result from evaluating an
+expression (that&#39;s a sharp tool, I know, I&#39;ll come back to that):</p>
+<div class="highlight"><pre><span class="n">project</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:city</span><span class="o">]</span> <span class="o">+</span> <span class="o">[</span><span class="ss">:name</span><span class="o">]</span><span class="p">)</span>
 </pre>
 </div>
 
-<div class="try-this"><a href="/?src=ZGVmIHN1cHBsaWVyc19pbihjKQogIHJlc3RyaWN0KHN1cHBsaWVycywgY2l0
-eTogYykKZW5kCmpvaW4oc3VwcGxpZXJzX2luKGFza193aGljaF9jaXR5X3Rv
-X3VzZXIpLCBzaGlwbWVudHMp
+<div class="try-this"><a href="/?src=cHJvamVjdChzdXBwbGllcnMsIFs6c2lkLCA6Y2l0eV0gKyBbOm5hbWVdKQ==
 " target="_blank">Try it!</a></div>
 
 <p>This dynamic nature is even more exemplified by Alf allowing the definition of user-defined relational operators. For instance, the documentation shows how you can add a &#39;safe&#39; join. The latter allows specifying on which attributes the join must apply, projecting away the other common attributes from the right operand, that would otherwise be taken into account by Alf&#39;s (natural) join:</p>
@@ -74,7 +73,7 @@ X3VzZXIpLCBzaGlwbWVudHMp
   <span class="n">join</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">allbut</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">commons</span> <span class="o">-</span> <span class="n">on</span><span class="p">))</span>      <span class="c1"># join is *natural* join in Alf</span>
 <span class="k">end</span>
 
-<span class="c1"># Part&#39;s name is projected away and join applies on :city only</span>
+<span class="c1"># The part :name will be projected away, so the join applies on :city only</span>
 <span class="n">join_on</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="n">parts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
 </pre>
 </div>
@@ -85,12 +84,12 @@ YC1gIG9wZXJhdG9ycyBhcmUgZGVmaW5lZApkZWYgam9pbl9vbihsZWZ0LCBy
 aWdodCwgb24pCiAgY29tbW9ucyA9IGxlZnQuYXR0cl9saXN0ICYgcmlnaHQu
 YXR0cl9saXN0CiAgam9pbihsZWZ0LCBhbGxidXQocmlnaHQsIGNvbW1vbnMg
 LSBvbikpICAgICAgIyBqb2luIGlzICpuYXR1cmFsKiBqb2luIGluIEFsZgpl
-bmQKCiMgUGFydCdzIG5hbWUgaXMgcHJvamVjdGVkIGF3YXkgYW5kIGpvaW4g
-YXBwbGllcyBvbiA6Y2l0eSBvbmx5CmpvaW5fb24oc3VwcGxpZXJzLCBwYXJ0
-cywgWzpjaXR5XSk=
+bmQKCiMgVGhlIHBhcnQgOm5hbWUgd2lsbCBiZSBwcm9qZWN0ZWQgYXdheSwg
+c28gdGhlIGpvaW4gYXBwbGllcyBvbiA6Y2l0eSBvbmx5CmpvaW5fb24oc3Vw
+cGxpZXJzLCBwYXJ0cywgWzpjaXR5XSk=
 " target="_blank">Try it!</a></div>
 
-<p>In short, I&#39;m looking for a query language that is more dynamic than SQL and even more <em>structured</em> than it. Despite its name, and even if you can compose SQL queries in a way similar to what is shown here, SQL seriously lacks lightweight and easy to use structuring mechanisms. The latter should help you <strong>reason</strong> about the task at hand while also raising the level of abstraction along the way, e.g. through composable user-defined relational operators.</p>
+<p>Beyond Alf itself, I&#39;d like a data manipulation language that would be more dynamic than SQL and even more <em>structured</em> than it. Despite its name, and even if you can compose SQL queries in a way similar to what is shown here, SQL seriously lacks lightweight and easy to use structuring mechanisms. The latter should help you <em>reason</em> about the task at hand while also raising the level of abstraction along the way, e.g. through composable user-defined relational operators.</p>
 
 <h3>A few weaknesses</h3>
 
@@ -122,7 +121,7 @@ c2lkLCA6cGlkLCA6bmFtZSwgOnF0eV0p
 </pre>
 </div>
 
-<p>So I ended up with this question: <em>Can I design a friendly syntax, and still provide it with a sound and simple functional semantics?</em>. And the answer is yes.</p>
+<p>So I ended up with this question: <em>Can I design a friendly syntax, and still provide it with a sound and simple functional semantics?</em>. The answer is yes.</p>
 
 <h2>Relational Algebra: a friendly functional syntax</h2>
 
@@ -159,19 +158,19 @@ c2lkLCA6cGlkLCA6bmFtZSwgOnF0eV0p
 </pre>
 </div>
 
-<p>The syntax proposal has many advantages over Alf syntaxes shown in previous section and SQL itself:</p>
+<p>My new syntax seems to have many advantages in comparison to Alf and SQL itself:</p>
 
 <ul>
 <li>Not too many parentheses are required, unlike Alf&#39;s purely functional syntax,</li>
 <li>The proposal does not rely on variable assignment, nor does it use object-oriented confusing constructs,</li>
 <li>Inserting a new relational operator into an existing expression is as simple as adding a new line, as shown by the query at right,</li>
 <li>As illustrated too, it is still easy to embed sub-expressions; the syntax thereby nicely exposes the compositional nature of relational algebra.</li>
-<li>The syntax can still be given a formal functional semantics (in terms of lambda calculus); in other words, it can be made precise.</li>
+<li>The syntax can still be given a formal functional semantics (e.g. terms of lambda calculus); in other words, it can be made precise.</li>
 </ul>
 
-<h2>A brief overview of semantics</h2>
+<h2>Brief overview of the semantics</h2>
 
-<p>What is the semantics of it? Let me first start by removing the syntactic sugar, getting closer to Alf regarding argument values:</p>
+<p>What might be the semantics of the language sketch here? Let me start by removing the syntactic sugar, getting closer to Alf regarding argument values:</p>
 <div class="highlight"><pre><span class="n">suppliers</span>
   <span class="o">|</span> <span class="n">join</span> <span class="n">shipments</span>
   <span class="o">|</span> <span class="n">restrict</span> <span class="p">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
@@ -189,7 +188,14 @@ c2lkLCA6cGlkLCA6bmFtZSwgOnF0eV0p
 </pre>
 </div>
 
-<p>Let also define <code>|</code> as an infix notation for function application, that is, <code>a | f  =  f a</code> (or <code>f(a)</code> if clearer for you, even if I will not use that kind of parenthesizing here). Some extra parenthesizing is required first:</p>
+<p>Let also define <code>|</code> as an infix notation for function application, that is,</p>
+<div class="highlight"><pre><span class="nf">a</span> <span class="o">|</span> <span class="n">f</span>  <span class="ow">=</span>  <span class="n">f</span> <span class="n">a</span>
+</pre>
+</div>
+
+<p>(or <code>f(a)</code> if you want, even if I will not use that kind of parenthesizing here).</p>
+
+<p>Before desugarizing <code>|</code>, some extra parenthesizing is required:</p>
 <div class="highlight"><pre><span class="p">(((</span><span class="n">suppliers</span>
   <span class="o">|</span> <span class="p">(</span><span class="n">join</span> <span class="n">shipments</span><span class="p">))</span>
   <span class="o">|</span> <span class="p">(</span><span class="n">restrict</span> <span class="p">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="s2">&quot;London&quot;</span><span class="p">)))</span>
@@ -204,7 +210,7 @@ c2lkLCA6cGlkLCA6bmFtZSwgOnF0eV0p
 </pre>
 </div>
 
-<p>What does this suggest? Let take a shortened expression using the following shortcuts:</p>
+<p>What does it suggest? Let take a shortened expression thanks to the following definitions:</p>
 <div class="highlight"><pre><span class="n">attrList</span> <span class="o">=</span> <span class="o">[</span><span class="ss">:sid</span><span class="p">,</span> <span class="ss">:pid</span><span class="p">,</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span>
 <span class="n">predicate</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">city</span> <span class="o">=</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
 <span class="n">s</span> <span class="o">=</span> <span class="n">suppliers</span>
@@ -217,11 +223,11 @@ c2lkLCA6cGlkLCA6bmFtZSwgOnF0eV0p
 </pre>
 </div>
 
-<p>This kind of expression has a special form, since every function abstraction takes only one argument. This is reminiscent of lambda calculus.</p>
+<p>This kind of expression has a special form, since every function abstraction takes only one argument. This is reminiscent of lambda calculus, that we might use to define the evaluation semantics of the language very precisely (I won&#39;t, at least not in this post).</p>
 
 <h2>Signatures for Relational Operators</h2>
 
-<p>The functional expression above suggests precise definitions for the relational operators (with inspiration from Haskell this time). Let introduce some notations first:</p>
+<p>The functional expression above suggests precise signatures for the relational operators (with inspiration from Haskell this time). Let me introduce some notations first:</p>
 
 <ul>
 <li>let <code>[N]</code> denote the type &#39;set of attribute names&#39; ; <code>N</code> will denote one of such sets, e.g. <code>[:sid, :name]</code></li>
@@ -239,8 +245,7 @@ c2lkLCA6cGlkLCA6bmFtZSwgOnF0eV0p
 </pre>
 </div>
 
-<p>The <code>project</code> operator takes a list of attribute names <code>N</code>. It returns a function that takes a relation with heading <code>H</code>
-as input and returns a relation with heading <code>I</code> as output. The <code>require</code> and <code>ensure</code> clauses must be properly formalized, but this is the subject for another post. Roughly, they encode some type-checking constraints that must be enforced either at compile time (a good challenge here, if anyone is interested) or injected as runtime checks.</p>
+<p>The <code>project</code> operator takes a list of attribute names <code>N</code>. It returns a function that takes a relation with heading <code>H</code> as input and returns a relation with heading <code>I</code> as output. The <code>require</code> and <code>ensure</code> clauses must be properly formalized, but it will be the topic of another post. Roughly, they encode type constraints that must either be enforced at compile time (a good challenge here, if anyone is interested) or injected as runtime checks.</p>
 
 <h3>Restrict</h3>
 <div class="highlight"><pre><span class="nf">restrict</span> <span class="ow">::</span> <span class="p">({</span><span class="kt">H</span><span class="p">}</span> <span class="ow">-&gt;</span> <span class="kt">Boolean</span><span class="p">)</span> <span class="ow">-&gt;</span> <span class="p">{{</span><span class="kt">H</span><span class="p">}}</span> <span class="ow">-&gt;</span> <span class="p">{{</span><span class="kt">H</span><span class="p">}}</span>
@@ -249,48 +254,56 @@ as input and returns a relation with heading <code>I</code> as output. The <code
 </pre>
 </div>
 
-<p>The <code>restrict</code> operator takes as first argument a function from tuples with heading <code>H</code> to Boolean. It returns another function that takes a relation with same heading <code>H</code> as input and returns yet another relation with same heading. No <code>require</code> and <code>ensure</code> constraints are needed. The needed constraints are already enforced by the use of the <code>H</code> type variable.</p>
+<p>The <code>restrict</code> operator takes as first argument a function from tuples with heading <code>H</code> to <code>Boolean</code>s. It returns another function that takes a relation with same heading <code>H</code> as input and returns yet another relation with same heading. The <code>require</code> and <code>ensure</code> clauses are trivial here. The needed constraints are implicit, through the use of the shared <code>H</code> type variable.</p>
 
 <h3>Join</h3>
 <div class="highlight"><pre><span class="nf">join</span> <span class="ow">::</span> <span class="p">{{</span><span class="kt">H</span><span class="p">}}</span> <span class="ow">-&gt;</span> <span class="p">{{</span><span class="kt">I</span><span class="p">}}</span> <span class="ow">-&gt;</span> <span class="p">{{</span><span class="kt">J</span><span class="p">}}</span>
   <span class="n">require</span> <span class="kt">:</span> <span class="kt">H</span> <span class="n">and</span> <span class="kt">I</span> <span class="n">agree</span> <span class="n">on</span> <span class="n">the</span> <span class="n">types</span> <span class="kr">of</span> <span class="n">shared</span> <span class="n">attribute</span> <span class="n">names</span>
-  <span class="n">ensure</span>  <span class="kt">:</span> <span class="kt">J</span> <span class="ow">=</span> <span class="kt">H</span> <span class="o">+</span> <span class="kt">I</span><span class="p">,</span> <span class="n">for</span> <span class="n">some</span> <span class="o">+</span> <span class="n">operator</span> <span class="n">for</span> <span class="n">headings</span>
+  <span class="n">ensure</span>  <span class="kt">:</span> <span class="kt">J</span> <span class="ow">=</span> <span class="kt">H</span> <span class="o">+</span> <span class="kt">I</span><span class="p">,</span> <span class="n">for</span> <span class="n">some</span> <span class="o">+</span> <span class="n">operator</span> <span class="n">on</span> <span class="n">headings</span>
 </pre>
 </div>
 
 <p>The <code>join</code> operator (binary join, in fact) takes a relation with heading <code>H</code> as input. It returns a function that takes another relation with heading <code>I</code> as input and returns yet another relation, with heading <code>J</code>. The output heading, <code>J</code> might be easily computed / constrained from inputs, using the (properly formalized) ensure clause.</p>
 
-<p>Other operators might then be defined similarly to built a relationaly complete algebra.</p>
+<p>Other operators might then be defined similarly to built a relationaly complete algebra. In addition, shorcuts operators can be easily defined, as in Alf:</p>
+<div class="highlight"><pre><span class="c1">-- `allbut` is the reverse of project, it projects `relation` on all but</span>
+<span class="c1">-- the attributes in `list`</span>
+<span class="c1">-- (Let suppose that the signature is inferred.)</span>
+<span class="nf">allbut</span> <span class="n">list</span> <span class="n">relation</span> <span class="ow">=</span>
+  <span class="n">relation</span>
+    <span class="o">|</span> <span class="n">project</span> <span class="p">((</span><span class="n">attrs</span> <span class="n">rel</span><span class="p">)</span> <span class="nf">\</span> <span class="n">list</span><span class="p">)</span>
+</pre>
+</div>
+<div class="highlight"><pre><span class="c1">-- `join_on` joins left and right relations on attributes in `list`. Attributes</span>
+<span class="c1">-- shared by `left` and `right` but not in `list` are first projected away from</span>
+<span class="c1">-- `right` (but are kept on `left` and therefore present in the result relation.)</span>
+<span class="nf">join_on</span> <span class="n">list</span> <span class="n">left</span> <span class="n">right</span> <span class="ow">=</span>
+  <span class="kr">let</span> <span class="n">commons</span> <span class="ow">=</span> <span class="p">(</span><span class="n">attrs</span> <span class="n">left</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">attrs</span> <span class="n">right</span><span class="p">)</span> <span class="kr">in</span>
+  <span class="n">left</span>
+    <span class="o">|</span> <span class="n">join</span> <span class="p">(</span><span class="n">right</span> <span class="o">|</span> <span class="n">allbut</span> <span class="p">(</span><span class="n">commons</span> <span class="o">-</span> <span class="n">list</span><span class="p">))</span>
+</pre>
+</div>
 
 <h2>Conclusion: an avenue of challenges</h2>
 
 <p>The post here provides an overview of what Alf aims to be, if one abstracts from the Ruby DSL. I&#39;m actually interrested in designing a data (well, information) manipulation language that would have tuples and relations as first-class citizen. As other researchers, language designers and programmers out there, I believe that nice synergies have to be found between functional programming and the relational model towards that goal.</p>
 
-<p>The kind of treatment shown here is a simple example of such synergies and yields many open questions. For instance, what semantics are we looking for exactly? Relational algebra is already well defined, so that&#39;s surely not my goal. Functional programming is well defined too. Yet, it seems that the language sketched here needs a mix of both to be precisely defined. It seems that the language here actually evaluates to (or generates) relational <em>expressions</em>, whose semantics can then easily be defined. But how can we make this fully precise?</p>
+<p>The kind of treatment shown here is a simple example of such synergies. Yet it yields many open questions. For instance, what semantics are we looking for exactly? Relational algebra is already well defined, so that&#39;s surely not my goal. Functional programming is well defined too of course. Yet, it seems that the language sketched here needs a mix of both to be precisely defined. It seems that the language here actually evaluates to (or generates) relational <em>expressions</em>, whose semantics can then easily be defined. But how can we make this fully precise?</p>
 
-<p>Another serious challenge is to keep the dynamic nature of Alf, while providing compile-time guarantees such a type-checking. If one accepts the hybrid nature of the language, that evaluates to relational expressions not relations themselves, then it might be possible to type-check the following program:</p>
-<div class="highlight"><pre><span class="nf">allbut</span> <span class="n">list</span> <span class="n">relation</span> <span class="ow">=</span>
-  <span class="n">relation</span>
-    <span class="o">|</span> <span class="n">project</span> <span class="p">((</span><span class="n">attrs</span> <span class="n">rel</span><span class="p">)</span> <span class="nf">\</span> <span class="n">list</span><span class="p">)</span>
-
-<span class="nf">join_on</span> <span class="n">on</span> <span class="n">left</span> <span class="n">right</span> <span class="ow">=</span>
-  <span class="kr">let</span> <span class="n">commons</span> <span class="ow">=</span> <span class="p">(</span><span class="n">attrs</span> <span class="n">left</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">attrs</span> <span class="n">right</span><span class="p">)</span> <span class="kr">in</span>
-  <span class="n">left</span>
-    <span class="o">|</span> <span class="n">join</span> <span class="p">(</span><span class="n">right</span> <span class="o">|</span> <span class="n">allbut</span> <span class="p">(</span><span class="n">commons</span> <span class="o">-</span> <span class="n">on</span><span class="p">))</span>
-
-<span class="nf">suppliers</span>
-  <span class="o">|</span> <span class="n">join_on</span> <span class="p">[</span><span class="kt">:</span><span class="n">sid</span><span class="p">]</span> <span class="n">shipments</span>
+<p>Another serious challenge is to keep the dynamic nature of Alf, while providing compile-time guarantees such a type-checking. If one accepts the hybrid nature of the language, that evaluates to relational expressions not relations themselves, then it might be possible to type-check the following program, that makes use of the operator definitions above:</p>
+<div class="highlight"><pre><span class="nf">suppliers</span>
+  <span class="o">|</span> <span class="n">join_on</span> <span class="p">[</span><span class="kt">:</span><span class="n">city</span><span class="p">]</span> <span class="n">parts</span>
 </pre>
 </div>
 
-<p>Yet another challenge, possibly a tough one, is to derived type inference rules for the language sketched here. Such rules are actually needed for type-checking, otherwise the syntax has to be extended with type anotations and I&#39;m not sure I want that:</p>
+<p>A related challenge, possibly a tough one, is to define type inference rules. Such rules are actually needed for type-checking, otherwise the syntax has to be extended with type anotations and I&#39;m not sure I want that:</p>
 <div class="highlight"><pre>  <span class="n">suppliers</span>
     <span class="o">|</span> <span class="n">restrict</span> <span class="p">(</span><span class="n">t</span><span class="kt">:</span><span class="p">{</span><span class="n">city</span><span class="kt">:</span> <span class="kt">String</span><span class="o">...</span><span class="p">}</span> <span class="ow">-&gt;</span> <span class="n">t</span><span class="o">.</span><span class="n">city</span> <span class="ow">=</span> <span class="s">&quot;London&quot;</span><span class="p">)</span>
 </pre>
 </div>
 
-<p>In addition, the type system has to be defined more precisely, and I&#39;m sure serious difficulties hide down there.</p>
+<p>In addition, the type system needs to be defined more precisely, for type inference and type checking relations to be sound and complete. I&#39;m sure there are plenty of nice research problems to be solved there.</p>
 
-<p>An avenue of challenges.</p>
+<p>In conclusion, a simple idea, yet an avenue of challenges.</p>
 
-<p>(If you liked this post, you should probably <a href="http://twitter.com/blambeau">follow me on twitter</a>, star <a href="http://github.com/alf-tool/try-alf">try-alf on github</a>, or simply <a href="mailto:blambeau@gmail.com">send me an email</a>.)</p>
+<p>(If you like this post, you should probably <a href="http://twitter.com/blambeau">follow me on twitter</a>, star <a href="http://github.com/alf-tool/try-alf">try-alf on github</a>, <a href="mailto:blambeau@gmail.com">send me an encouragement email</a> or hire me on your next data problem!)</p>
