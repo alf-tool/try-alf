@@ -17,6 +17,8 @@ gem "alf-sql",    :git => "git://github.com/alf-tool/alf-sql.git"
 gem "alf-sequel", :git => "git://github.com/alf-tool/alf-sequel.git"
 gem "alf-rack",   :git => "git://github.com/alf-tool/alf-rack.git"
 
+gem "ruby_cop", :git => "https://github.com/blambeau/RubyCop.git"
+
 # gem 'alf-core',   path: "../alf/alf-core"
 # gem 'alf-sql',    path: "../alf/alf-sql"
 # gem 'alf-sequel', path: "../alf/alf-sequel"
