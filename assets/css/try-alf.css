@@ -156,7 +156,6 @@ form.formats-form label.radio {
 }
 article {
   background: white;
-  min-height: 300px;
   border: 1px solid black;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -259,6 +258,7 @@ article table td {
   padding: .2em 1em !important;
 }
 article pre {
+  min-height: 40px;
   margin: 1em 0 !important;
   font-size: 90% !important;
   background-color: #f8f8ff !important;
@@ -291,15 +291,30 @@ article .readmore a {
   color: #222222;
   text-decoration: underline;
 }
-div.try-this {
-  text-align: right;
-  font-size: 80%;
+a.try-this {
+  font-size: 85%;
+  border: 3px solid #cfdcec;
+  border-radius: 50%;
+  display: block;
+  float: right;
   margin: 0px;
-  padding: 0px;
-  margin-top: -45px;
-  margin-right: 10px;
-  margin-bottom: 25px;
-  padding-top: 5px;
+  padding: 10px;
+  margin-top: -70px;
+  margin-right: 5px;
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+  line-height: 28px;
+  text-align: center;
+  background: #08c;
+  color: white;
+  white-space: nowrap;
+  overflow: hidden;
+}
+a.try-this:hover {
+  background: #30588e;
+  cursor: pointer;
+  text-decoration: none;
 }
 .blog-post-date {
   text-align: right;
