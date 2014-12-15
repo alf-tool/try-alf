@@ -255,7 +255,7 @@ eQojIHBhcmFtZXRlcml6ZWQKc3VwcGxpZXJz
 <li>Abstracting from the city, as we know it&#39;s London (or Paris, or whatever)</li>
 </ul>
 
-<p>This gives us a &quot;sub database&quot; if you want, that me might very well be queries as if it was the entire database. This is definitely what abstraction, and so-called <a href="http://www.revision-zero.org/logical-data-independence">logical data independance</a>, is about:</p>
+<p>This gives us a &quot;sub database&quot; if you want, that we might very well query as if it was the entire database. This is definitely what abstraction, and so-called <a href="http://www.revision-zero.org/logical-data-independence">logical data independance</a>, is about:</p>
 <div class="highlight"><pre><span class="c1"># Change me by Paris and see what happens</span>
 <span class="k">def</span> <span class="nf">whichCity</span>
   <span class="s2">&quot;London&quot;</span>
@@ -356,7 +356,7 @@ cHBsaWVycywgY2l0eTogIkxvbmRvbiIp
 </pre>
 </div>
 
-<p>In other words, a similar mechanism to the one used previously, makes implicit what the context makes obvious (that users want to query the <em>last known</em> database value; yet is it that obvious after all?). That is, using the usual Ruby syntax of this blog post once again:</p>
+<p>In other words, a similar mechanism to the one used previously makes implicit what the context makes obvious (that users want to query the <em>last known</em> database value; yet is it that obvious after all?). That is, using the usual Ruby syntax of this blog post once again:</p>
 <div class="highlight"><pre><span class="k">def</span> <span class="nf">base</span>
   <span class="n">get_last_known_database_value</span>
 <span class="k">end</span>
