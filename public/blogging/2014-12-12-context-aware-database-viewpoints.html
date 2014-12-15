@@ -1,0 +1,409 @@
+<h1>Context-aware Database Viewpoints</h1>
+
+<p>Viewpoints are a concept that I have only mentionned in passing in <a href="/blog/2013-10-21-relations-as-first-class-citizen">try-alf&#39;s first post</a>. They certainly deserve more thoughts: while very simple you&#39;ll be amazed by their power. In short, viewpoints are to databases (variables) what views are to relations (variables). If the last sentence sounds cryptic, just read on! To keep this post self-contained, I need to start with some basic material on views before moving on to context-awareness and database viewpoints. A general comment before starting: don&#39;t get abused by the taste of triviality; simplicity, sometimes, is that simple.</p>
+
+<h2>Views</h2>
+
+<p>If you have read previous posts here or played with Alf by yourself, you know try-alf&#39;s main message now: relational algebra is a software engineer&#39;s best friend. Relational algebra is very simple yet immensely powerful, as a simple example illustrates. Let start with some relations:</p>
+<div class="highlight"><pre><span class="n">suppliers</span>                               <span class="n">shipments</span>
+<span class="o">+------+-------+---------+--------+</span>     <span class="o">+------+------+------+</span>
+<span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:status</span> <span class="o">|</span> <span class="ss">:city</span>  <span class="o">|</span>     <span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:qty</span> <span class="o">|</span>
+<span class="o">+------+-------+---------+--------+</span>     <span class="o">+------+------+------+</span>
+<span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">Smith</span> <span class="o">|</span>      <span class="mi">20</span> <span class="o">|</span> <span class="no">London</span> <span class="o">|</span>     <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span>  <span class="mi">300</span> <span class="o">|</span>
+<span class="o">|</span> <span class="no">S2</span>   <span class="o">|</span> <span class="no">Jones</span> <span class="o">|</span>      <span class="mi">10</span> <span class="o">|</span> <span class="no">Paris</span>  <span class="o">|</span>     <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span>  <span class="mi">200</span> <span class="o">|</span>
+<span class="o">|</span> <span class="no">S3</span>   <span class="o">|</span> <span class="no">Blake</span> <span class="o">|</span>      <span class="mi">30</span> <span class="o">|</span> <span class="no">Paris</span>  <span class="o">|</span>     <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P3</span>   <span class="o">|</span>  <span class="mi">400</span> <span class="o">|</span>
+<span class="o">|</span> <span class="no">S4</span>   <span class="o">|</span> <span class="no">Clark</span> <span class="o">|</span>      <span class="mi">20</span> <span class="o">|</span> <span class="no">London</span> <span class="o">|</span>     <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span>  <span class="mi">200</span> <span class="o">|</span>
+<span class="o">|</span> <span class="no">S5</span>   <span class="o">|</span> <span class="no">Adams</span> <span class="o">|</span>      <span class="mi">30</span> <span class="o">|</span> <span class="no">Athens</span> <span class="o">|</span>     <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span>  <span class="mi">100</span> <span class="o">|</span>
+<span class="o">+------+-------+---------+--------+</span>     <span class="o">...</span>
+                                        <span class="o">|</span> <span class="no">S4</span>   <span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span>  <span class="mi">400</span> <span class="o">|</span>
+<span class="n">parts</span>                                   <span class="o">+------+------+------+</span>
+<span class="o">+------+-------+--------+---------+--------+</span>
+<span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:color</span> <span class="o">|</span> <span class="ss">:weight</span> <span class="o">|</span> <span class="ss">:city</span>  <span class="o">|</span>
+<span class="o">+------+-------+--------+---------+--------+</span>
+<span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span> <span class="no">Nut</span>   <span class="o">|</span> <span class="no">Red</span>    <span class="o">|</span>  <span class="mi">12</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="no">London</span> <span class="o">|</span>
+<span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span> <span class="no">Bolt</span>  <span class="o">|</span> <span class="no">Green</span>  <span class="o">|</span>  <span class="mi">17</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="no">Paris</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="no">P3</span>   <span class="o">|</span> <span class="no">Screw</span> <span class="o">|</span> <span class="no">Blue</span>   <span class="o">|</span>  <span class="mi">17</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="no">Oslo</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span> <span class="no">Screw</span> <span class="o">|</span> <span class="no">Red</span>    <span class="o">|</span>  <span class="mi">14</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="no">London</span> <span class="o">|</span>
+<span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span> <span class="no">Cam</span>   <span class="o">|</span> <span class="no">Blue</span>   <span class="o">|</span>  <span class="mi">12</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="no">Paris</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="no">P6</span>   <span class="o">|</span> <span class="no">Cog</span>   <span class="o">|</span> <span class="no">Red</span>    <span class="o">|</span>  <span class="mi">19</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="no">London</span> <span class="o">|</span>
+<span class="o">+------+-------+--------+---------+--------+</span>
+</pre>
+</div>
+
+<p>Relational algebra lets you &quot;manipulate&quot; those relations with operators (<code>restrict</code>, <code>join</code>, <code>group</code>, etc.) in a similar way to &quot;manipulating&quot; numbers through arithmetic operators (<code>+</code>, <code>-</code>, <code>*</code>, etc.). For instance, the following Alf expression:</p>
+<div class="highlight"><pre><span class="c1"># London suppliers with their shipments</span>
+<span class="n">group</span><span class="p">(</span>
+  <span class="n">join</span><span class="p">(</span>
+    <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">),</span>
+    <span class="n">shipments</span><span class="p">),</span>
+  <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="ss">:shipped</span><span class="p">)</span>
+</pre>
+</div>
+
+<p><a class="try-this" href="/?src=IyBMb25kb24gc3VwcGxpZXJzIHdpdGggdGhlaXIgc2hpcG1lbnRzCmdyb3Vw
+KAogIGpvaW4oCiAgICByZXN0cmljdChzdXBwbGllcnMsIGNpdHk6ICJMb25k
+b24iKSwKICAgIHNoaXBtZW50cyksCiAgWzpwaWQsIDpxdHldLCA6c2hpcHBl
+ZCk=
+" target="_blank">Try!</a></p>
+
+<p>Evaluates to:</p>
+<div class="highlight"><pre><span class="o">+------+-------+---------+--------+-----------------+</span>
+<span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:status</span> <span class="o">|</span> <span class="ss">:city</span>  <span class="o">|</span> <span class="ss">:shipped</span>        <span class="o">|</span>
+<span class="o">+------+-------+---------+--------+-----------------+</span>
+<span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">Smith</span> <span class="o">|</span>      <span class="mi">20</span> <span class="o">|</span> <span class="no">London</span> <span class="o">|</span> <span class="o">+------+------+</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:qty</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">+------+------+</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span>  <span class="mi">300</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span>  <span class="mi">200</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P3</span>   <span class="o">|</span>  <span class="mi">400</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span>  <span class="mi">200</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span>  <span class="mi">100</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P6</span>   <span class="o">|</span>  <span class="mi">100</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">+------+------+</span> <span class="o">|</span>
+<span class="o">|</span> <span class="no">S4</span>   <span class="o">|</span> <span class="no">Clark</span> <span class="o">|</span>      <span class="mi">20</span> <span class="o">|</span> <span class="no">London</span> <span class="o">|</span> <span class="o">+------+------+</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:qty</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">+------+------+</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span>  <span class="mi">200</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span>  <span class="mi">300</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span>  <span class="mi">400</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>      <span class="o">|</span>       <span class="o">|</span>         <span class="o">|</span>        <span class="o">|</span> <span class="o">+------+------+</span> <span class="o">|</span>
+<span class="o">+------+-------+---------+--------+-----------------+</span>
+</pre>
+</div>
+
+<p>In a database context, a <em>view</em> is a fancy name to say &quot;introducing a short name for a long expression&quot;. In SQL parlance:</p>
+<div class="highlight"><pre><span class="k">CREATE</span> <span class="k">VIEW</span> <span class="n">london_suppliers_with_their_shipments</span> <span class="k">AS</span>
+<span class="k">SELECT</span> <span class="p">[...</span><span class="n">a</span> <span class="n">long</span> <span class="n">expression</span> <span class="n">here</span><span class="p">...]</span>
+</pre>
+</div>
+
+<p>In Alf, which is a Ruby DSL, this &quot;naming&quot; process is as simple as:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">london_suppliers_with_their_shipments</span>
+  <span class="n">group</span><span class="p">(</span>
+    <span class="n">join</span><span class="p">(</span>
+      <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">),</span>
+      <span class="n">shipments</span><span class="p">),</span>
+    <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="ss">:shipped</span><span class="p">)</span>  
+<span class="k">end</span>
+
+<span class="c1"># Views simply introduce new names for relations.</span>
+<span class="c1"># We can then &quot;manipulate&quot; them as usual:</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">london_suppliers_with_their_shipments</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p><a class="try-this" href="/?src=ZGVmIGxvbmRvbl9zdXBwbGllcnNfd2l0aF90aGVpcl9zaGlwbWVudHMKICBn
+cm91cCgKICAgIGpvaW4oCiAgICAgIHJlc3RyaWN0KHN1cHBsaWVycywgY2l0
+eTogIkxvbmRvbiIpLAogICAgICBzaGlwbWVudHMpLAogICAgWzpwaWQsIDpx
+dHldLCA6c2hpcHBlZCkgIAplbmQKCiMgVmlld3Mgc2ltcGx5IGludHJvZHVj
+ZSBuZXcgbmFtZXMgZm9yIHJlbGF0aW9ucy4KIyBXZSBjYW4gdGhlbiAibWFu
+aXB1bGF0ZSIgdGhlbSBhcyB1c3VhbDoKcmVzdHJpY3QobG9uZG9uX3N1cHBs
+aWVyc193aXRoX3RoZWlyX3NoaXBtZW50cywgc2lkOiAiUzEiKQ==
+" target="_blank">Try!</a></p>
+
+<p>So far, so good. Here is where I start complaining about SQL once again, I&#39;m affraid.</p>
+
+<h2>Towards context-awareness: parameterized views</h2>
+
+<p><em>Context-aware</em>, at first glance, is a fancy name to say &quot;hey, there might be some query parameters involved&quot;. In the running example, maybe the &quot;London&quot; constant must change according to some business rules. More generally, most of the time queries are send to DBMSs in a particular context, e.g.</p>
+
+<ul>
+<li>On behalf of a specific user,</li>
+<li>Expecting results in a particular language (for internationalized data),</li>
+<li>From a particular area in the world,</li>
+<li>Targetting a specific audience,</li>
+<li>and so on.</li>
+</ul>
+
+<p>Such context frequenly leads to query parameters and developers then make use of prepared statements:</p>
+<div class="highlight"><pre><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">suppliers</span> <span class="k">WHERE</span> <span class="n">city</span> <span class="o">=</span> <span class="o">?</span>
+</pre>
+</div>
+
+<p>Or they rely on ORMs and query builders:</p>
+<div class="highlight"><pre><span class="n">whichCity</span> <span class="o">=</span> <span class="s2">&quot;London&quot;</span>
+<span class="no">Supplier</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="ss">city</span><span class="p">:</span> <span class="n">whichCity</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>As a query language, SQL does not natively support those <code>?</code> placeholders. This is a trick of call-level APIs that, among others, helps preventing SQL injection. There are no native way of building parameterized views in pure SQL. <a href="/blog/2014-12-03-what-would-a-functional-sql-look-like">As I said earlier</a>, SQL lacks support for <em>structuring</em> code, despite its name (I admit cheating here, <em>structured</em> here goes down to Dijkstra&#39;s structured programming and actually means <em>reasoning about</em>; SQL is rather friendly in this area, except maybe for the NULL mess).</p>
+
+<p>In Alf, parameterized views are as simple as this:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">suppliers_with_their_shipments</span><span class="p">(</span><span class="n">whichCity</span><span class="p">)</span>
+  <span class="n">group</span><span class="p">(</span>
+    <span class="n">join</span><span class="p">(</span>
+      <span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">whichCity</span><span class="p">),</span>
+      <span class="n">shipments</span><span class="p">),</span>
+    <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="ss">:shipped</span><span class="p">)</span>  
+<span class="k">end</span>
+
+<span class="c1"># Change London by Paris here and see what happens</span>
+<span class="n">suppliers_with_their_shipments</span><span class="p">(</span><span class="s2">&quot;London&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p><a class="try-this" href="/?src=ZGVmIHN1cHBsaWVyc193aXRoX3RoZWlyX3NoaXBtZW50cyh3aGljaENpdHkp
+CiAgZ3JvdXAoCiAgICBqb2luKAogICAgICByZXN0cmljdChzdXBwbGllcnMs
+IGNpdHk6IHdoaWNoQ2l0eSksCiAgICAgIHNoaXBtZW50cyksCiAgICBbOnBp
+ZCwgOnF0eV0sIDpzaGlwcGVkKSAgCmVuZAoKIyBDaGFuZ2UgTG9uZG9uIGJ5
+IFBhcmlzIGhlcmUgYW5kIHNlZSB3aGF0IGhhcHBlbnMKc3VwcGxpZXJzX3dp
+dGhfdGhlaXJfc2hpcG1lbnRzKCJMb25kb24iKQ==
+" target="_blank">Try!</a></p>
+
+<p>Trivial? Read on.</p>
+
+<h2>Towards context-awareness: on the importance of names</h2>
+
+<p>Before moving to database viewpoints, let me make a short aside (the real reason of this aside will be clearer a bit later). What I write on this blog is from the pespective of somewhat complex software systems, that maybe <em>start</em> small, but evolve to meet complex data requirements. I&#39;ll write a post later that explains what <em>complex data requirements</em> is supposed to mean. In the mean time, think about multilingual data, complex visibility/security rules, multiple business viewpoints on the same database, cross-databases querying, etc. In all such cases we need approaches that help incorporating complexity slowly in the overal software mixture while keeping things simple along the way.</p>
+
+<p>You probably know that &quot;naming is the hardest problem in computer science&quot;. It is even harder if you are prevented from denoting different things by the <em>same</em> name, relying on the context for disambiguation. Imagine a natural language where a word would have only one very precise meaning and no overloading. Imagine a programming language where all variables would be global. Well,</p>
+
+<ul>
+<li><p>SQL has no real namespace support: all tables and all views must have different names. Hence abominations like <code>london_suppliers_with_their_shipments</code> above. Maybe the context provides disambiguation support? How about simply calling that view <code>suppliers</code> in that context?</p></li>
+<li><p>You probably know that <a href="http://www.revision-zero.org/orm-haters-do-get-it">I&#39;m not a big fan of object models and ORMs</a>. Think about the <code>Supplier</code>, <code>Part</code> and <code>Shipment</code> classes. When using such a global object model the inability for the software to grow seems built in to me: you&#39;re entangled in a very strict and skimpy namespace with respect to data. You wouldn&#39;t want language designers to do such poor choices. Why the hell are you doing it to yourself?</p></li>
+</ul>
+
+<p>How about?</p>
+<div class="highlight"><pre><span class="n">parts</span> <span class="p">(</span><span class="n">english</span><span class="p">)</span>       <span class="n">parts</span> <span class="p">(</span><span class="n">french</span><span class="p">)</span>        <span class="n">parts</span> <span class="p">(</span><span class="n">shipped</span> <span class="n">by</span> <span class="no">S1</span><span class="p">)</span>
+<span class="o">+------+-------+</span>      <span class="o">+------+--------+</span>     <span class="o">+------+-------+</span>
+<span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span>      <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:name</span>  <span class="o">|</span>     <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span>
+<span class="o">+------+-------+</span>      <span class="o">+------+--------+</span>     <span class="o">+------+-------+</span>
+<span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span> <span class="no">Nut</span>   <span class="o">|</span>      <span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span> <span class="no">Ecrou</span>  <span class="o">|</span>     <span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span> <span class="no">Nut</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span> <span class="no">Bolt</span>  <span class="o">|</span>      <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span> <span class="no">Boulon</span> <span class="o">|</span>     <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span> <span class="no">Bolt</span>  <span class="o">|</span>
+<span class="o">|</span> <span class="no">P3</span>   <span class="o">|</span> <span class="no">Screw</span> <span class="o">|</span>      <span class="o">|</span> <span class="no">P3</span>   <span class="o">|</span> <span class="no">Vis</span>    <span class="o">|</span>     <span class="o">+------+-------+</span>
+<span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span> <span class="no">Screw</span> <span class="o">|</span>      <span class="o">|</span> <span class="no">P3</span>   <span class="o">|</span> <span class="no">Vis</span>    <span class="o">|</span>
+<span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span> <span class="no">Cam</span>   <span class="o">|</span>      <span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span> <span class="no">Came</span>   <span class="o">|</span>
+<span class="o">|</span> <span class="no">P6</span>   <span class="o">|</span> <span class="no">Cog</span>   <span class="o">|</span>      <span class="o">|</span> <span class="no">P6</span>   <span class="o">|</span> <span class="no">Rouage</span> <span class="o">|</span>
+<span class="o">+------+-------+</span>      <span class="o">+------+--------+</span>
+</pre>
+</div>
+
+<p>Please don&#39;t think &quot;But! these are different <em>views</em>&quot;. I could write so many of such views that you&#39;ll quickly lack distinct words to distinguish them. These are &quot;<em>the parts</em>&quot;, and the context of use of those two simple words must make clear what that means. One global context is simply not enough.</p>
+
+<h2>Context-awareness</h2>
+
+<p>To sum up, a context-aware database interface/query language would allow denoting by <code>suppliers</code> in a context <code>C1</code> the same as what is denoted by <code>suppliers_with_their_shipments(&quot;London&quot;)</code> in another context <code>C2</code>. In other words, context-awareness would be enabled by a database query interface/language that</p>
+
+<ul>
+<li>Supports namespacing,</li>
+<li>Supports parameterized queries,</li>
+<li>Supports parameter values to be implicitely obtained from the context</li>
+</ul>
+
+<p>Demonstrating the feature on try-alf is a bit tricky: Alf relies on Ruby modules for creating contextes cleanly and modules are not allowed here for security reasons. In essence, however, the feature works as follows:</p>
+<div class="highlight"><pre><span class="c1"># This is the contextual city value</span>
+<span class="c1"># - change it to Paris and see what happens</span>
+<span class="k">def</span> <span class="nf">whichCity</span>
+  <span class="s2">&quot;London&quot;</span>
+<span class="k">end</span>
+
+<span class="c1"># Definition of suppliers in C1, relying on suppliers from C2</span>
+<span class="k">def</span> <span class="nf">suppliers</span>
+  <span class="c1"># `super` below captures suppliers in context C2, this is a hack</span>
+  <span class="c1"># on how try-alf is implemented but that demonstrates the feature.</span>
+  <span class="n">c2_suppliers</span> <span class="o">=</span> <span class="k">super</span>
+
+  <span class="c1"># our usual query, using whichCity which is in the same lexical scope</span>
+  <span class="n">group</span><span class="p">(</span>
+    <span class="n">join</span><span class="p">(</span>
+      <span class="n">restrict</span><span class="p">(</span><span class="n">c2_suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">whichCity</span><span class="p">),</span>
+      <span class="n">shipments</span><span class="p">),</span>
+    <span class="o">[</span><span class="ss">:pid</span><span class="p">,</span> <span class="ss">:qty</span><span class="o">]</span><span class="p">,</span> <span class="ss">:shipped</span><span class="p">)</span>  
+<span class="k">end</span>
+
+<span class="c1"># Suppliers in context C1 denotes London suppliers with their shipments,</span>
+<span class="c1"># while reusing the `suppliers` name and without being explicitely</span>
+<span class="c1"># parameterized</span>
+<span class="n">suppliers</span>
+</pre>
+</div>
+
+<p><a class="try-this" href="/?src=IyBUaGlzIGlzIHRoZSBjb250ZXh0dWFsIGNpdHkgdmFsdWUKIyAtIGNoYW5n
+ZSBpdCB0byBQYXJpcyBhbmQgc2VlIHdoYXQgaGFwcGVucwpkZWYgd2hpY2hD
+aXR5CiAgIkxvbmRvbiIKZW5kCgojIERlZmluaXRpb24gb2Ygc3VwcGxpZXJz
+IGluIEMxLCByZWx5aW5nIG9uIHN1cHBsaWVycyBmcm9tIEMyCmRlZiBzdXBw
+bGllcnMKICAjIGBzdXBlcmAgYmVsb3cgY2FwdHVyZXMgc3VwcGxpZXJzIGlu
+IGNvbnRleHQgQzIsIHRoaXMgaXMgYSBoYWNrCiAgIyBvbiBob3cgdHJ5LWFs
+ZiBpcyBpbXBsZW1lbnRlZCBidXQgdGhhdCBkZW1vbnN0cmF0ZXMgdGhlIGZl
+YXR1cmUuCiAgYzJfc3VwcGxpZXJzID0gc3VwZXIKCiAgIyBvdXIgdXN1YWwg
+cXVlcnksIHVzaW5nIHdoaWNoQ2l0eSB3aGljaCBpcyBpbiB0aGUgc2FtZSBs
+ZXhpY2FsIHNjb3BlCiAgZ3JvdXAoCiAgICBqb2luKAogICAgICByZXN0cmlj
+dChjMl9zdXBwbGllcnMsIGNpdHk6IHdoaWNoQ2l0eSksCiAgICAgIHNoaXBt
+ZW50cyksCiAgICBbOnBpZCwgOnF0eV0sIDpzaGlwcGVkKSAgCmVuZAoKIyBT
+dXBwbGllcnMgaW4gY29udGV4dCBDMSBkZW5vdGVzIExvbmRvbiBzdXBwbGll
+cnMgd2l0aCB0aGVpciBzaGlwbWVudHMsCiMgd2hpbGUgcmV1c2luZyB0aGUg
+YHN1cHBsaWVyc2AgbmFtZSBhbmQgd2l0aG91dCBiZWluZyBleHBsaWNpdGVs
+eQojIHBhcmFtZXRlcml6ZWQKc3VwcGxpZXJz
+" target="_blank">Try!</a></p>
+
+<p>Conceptually, the example above illustrates the three important parts in the picture: the context <em>instantiation</em> that binds parameter names to values (<code>whichCity</code> is <code>&quot;London&quot;</code>), the context <em>definition</em> (<code>def suppliers</code>) that depends on parameters and relies on another context, and the context <em>usage</em>, here querying suppliers (<code>suppliers</code> on last line).</p>
+
+<p>The key observation is that the last line abstracts from both the suppliers definition and the city value being London. In that context, <code>suppliers</code> denotes the suppliers in London together with their shipments. You can further query <code>suppliers</code> in that context. For instance, try changing the last line by:</p>
+<div class="highlight"><pre><span class="c1"># Observe how `suppliers` here may denote whatever the context dictates</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<h2>Database viewpoints</h2>
+
+<p>Viewpoints are simply the same idea, but applied to entire database schemas, loosely speaking. In other words, a viewpoint is simply a set of related, possibly context-aware, views. A simple example illustrates this. Suppose we want to see our database from the point of view of a particular city, say London:</p>
+
+<ul>
+<li>Only suppliers located in London</li>
+<li>Only parts located in London</li>
+<li>Only shipments of suppliers and parts we care about</li>
+<li>Abstracting from the city, as we know it&#39;s London (or Paris, or whatever)</li>
+</ul>
+
+<p>This gives us a &quot;sub database&quot; if you want, that me might very well be queries as if it was the entire database. This is definitely what abstraction, and so-called <a href="http://www.revision-zero.org/logical-data-independence">logical data independance</a>, is about:</p>
+<div class="highlight"><pre><span class="c1"># Change me by Paris and see what happens</span>
+<span class="k">def</span> <span class="nf">whichCity</span>
+  <span class="s2">&quot;London&quot;</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">suppliers</span>
+  <span class="n">allbut</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">whichCity</span><span class="p">),</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">parts</span>
+  <span class="n">allbut</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">whichCity</span><span class="p">),</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">shipments</span>
+  <span class="n">matching</span><span class="p">(</span><span class="n">matching</span><span class="p">(</span><span class="k">super</span><span class="p">,</span> <span class="n">suppliers</span><span class="p">),</span> <span class="n">parts</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="c1"># Query from that database viewpoint, let see the &quot;entire&quot; database</span>
+<span class="c1"># for instance:</span>
+<span class="kp">extend</span><span class="p">(</span><span class="no">DEE</span><span class="p">,</span>
+  <span class="ss">suppliers</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">suppliers</span> <span class="p">},</span>
+  <span class="ss">parts</span><span class="p">:</span>     <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">parts</span> <span class="p">},</span>
+  <span class="ss">shipments</span><span class="p">:</span> <span class="o">-&gt;</span><span class="p">(</span><span class="n">t</span><span class="p">){</span> <span class="n">shipments</span> <span class="p">})</span>
+</pre>
+</div>
+
+<p><a class="try-this" href="/?src=IyBDaGFuZ2UgbWUgYnkgUGFyaXMgYW5kIHNlZSB3aGF0IGhhcHBlbnMKZGVm
+IHdoaWNoQ2l0eQogICJMb25kb24iCmVuZAoKZGVmIHN1cHBsaWVycwogIGFs
+bGJ1dChyZXN0cmljdChzdXBlciwgY2l0eTogd2hpY2hDaXR5KSwgWzpjaXR5
+XSkKZW5kCgpkZWYgcGFydHMKICBhbGxidXQocmVzdHJpY3Qoc3VwZXIsIGNp
+dHk6IHdoaWNoQ2l0eSksIFs6Y2l0eV0pCmVuZAoKZGVmIHNoaXBtZW50cwog
+IG1hdGNoaW5nKG1hdGNoaW5nKHN1cGVyLCBzdXBwbGllcnMpLCBwYXJ0cykK
+ZW5kCgojIFF1ZXJ5IGZyb20gdGhhdCBkYXRhYmFzZSB2aWV3cG9pbnQsIGxl
+dCBzZWUgdGhlICJlbnRpcmUiIGRhdGFiYXNlCiMgZm9yIGluc3RhbmNlOgpl
+eHRlbmQoREVFLAogIHN1cHBsaWVyczogLT4odCl7IHN1cHBsaWVycyB9LAog
+IHBhcnRzOiAgICAgLT4odCl7IHBhcnRzIH0sCiAgc2hpcG1lbnRzOiAtPih0
+KXsgc2hpcG1lbnRzIH0p
+" target="_blank">Try!</a></p>
+
+<p>So, the Suppliers and Parts exemplar from a London point of view:</p>
+<div class="highlight"><pre><span class="o">+----------------------------+-------------------------------------+------------------------+</span>
+<span class="o">|</span> <span class="ss">:suppliers</span>                 <span class="o">|</span> <span class="ss">:parts</span>                              <span class="o">|</span> <span class="ss">:shipments</span>             <span class="o">|</span>
+<span class="o">+----------------------------+-------------------------------------+------------------------+</span>
+<span class="o">|</span> <span class="o">+------+-------+---------+</span> <span class="o">|</span> <span class="o">+------+-------+--------+---------+</span> <span class="o">|</span> <span class="o">+------+------+------+</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:status</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:color</span> <span class="o">|</span> <span class="ss">:weight</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:qty</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">+------+-------+---------+</span> <span class="o">|</span> <span class="o">+------+-------+--------+---------+</span> <span class="o">|</span> <span class="o">+------+------+------+</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">Smith</span> <span class="o">|</span>      <span class="mi">20</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span> <span class="no">Nut</span>   <span class="o">|</span> <span class="no">Red</span>    <span class="o">|</span>  <span class="mi">12</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P1</span>   <span class="o">|</span>  <span class="mi">300</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="no">S4</span>   <span class="o">|</span> <span class="no">Clark</span> <span class="o">|</span>      <span class="mi">20</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span> <span class="no">Screw</span> <span class="o">|</span> <span class="no">Red</span>    <span class="o">|</span>  <span class="mi">14</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span>  <span class="mi">200</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">+------+-------+---------+</span> <span class="o">|</span> <span class="o">|</span> <span class="no">P6</span>   <span class="o">|</span> <span class="no">Cog</span>   <span class="o">|</span> <span class="no">Red</span>    <span class="o">|</span>  <span class="mi">19</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">S1</span>   <span class="o">|</span> <span class="no">P6</span>   <span class="o">|</span>  <span class="mi">100</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span> <span class="o">+------+-------+--------+---------+</span> <span class="o">|</span> <span class="o">|</span> <span class="no">S4</span>   <span class="o">|</span> <span class="no">P4</span>   <span class="o">|</span>  <span class="mi">300</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span>                            <span class="o">|</span>                                     <span class="o">|</span> <span class="o">+------+------+------+</span> <span class="o">|</span>
+<span class="o">+----------------------------+-------------------------------------+------------------------+</span>
+</pre>
+</div>
+
+<p>The &quot;same&quot; database, from a Paris point of view:</p>
+<div class="highlight"><pre><span class="o">+----------------------------+-------------------------------------+------------------------+</span>
+<span class="o">|</span> <span class="ss">:suppliers</span>                 <span class="o">|</span> <span class="ss">:parts</span>                              <span class="o">|</span> <span class="ss">:shipments</span>             <span class="o">|</span>
+<span class="o">+----------------------------+-------------------------------------+------------------------+</span>
+<span class="o">|</span> <span class="o">+------+-------+---------+</span> <span class="o">|</span> <span class="o">+------+-------+--------+---------+</span> <span class="o">|</span> <span class="o">+------+------+------+</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:status</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:name</span> <span class="o">|</span> <span class="ss">:color</span> <span class="o">|</span> <span class="ss">:weight</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="ss">:sid</span> <span class="o">|</span> <span class="ss">:pid</span> <span class="o">|</span> <span class="ss">:qty</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">+------+-------+---------+</span> <span class="o">|</span> <span class="o">+------+-------+--------+---------+</span> <span class="o">|</span> <span class="o">+------+------+------+</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="no">S2</span>   <span class="o">|</span> <span class="no">Jones</span> <span class="o">|</span>      <span class="mi">10</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span> <span class="no">Bolt</span>  <span class="o">|</span> <span class="no">Green</span>  <span class="o">|</span>  <span class="mi">17</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">S2</span>   <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span>  <span class="mi">400</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">|</span> <span class="no">S3</span>   <span class="o">|</span> <span class="no">Blake</span> <span class="o">|</span>      <span class="mi">30</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">P5</span>   <span class="o">|</span> <span class="no">Cam</span>   <span class="o">|</span> <span class="no">Blue</span>   <span class="o">|</span>  <span class="mi">12</span><span class="o">.</span><span class="mo">000</span> <span class="o">|</span> <span class="o">|</span> <span class="o">|</span> <span class="no">S3</span>   <span class="o">|</span> <span class="no">P2</span>   <span class="o">|</span>  <span class="mi">200</span> <span class="o">|</span> <span class="o">|</span>
+<span class="o">|</span> <span class="o">+------+-------+---------+</span> <span class="o">|</span> <span class="o">+------+-------+--------+---------+</span> <span class="o">|</span> <span class="o">+------+------+------+</span> <span class="o">|</span>
+<span class="o">+----------------------------+-------------------------------------+------------------------+</span>
+</pre>
+</div>
+
+<h2>Viewpoint composition: Embracing database values!</h2>
+
+<p>Since version 0.15.0, Alf supports those viewpoints, and composition of them, through Ruby modules and the <code>super</code> keyword. Ruby simply does the rest (lexical scoping, composition, etc.). Maybe that&#39;s a bit too magical to your taste, or it prevents from truly understanding what&#39;s going on here. So let me explain it a bit differently now, by making the magic explicit.</p>
+
+<p>If you abstract from updates, a database can simply be seen as a huge value. Not any kind of value. As far as the relational model is concerned, it is a collection of <em>relation</em> values specifically, like our <em>suppliers</em>, <em>parts</em> and <em>shipments</em> relation values above. This &quot;collection&quot; can be made very precise by stating that a database is itself a tuple value, with every attribute being a relation value. Let call it <code>base</code>, in reference to so-called &#39;base&#39; tables (relation variables in our parlance here):</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">base</span>
+  <span class="p">{</span>
+    <span class="ss">suppliers</span><span class="p">:</span> <span class="no">Relation</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+    <span class="ss">parts</span><span class="p">:</span>     <span class="no">Relation</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+    <span class="ss">shipments</span><span class="p">:</span> <span class="no">Relation</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+</pre>
+</div>
+
+<p>With a database conceptually modeled as a tuple value, one simply has to accept that when a query like the following one is sent to the database:</p>
+<div class="highlight"><pre><span class="c1"># Get suppliers located in London</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p><a class="try-this" href="/?src=IyBHZXQgc3VwcGxpZXJzIGxvY2F0ZWQgaW4gTG9uZG9uCnJlc3RyaWN0KHN1
+cHBsaWVycywgY2l0eTogIkxvbmRvbiIp
+" target="_blank">Try!</a></p>
+
+<p>Then, under the hood, the database management system has to resolve <code>suppliers</code> to actually denote <code>base.suppliers</code>, where <code>.</code> would be a tuple attribute dereferencing operator:</p>
+<div class="highlight"><pre><span class="c1"># Get suppliers located in London (from the current database value)</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">base</span><span class="o">.</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>In other words, a similar mechanism to the one used previously, makes implicit what the context makes obvious (that users want to query the <em>last known</em> database value; yet is it that obvious after all?). That is, using the usual Ruby syntax of this blog post once again:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">base</span>
+  <span class="n">get_last_known_database_value</span>
+<span class="k">end</span>
+
+<span class="k">def</span> <span class="nf">suppliers</span>
+  <span class="n">base</span><span class="o">.</span><span class="n">suppliers</span>
+<span class="k">end</span>
+
+<span class="n">restrict</span><span class="p">(</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>Now, if one designs a language with database values as first-class citizen, then all this context-aware viewpoint stuff becomes fairly trivial: viewpoints are database values obtained from other database values, that&#39;s all. More precisely, it naturally leads seeing viewpoints as <em>functions</em> from database values to database values. Let&#39;s take our London/Paris viewpoint above as an example:</p>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">fromCity</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">whichCity</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="ss">suppliers</span><span class="p">:</span> <span class="n">allbut</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">whichCity</span><span class="p">),</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">),</span>
+    <span class="ss">parts</span><span class="p">:</span>     <span class="n">allbut</span><span class="p">(</span><span class="n">restrict</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">parts</span><span class="p">,</span> <span class="ss">city</span><span class="p">:</span> <span class="n">whichCity</span><span class="p">),</span> <span class="o">[</span><span class="ss">:city</span><span class="o">]</span><span class="p">),</span>
+    <span class="ss">shipments</span><span class="p">:</span> <span class="o">...</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="c1"># Viewpoint instantiation from the `base` database</span>
+<span class="n">londonViewpoint</span> <span class="o">=</span> <span class="n">cityViewpoint</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;London&quot;</span><span class="p">)</span>
+
+<span class="c1"># Query as ususal</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">londonViewpoint</span><span class="o">.</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>Viewpoint composition boils down to functional composition and is trivial too. Suppose we have an multilingual version of the suppliers and parts database, and another viewpoint that &quot;projects&quot; it on a particular language. Then,</p>
+<div class="highlight"><pre><span class="c1"># Project `db` on language `lang`</span>
+<span class="k">def</span> <span class="nf">inLanguage</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">lang</span><span class="p">)</span>
+  <span class="p">{</span>
+    <span class="ss">suppliers</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="ss">parts</span><span class="p">:</span>     <span class="o">...</span>
+    <span class="ss">shipments</span><span class="p">:</span> <span class="o">...</span>
+  <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="c1"># Viewpoint instantiations and composition</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">inLanguage</span><span class="p">(</span><span class="n">fromCity</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="s2">&quot;London&quot;</span><span class="p">),</span> <span class="s2">&quot;fr&quot;</span><span class="p">)</span>
+
+<span class="c1"># Query as ususal</span>
+<span class="n">restrict</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">suppliers</span><span class="p">,</span> <span class="ss">sid</span><span class="p">:</span> <span class="s2">&quot;S1&quot;</span><span class="p">)</span>
+</pre>
+</div>
+
+<p>And that&#39;s all for today. It&#39;s interresting to classify database viewpoint according to whether those functions are type preserving or not (that is, whether they preserve the database &#39;schema&#39; itself), but that will be the topic of another post.</p>
+
+<p>(If you liked this post, you should probably <a href="http://twitter.com/blambeau">follow me on twitter</a>, star <a href="http://github.com/alf-tool/try-alf">try-alf on github</a>, <a href="mailto:blambeau@gmail.com">send me an encouragement email</a> or hire me on your next data problem!)</p>
