@@ -291,6 +291,11 @@ article .readmore a {
   color: #222222;
   text-decoration: underline;
 }
+article img {
+  display: block;
+  text-align: center;
+  margin: auto;
+}
 a.try-this {
   font-size: 85%;
   border: 3px solid #cfdcec;
