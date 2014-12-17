@@ -103,7 +103,7 @@ aXB1bGF0ZSIgdGhlbSBhcyB1c3VhbDoKcmVzdHJpY3QobG9uZG9uX3N1cHBs
 aWVyc193aXRoX3RoZWlyX3NoaXBtZW50cywgc2lkOiAiUzEiKQ==
 " target="_blank">Try!</a></p>
 
-<p>So far, so good. Here is where I start complaining about SQL once again, I&#39;m affraid.</p>
+<p>So far, so good. Here is where I start complaining about SQL once again, I&#39;m afraid.</p>
 
 <h2>Towards context-awareness: parameterized views</h2>
 
@@ -113,11 +113,11 @@ aWVyc193aXRoX3RoZWlyX3NoaXBtZW50cywgc2lkOiAiUzEiKQ==
 <li>On behalf of a specific user,</li>
 <li>Expecting results in a particular language (for internationalized data),</li>
 <li>From a particular area in the world,</li>
-<li>Targetting a specific audience,</li>
+<li>Targeting a specific audience,</li>
 <li>and so on.</li>
 </ul>
 
-<p>Such context frequenly leads to query parameters and developers then make use of prepared statements:</p>
+<p>Such context frequently leads to query parameters and developers then make use of prepared statements:</p>
 <div class="highlight"><pre><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">suppliers</span> <span class="k">WHERE</span> <span class="n">city</span> <span class="o">=</span> <span class="o">?</span>
 </pre>
 </div>
@@ -189,7 +189,7 @@ dGhfdGhlaXJfc2hpcG1lbnRzKCJMb25kb24iKQ==
 <ul>
 <li>Supports namespacing,</li>
 <li>Supports parameterized queries,</li>
-<li>Supports parameter values to be implicitely obtained from the context</li>
+<li>Supports parameter values to be implicitly obtained from the context</li>
 </ul>
 
 <p>Demonstrating the feature on try-alf is a bit tricky: Alf relies on Ruby modules for creating contextes cleanly and modules are not allowed here for security reasons. In essence, however, the feature works as follows:</p>
@@ -257,7 +257,7 @@ eQojIHBhcmFtZXRlcml6ZWQKc3VwcGxpZXJz
 <li>Abstracting from the city, as we know it&#39;s London (or Paris, or whatever)</li>
 </ul>
 
-<p>This gives us a &quot;sub database&quot; if you want, that we might very well query as if it was the entire database. This is definitely what abstraction, and so-called <a href="http://www.revision-zero.org/logical-data-independence">logical data independance</a>, is about:</p>
+<p>This gives us a &quot;sub database&quot; if you want, that we might very well query as if it was the entire database. This is definitely what abstraction, and so-called <a href="http://www.revision-zero.org/logical-data-independence">logical data independence</a>, is about:</p>
 <div class="highlight"><pre><span class="c1"># Change me by Paris and see what happens</span>
 <span class="k">def</span> <span class="nf">whichCity</span>
   <span class="s2">&quot;London&quot;</span>
@@ -406,6 +406,10 @@ cHBsaWVycywgY2l0eTogIkxvbmRvbiIp
 </pre>
 </div>
 
-<p>And that&#39;s all for today. It&#39;s interresting to classify database viewpoint according to whether those functions are type preserving or not (that is, whether they preserve the database &#39;schema&#39; itself), but that will be the topic of another post.</p>
+<p>And that&#39;s all for today. It&#39;s interesting to classify database viewpoint according to whether those functions are type preserving or not (that is, whether they preserve the database &#39;schema&#39; itself), but that will be the topic of another post.</p>
 
 <p>(If you liked this post, you should probably <a href="http://twitter.com/blambeau">follow me on twitter</a>, star <a href="http://github.com/alf-tool/try-alf">try-alf on github</a>, <a href="mailto:blambeau@gmail.com">send me an encouragement email</a> or hire me on your next data problem!)</p>
+
+<h2>Acknowledgements</h2>
+
+<p>I&#39;d like to thank Erwin S., James K. L. for their feedback and comments on earlier versions of this blog post.</p>
