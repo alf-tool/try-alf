@@ -1,32 +1,26 @@
 source "https://rubygems.org"
 
-ruby '1.9.3'
+ruby '2.7.2'
 
 gem 'thin'
 gem "sequel",  "~> 4.2"
 gem "rack-robustness", "~> 1.1"
-gem "rack-timeout"
-gem "rake"
-gem 'sprockets', '~> 2.0'
+gem "rack-timeout", "~> 0.6"
+gem "rake", "~> 13.0"
+gem 'sprockets', '~> 4.0'
 gem 'sinatra', '~> 1.4'
 gem 'wlang', '~> 2.3'
 
-gem "alf-core",   :git => "git://github.com/alf-tool/alf-core.git"
-gem "alf-doc",    :git => "git://github.com/alf-tool/alf-doc.git"
-gem "alf-sql",    :git => "git://github.com/alf-tool/alf-sql.git"
-gem "alf-sequel", :git => "git://github.com/alf-tool/alf-sequel.git"
-gem "alf-rack",   :git => "git://github.com/alf-tool/alf-rack.git"
+gem "alf-core",   :git => "https://github.com/alf-tool/alf-core.git"
+gem "alf-doc",    :git => "https://github.com/alf-tool/alf-doc.git"
+gem "alf-sql",    :git => "https://github.com/alf-tool/alf-sql.git"
+gem "alf-sequel", :git => "https://github.com/alf-tool/alf-sequel.git"
+gem "alf-rack",   :git => "https://github.com/alf-tool/alf-rack.git"
 
 gem "ruby_cop", :git => "https://github.com/blambeau/RubyCop.git"
 
-# gem 'alf-core',   path: "../alf/alf-core"
-# gem 'alf-sql',    path: "../alf/alf-sql"
-# gem 'alf-sequel', path: "../alf/alf-sequel"
-# gem 'alf-rack',   path: "../alf/alf-rack"
-# gem 'alf-doc',    path: "../alf/alf-doc"
-
 group :runtime do
-  gem "pg", "~> 0.17"
+  gem "pg", "~> 1.2"
 end
 
 group :development do

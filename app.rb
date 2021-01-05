@@ -4,7 +4,7 @@ Encoding.default_external = Encoding::UTF_8
 require 'path'
 require 'sprockets'
 require 'rack/robustness'
-require 'rack/timeout'
+require 'rack-timeout'
 require 'alf-core'
 require 'alf/lang/parser/safer'
 require 'alf-sequel'
@@ -136,7 +136,7 @@ TryAlf = ::Rack::Builder.new do
         puts ex.backtrace.join("\n")
       }
     end
-    use Rack::Timeout; Rack::Timeout.timeout = 1
+    use Rack::Timeout; Rack::Timeout.new(App, service_timeout: 1)
     use Alf::Rack::Connect do |cfg|
       cfg.database = Alf::Database.new(SequelDb, DbOptions)
     end
