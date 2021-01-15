@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: try-alf
+  namespace: enspirit
+  labels:
+    app: try-alf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: try-alf
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: try-alf
+    spec:
+      containers:
+      - image: enspirit/try-alf
+        name: try-alf
+        ports:
+        - containerPort: 4000
