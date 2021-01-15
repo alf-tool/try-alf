@@ -1,26 +1,29 @@
-container = try-alf
+CONTAINER = enspirit/try-alf
 
 ps:
 	docker ps
 
-build:
-	docker build -t $(container) .
+image:
+	docker build -t $(CONTAINER) .
 
-up: 
-	docker run -d -p 4000:4000 --rm --name $(container) $(container)
+push-image:
+	docker push $(CONTAINER)
+
+up:
+	docker run -d -p 4000:4000 --rm --name $(CONTAINER) $(CONTAINER)
 	docker ps
 
 logs:
-	docker logs -f $(container)
+	docker logs -f $(CONTAINER)
 
 down:
-	docker stop $(container)
+	docker stop $(CONTAINER)
 
 restart:
-	docker container restart $(container)
+	docker CONTAINER restart $(CONTAINER)
 
 clean:
 	docker rm try-alf
 
 bash:
-	docker exec -it $(container) bash
+	docker exec -it $(CONTAINER) bash
