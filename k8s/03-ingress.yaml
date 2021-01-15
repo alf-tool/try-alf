@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: "true"
+  name: try-alf
+  namespace: enspirit
+spec:
+  rules:
+  - host: www.try-alf.org
+    http:
+      paths:
+      - backend:
+          serviceName: try-alf
+          servicePort: 80
+  - host: try-alf.org
+    http:
+      paths:
+      - backend:
+          serviceName: try-alf
+          servicePort: 80
+  tls:
+  - hosts:
+    - www.try-alf.org
+    secretName: try-alf-ssl
+  - hosts:
+    - try-alf.org
+    secretName: try-alf-root-ssl

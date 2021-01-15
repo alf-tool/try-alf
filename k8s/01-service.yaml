@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: try-alf
+  namespace: enspirit
+  labels:
+    app: try-alf
+spec:
+  ports:
+    - port: 80
+      name: http
+      targetPort: 4000
+  selector:
+    app: try-alf
